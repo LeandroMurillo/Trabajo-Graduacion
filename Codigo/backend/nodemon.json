@@ -1,0 +1,8 @@
+{
+	"watch": ["."],
+	"ignore": ["node_modules", "dist"],
+	"ext": "ts",
+	"execMap": {
+		"ts": "node --loader ts-node/esm"
+	}
+}

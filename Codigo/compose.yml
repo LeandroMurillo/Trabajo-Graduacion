@@ -1,0 +1,114 @@
+services:
+  # ----------------------------------------
+  # MariaDB Database Service
+  # ----------------------------------------
+  db:
+    image: mariadb:lts-noble # Use a stable MariaDB version
+    container_name: proyecto-db
+    restart: unless-stopped
+    environment:
+      # Use .env file for these values
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${DB_DATABASE}
+      MYSQL_USER: ${DB_USER}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+    ports:
+      # Expose on host port 3306 for easy access with a DB client like DBeaver
+      - '3306:3306'
+    volumes:
+      # Persist database data
+      - mariadb-data:/var/lib/mysql
+      # Mount all your SQL scripts to initialize the database
+      # The entrypoint runs them in alphabetical order.
+      - ./db/proyecto_script.sql:/docker-entrypoint-initdb.d/1_schema.sql
+      - ./db/datos.sql:/docker-entrypoint-initdb.d/2_data.sql
+      - ./db/sp admins.sql:/docker-entrypoint-initdb.d/3_sp_admins.sql
+      - ./db/sp postulantes.sql:/docker-entrypoint-initdb.d/4_sp_postulantes.sql
+      - ./db/sp usuarios.sql:/docker-entrypoint-initdb.d/5_sp_usuarios.sql
+      - ./db/sp_superadmin.sql:/docker-entrypoint-initdb.d/6_sp_superadmin.sql
+
+  # ----------------------------------------
+  # Backend Node.js Service
+  # ----------------------------------------
+  backend:
+    container_name: proyecto-backend
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - '3000:3000' # Expose API on host port 3000
+    environment:
+      # Database connection details
+      DB_HOST: 'db' # This is the service name of the MariaDB container
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_DATABASE: ${DB_DATABASE}
+      DB_PORT: 3306
+      # Application port
+      PORT: 3000
+      # Pass the Firebase service account JSON from the .env file
+      FIREBASE_SERVICE_ACCOUNT_JSON: ${FIREBASE_SERVICE_ACCOUNT_JSON}
+    volumes:
+      # Mount source code for hot-reloading
+      - ./backend:/app
+      # Anonymous volume to prevent host node_modules from overwriting container's
+      - /app/node_modules
+    depends_on:
+      - db # Wait for the db service to start
+
+  # ----------------------------------------
+  # Frontend (Postulantes) Service
+  # ----------------------------------------
+  frontend-postulantes:
+    container_name: proyecto-frontend-postulantes
+    build:
+      context: ./frontend-postulantes
+      dockerfile: Dockerfile
+    ports:
+      - '80:80'
+    environment:
+      # This URL is used by the *browser* to find the API
+      VITE_API_URL: 'http://trabajo.com:3000'
+    volumes:
+      # Only mount node_modules
+      - /app/node_modules
+    depends_on:
+      - backend
+    develop:
+      watch:
+        - path: ./frontend-postulantes/package.json
+          action: rebuild
+        # This 'sync' action replaces the old volume mount
+        - path: ./frontend-postulantes
+          target: /app  # <-- Make sure this target matches your Dockerfile WORKDIR
+          action: sync
+
+  # ----------------------------------------
+  # Frontend (Administradores) Service
+  # ----------------------------------------
+  frontend-admin:
+    container_name: proyecto-frontend-admin
+    build:
+      context: ./frontend-administradores
+      dockerfile: Dockerfile
+    ports:
+      - '5173:5173'
+    environment:
+      VITE_API_URL: 'http://trabajo.com:3000'
+    volumes:
+      # Only mount node_modules
+      - /app/node_modules
+    depends_on:
+      - backend
+    develop:
+      watch:
+        - path: ./frontend-administradores/package.json
+          action: rebuild
+        # This 'sync' action replaces the old volume mount
+        - path: ./frontend-administradores
+          target: /app # <-- Make sure this target matches your Dockerfile WORKDIR
+          action: sync
+
+# Define the named volume for database persistence
+volumes:
+  mariadb-data:

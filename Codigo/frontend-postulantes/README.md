@@ -1,0 +1,3 @@
+# Dependencias
+
+- Archivo .env

@@ -1,0 +1,131 @@
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36" version="29.3.6">
+  <diagram name="Página-1" id="9PSPX-aOGX__WNJ34gG8">
+    <mxGraphModel dx="1174" dy="890" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="IVUfIxKTZZv3_LD7kG5y-6" parent="1" style="rounded=0;whiteSpace=wrap;strokeColor=#0F8B8D;fontColor=#143642;fillColor=none;verticalAlign=top;fontFamily=Arimo Nerd Font;labelBackgroundColor=none;html=1;" value="Administrador" vertex="1">
+          <mxGeometry height="660" width="210" x="20" y="40" as="geometry" />
+        </mxCell>
+        <mxCell id="DNTc8l9gZBxjtoVxKWfF-1" parent="1" style="rounded=0;whiteSpace=wrap;strokeColor=#0F8B8D;fontColor=#143642;fillColor=none;verticalAlign=top;fontFamily=Arimo Nerd Font;labelBackgroundColor=none;html=1;" value="SGVac" vertex="1">
+          <mxGeometry height="660" width="510" x="230" y="40" as="geometry" />
+        </mxCell>
+        <mxCell id="vX0-nyg-rzqHEZjBwQVW-1" edge="1" parent="1" source="IVUfIxKTZZv3_LD7kG5y-1" style="edgeStyle=elbowEdgeStyle;shape=connector;rounded=1;orthogonalLoop=1;jettySize=auto;elbow=vertical;html=1;strokeColor=#A8201A;align=center;verticalAlign=middle;fontFamily=Arimo Nerd Font;fontSize=12;fontColor=default;labelBackgroundColor=default;resizable=0;startSize=8;endArrow=classic;endSize=8;shadow=1;" target="IVUfIxKTZZv3_LD7kG5y-2" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Z9y05rFwCxt9J1MBwWmU-1" connectable="0" parent="vX0-nyg-rzqHEZjBwQVW-1" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=12;fontFamily=Arimo Nerd Font;fontColor=default;labelBackgroundColor=default;" value="" vertex="1">
+          <mxGeometry relative="1" x="-0.1101" y="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="IVUfIxKTZZv3_LD7kG5y-1" parent="1" style="ellipse;whiteSpace=wrap;aspect=fixed;rounded=1;labelBackgroundColor=none;fillColor=#FAE5C7;strokeColor=#0F8B8D;fontColor=#143642;fontFamily=Arimo Nerd Font;html=1;shadow=1;" value="" vertex="1">
+          <mxGeometry height="40" width="40" x="105" y="110" as="geometry" />
+        </mxCell>
+        <mxCell id="fmH8XZ2dsQ0Q36zmjPb7-3" edge="1" parent="1" source="IVUfIxKTZZv3_LD7kG5y-2" style="edgeStyle=elbowEdgeStyle;shape=connector;curved=0;rounded=1;orthogonalLoop=1;jettySize=auto;elbow=horizontal;html=1;shadow=1;strokeColor=#A8201A;align=center;verticalAlign=middle;fontFamily=Arimo Nerd Font;fontSize=12;fontColor=default;labelBackgroundColor=default;resizable=0;startSize=8;endArrow=classic;endSize=8;" target="0zscgz5cWm1JYymeTCS0-1" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="IVUfIxKTZZv3_LD7kG5y-2" parent="1" style="rounded=1;whiteSpace=wrap;labelBackgroundColor=none;fillColor=#FAE5C7;strokeColor=#0F8B8D;fontColor=#143642;fontFamily=Arimo Nerd Font;html=1;shadow=1;" value="Ingresa a vacantes y selecciona Añadir vacante&amp;nbsp;" vertex="1">
+          <mxGeometry height="60" width="150" x="50" y="190" as="geometry" />
+        </mxCell>
+        <mxCell id="IVUfIxKTZZv3_LD7kG5y-5" connectable="0" parent="1" style="group;fontFamily=Arimo Nerd Font;labelBackgroundColor=none;fontColor=#143642;html=1;shadow=1;" value="" vertex="1">
+          <mxGeometry height="40" width="40" x="105" y="630" as="geometry" />
+        </mxCell>
+        <mxCell id="IVUfIxKTZZv3_LD7kG5y-3" parent="IVUfIxKTZZv3_LD7kG5y-5" style="ellipse;whiteSpace=wrap;aspect=fixed;rounded=1;labelBackgroundColor=none;fillColor=#FAE5C7;strokeColor=#0F8B8D;fontColor=#143642;fontFamily=Arimo Nerd Font;html=1;shadow=1;" value="" vertex="1">
+          <mxGeometry height="40" width="40" as="geometry" />
+        </mxCell>
+        <mxCell id="IVUfIxKTZZv3_LD7kG5y-4" parent="IVUfIxKTZZv3_LD7kG5y-5" style="ellipse;whiteSpace=wrap;aspect=fixed;rounded=1;labelBackgroundColor=none;fillColor=light-dark(#36240A,#FAE5C7);strokeColor=#0F8B8D;fontColor=#143642;fontFamily=Arimo Nerd Font;html=1;shadow=1;" value="" vertex="1">
+          <mxGeometry height="20" width="20" x="10" y="10" as="geometry" />
+        </mxCell>
+        <mxCell id="5Xr3Pk6T8PYeCBqAalE5-4" edge="1" parent="1" source="0zscgz5cWm1JYymeTCS0-1" style="edgeStyle=elbowEdgeStyle;shape=connector;rounded=1;orthogonalLoop=1;jettySize=auto;elbow=vertical;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;shadow=1;strokeColor=#A8201A;align=center;verticalAlign=middle;fontFamily=Arimo Nerd Font;fontSize=12;fontColor=default;labelBackgroundColor=default;resizable=0;startSize=8;endArrow=classic;endSize=8;" target="5Xr3Pk6T8PYeCBqAalE5-1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="0zscgz5cWm1JYymeTCS0-1" parent="1" style="rounded=1;whiteSpace=wrap;labelBackgroundColor=none;fillColor=#FAE5C7;strokeColor=#0F8B8D;fontColor=#143642;fontFamily=Arimo Nerd Font;html=1;shadow=1;" value="Muestra un formulario" vertex="1">
+          <mxGeometry height="60" width="150" x="300" y="190" as="geometry" />
+        </mxCell>
+        <mxCell id="5Xr3Pk6T8PYeCBqAalE5-10" edge="1" parent="1" source="nNrUFF6f1n4sBPa7KNR9-2" style="edgeStyle=elbowEdgeStyle;shape=connector;rounded=1;orthogonalLoop=1;jettySize=auto;elbow=vertical;html=1;shadow=1;strokeColor=#A8201A;align=center;verticalAlign=middle;fontFamily=Arimo Nerd Font;fontSize=12;fontColor=default;labelBackgroundColor=default;resizable=0;startSize=8;endArrow=classic;endSize=8;" target="5Xr3Pk6T8PYeCBqAalE5-9" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="5Xr3Pk6T8PYeCBqAalE5-25" connectable="0" parent="5Xr3Pk6T8PYeCBqAalE5-10" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=12;fontFamily=Arimo Nerd Font;fontColor=default;labelBackgroundColor=default;" value="NO" vertex="1">
+          <mxGeometry relative="1" x="-0.3025" as="geometry">
+            <mxPoint x="9" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="5Xr3Pk6T8PYeCBqAalE5-13" edge="1" parent="1" source="nNrUFF6f1n4sBPa7KNR9-2" style="edgeStyle=elbowEdgeStyle;shape=connector;rounded=1;orthogonalLoop=1;jettySize=auto;elbow=vertical;html=1;shadow=1;strokeColor=#A8201A;align=center;verticalAlign=middle;fontFamily=Arimo Nerd Font;fontSize=12;fontColor=default;labelBackgroundColor=default;resizable=0;startSize=8;endArrow=classic;endSize=8;" target="5Xr3Pk6T8PYeCBqAalE5-12" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="5Xr3Pk6T8PYeCBqAalE5-24" connectable="0" parent="5Xr3Pk6T8PYeCBqAalE5-13" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=12;fontFamily=Arimo Nerd Font;fontColor=default;labelBackgroundColor=default;" value="SI" vertex="1">
+          <mxGeometry relative="1" x="-0.2786" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="nNrUFF6f1n4sBPa7KNR9-2" parent="1" style="rhombus;whiteSpace=wrap;strokeColor=#0F8B8D;fontFamily=Arimo Nerd Font;fontSize=12;fontColor=#143642;labelBackgroundColor=none;fillColor=#FAE5C7;textDirection=ltr;html=1;shadow=1;" value="Ingresó datos obligatorios?" vertex="1">
+          <mxGeometry height="80" width="167.5" x="291.25" y="320" as="geometry" />
+        </mxCell>
+        <mxCell id="aFbJmyOD42f-Nzscdl5H-1" edge="1" parent="1" source="aFbJmyOD42f-Nzscdl5H-2" style="shape=connector;rounded=1;orthogonalLoop=1;jettySize=auto;elbow=vertical;html=1;shadow=1;strokeColor=#A8201A;align=center;verticalAlign=middle;fontFamily=Arimo Nerd Font;fontSize=12;fontColor=default;labelBackgroundColor=none;resizable=0;startSize=8;endArrow=none;endSize=8;endFill=0;dashed=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0.567;entryY=0;entryDx=0;entryDy=0;entryPerimeter=0;" target="0zscgz5cWm1JYymeTCS0-1" value="">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="312.5" y="190" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="aFbJmyOD42f-Nzscdl5H-2" parent="1" style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;fontColor=#143642;darkOpacity=0.05;fillColor=#FAE5C7;strokeColor=none;fillStyle=solid;direction=west;gradientDirection=north;shadow=1;size=20;pointerEvents=1;labelBackgroundColor=none;" value="&lt;font face=&quot;Arimo Nerd Font&quot;&gt;Título, descripción,&amp;nbsp;&lt;/font&gt;&lt;span style=&quot;font-family: &amp;quot;Arimo Nerd Font&amp;quot;;&quot;&gt;categoría,&amp;nbsp;&lt;/span&gt;&lt;font face=&quot;Arimo Nerd Font&quot;&gt;tipo y modalidad de trabajo, nivel de experiencia, localidad, habilidades y estado de vacante&lt;/font&gt;" vertex="1">
+          <mxGeometry height="60" width="290" x="240" y="100" as="geometry" />
+        </mxCell>
+        <mxCell id="5Xr3Pk6T8PYeCBqAalE5-6" edge="1" parent="1" source="5Xr3Pk6T8PYeCBqAalE5-1" style="edgeStyle=elbowEdgeStyle;shape=connector;rounded=1;orthogonalLoop=1;jettySize=auto;elbow=vertical;html=1;shadow=1;strokeColor=#A8201A;align=center;verticalAlign=middle;fontFamily=Arimo Nerd Font;fontSize=12;fontColor=default;labelBackgroundColor=default;resizable=0;startSize=8;endArrow=classic;endSize=8;" target="nNrUFF6f1n4sBPa7KNR9-2" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="5Xr3Pk6T8PYeCBqAalE5-1" parent="1" style="rounded=1;whiteSpace=wrap;labelBackgroundColor=none;fillColor=#FAE5C7;strokeColor=#0F8B8D;fontColor=#143642;fontFamily=Arimo Nerd Font;html=1;shadow=1;" value="Ingresa datos" vertex="1">
+          <mxGeometry height="60" width="150" x="50" y="330" as="geometry" />
+        </mxCell>
+        <mxCell id="5Xr3Pk6T8PYeCBqAalE5-11" edge="1" parent="1" source="5Xr3Pk6T8PYeCBqAalE5-9" style="edgeStyle=elbowEdgeStyle;shape=connector;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;entryX=1;entryY=0.5;entryDx=0;entryDy=0;shadow=1;strokeColor=#A8201A;align=center;verticalAlign=middle;fontFamily=Arimo Nerd Font;fontSize=12;fontColor=default;labelBackgroundColor=default;resizable=0;startSize=8;endArrow=classic;endSize=8;" target="0zscgz5cWm1JYymeTCS0-1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="720" y="270" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="5Xr3Pk6T8PYeCBqAalE5-9" parent="1" style="rounded=1;whiteSpace=wrap;labelBackgroundColor=none;fillColor=#FAE5C7;strokeColor=#0F8B8D;fontColor=#143642;fontFamily=Arimo Nerd Font;html=1;shadow=1;" value="Muestra datos inválidos" vertex="1">
+          <mxGeometry height="60" width="150" x="550" y="330" as="geometry" />
+        </mxCell>
+        <mxCell id="5Xr3Pk6T8PYeCBqAalE5-15" edge="1" parent="1" source="5Xr3Pk6T8PYeCBqAalE5-12" style="edgeStyle=elbowEdgeStyle;shape=connector;rounded=1;orthogonalLoop=1;jettySize=auto;elbow=vertical;html=1;shadow=1;strokeColor=#A8201A;align=center;verticalAlign=middle;fontFamily=Arimo Nerd Font;fontSize=12;fontColor=default;labelBackgroundColor=default;resizable=0;startSize=8;endArrow=classic;endSize=8;" target="5Xr3Pk6T8PYeCBqAalE5-14" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="5Xr3Pk6T8PYeCBqAalE5-22" connectable="0" parent="5Xr3Pk6T8PYeCBqAalE5-15" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=12;fontFamily=Arimo Nerd Font;fontColor=default;labelBackgroundColor=default;" value="SI" vertex="1">
+          <mxGeometry relative="1" x="0.0386" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="5Xr3Pk6T8PYeCBqAalE5-20" edge="1" parent="1" source="5Xr3Pk6T8PYeCBqAalE5-12" style="edgeStyle=orthogonalEdgeStyle;shape=connector;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;shadow=1;strokeColor=#A8201A;align=center;verticalAlign=middle;fontFamily=Arimo Nerd Font;fontSize=12;fontColor=default;labelBackgroundColor=default;resizable=0;elbow=vertical;startSize=8;endArrow=classic;endSize=8;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="5Xr3Pk6T8PYeCBqAalE5-18">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="130" y="620" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="5Xr3Pk6T8PYeCBqAalE5-23" connectable="0" parent="5Xr3Pk6T8PYeCBqAalE5-20" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=12;fontFamily=Arimo Nerd Font;fontColor=default;labelBackgroundColor=default;" value="NO" vertex="1">
+          <mxGeometry relative="1" x="-0.1033" y="-1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="5Xr3Pk6T8PYeCBqAalE5-12" parent="1" style="rhombus;whiteSpace=wrap;strokeColor=#0F8B8D;fontFamily=Arimo Nerd Font;fontSize=12;fontColor=#143642;labelBackgroundColor=none;fillColor=#FAE5C7;textDirection=ltr;html=1;shadow=1;" value="Categoría no activa?" vertex="1">
+          <mxGeometry height="80" width="148.75" x="301.25" y="470" as="geometry" />
+        </mxCell>
+        <mxCell id="5Xr3Pk6T8PYeCBqAalE5-16" edge="1" parent="1" source="5Xr3Pk6T8PYeCBqAalE5-14" style="edgeStyle=orthogonalEdgeStyle;shape=connector;rounded=1;orthogonalLoop=1;jettySize=auto;elbow=vertical;html=1;entryX=1;entryY=0.5;entryDx=0;entryDy=0;shadow=1;strokeColor=#A8201A;align=center;verticalAlign=middle;fontFamily=Arimo Nerd Font;fontSize=12;fontColor=default;labelBackgroundColor=default;resizable=0;startSize=8;endArrow=classic;endSize=8;" target="0zscgz5cWm1JYymeTCS0-1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="720" y="510" />
+              <mxPoint x="720" y="220" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="5Xr3Pk6T8PYeCBqAalE5-14" parent="1" style="rounded=1;whiteSpace=wrap;labelBackgroundColor=none;fillColor=#FAE5C7;strokeColor=#0F8B8D;fontColor=#143642;fontFamily=Arimo Nerd Font;html=1;shadow=1;" value="Muestra categoría inválida" vertex="1">
+          <mxGeometry height="60" width="150" x="550" y="480" as="geometry" />
+        </mxCell>
+        <mxCell id="5Xr3Pk6T8PYeCBqAalE5-21" edge="1" parent="1" source="5Xr3Pk6T8PYeCBqAalE5-18" style="edgeStyle=orthogonalEdgeStyle;shape=connector;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;shadow=1;strokeColor=#A8201A;align=center;verticalAlign=middle;fontFamily=Arimo Nerd Font;fontSize=12;fontColor=default;labelBackgroundColor=default;resizable=0;elbow=vertical;startSize=8;endArrow=classic;endSize=8;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" target="IVUfIxKTZZv3_LD7kG5y-3" value="">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="150" y="650" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="5Xr3Pk6T8PYeCBqAalE5-18" parent="1" style="rounded=1;whiteSpace=wrap;labelBackgroundColor=none;fillColor=#FAE5C7;strokeColor=#0F8B8D;fontColor=#143642;fontFamily=Arimo Nerd Font;html=1;shadow=1;" value="Se crea la vacante con el estado elegido" vertex="1">
+          <mxGeometry height="60" width="170" x="291.25" y="620" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
