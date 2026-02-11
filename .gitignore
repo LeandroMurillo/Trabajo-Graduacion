@@ -1,0 +1,15 @@
+## Archivos que no se comitean en Vite
+node_modules/
+dist/
+.env
+pnpm-lock.yaml
+
+codigo-proyecto/backend/config.js
+
+## Typst
+Informe/*.pdf
+
+.vscode/
+proyecto_modelo.mwb.bak
+.*~
+Codigo/frontend-administradores/tsconfig.tsbuildinfo

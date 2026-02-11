@@ -1,0 +1,81 @@
+name: Informe
+
+# Controls when the workflow will run
+on:
+  push:
+    paths:
+      - 'Informe/**'
+      - '.github/workflows/Informe.yml'
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  build:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-24.04
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Typst
+        uses: typst-community/setup-typst@v4
+
+      # Added 'gnupg' to dependencies
+      - name: Install system dependencies
+        run: sudo apt-get update && sudo apt-get install -y qpdf gnupg
+
+      - name: Set dynamic document name
+        id: nombre
+        run: echo "NOMBRE=Trabajo Final - Murillo, Herrera - $(date +'%d-%m-%Y')" >> "$GITHUB_OUTPUT"
+
+      - name: Render, Protect and Sign documents
+        env:
+          # Pulls the password from GitHub Secrets into an Env Var
+          PGP_PRIVATE_KEY: ${{ secrets.PGP_PRIVATE_KEY }}
+          PGP_PASSPHRASE: ${{ secrets.PGP_PASSPHRASE }}
+        run: |
+          # --- 0. Robust Import PGP Key ---
+          printf "%s" "$PGP_PRIVATE_KEY" | gpg --batch --import
+
+          # --- 1. Compile with Typst ---
+          typst compile --pdf-standard=a-3u --font-path=Informe Informe/anexo.typ
+          typst compile --pdf-standard=a-3u --font-path=Informe Informe/informe.typ
+
+          # --- 2. Protect with qpdf ---
+          qpdf --replace-input --encrypt "" "$PGP_PASSPHRASE" 256 --modify=none -- Informe/anexo.pdf
+          qpdf --replace-input --encrypt "" "$PGP_PASSPHRASE" 256 --modify=none -- Informe/informe.pdf
+
+          # --- 3. Dynamic Variables ---
+          BUILD_DATE=$(date +'%d-%m-%Y')
+          ANEXO_NAME="Informe/Anexo - Murillo, Herrera - ${BUILD_DATE}.pdf"
+          INFORME_NAME="Informe/${{ steps.nombre.outputs.NOMBRE }}.pdf"
+
+          # --- 4. Rename & Sign Loop ---
+          mv -v Informe/anexo.pdf "$ANEXO_NAME"
+          mv -v Informe/informe.pdf "$INFORME_NAME"
+
+          for FILE in "$ANEXO_NAME" "$INFORME_NAME"; do
+             echo "Signing $FILE..."
+             gpg --batch --yes --pinentry-mode loopback \
+                 --passphrase "$PGP_PASSPHRASE" \
+                 --detach-sign --armor \
+                 --output "${FILE}.asc" \
+                 "$FILE"
+
+             echo "Verifying signature for $FILE..."
+             gpg --verify "${FILE}.asc" "$FILE"
+          done
+
+      - name: Upload artifacts (PDFs + Signatures)
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ steps.nombre.outputs.NOMBRE }}
+          # Uploads both .pdf and .asc files
+          path: |
+            Informe/${{ steps.nombre.outputs.NOMBRE }}*
