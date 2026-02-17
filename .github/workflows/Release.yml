@@ -31,7 +31,7 @@ jobs:
 
       - name: Set dynamic document name
         id: nombre
-        run: echo "NOMBRE=Trabajo Final - Murillo, Herrera - $(date +'%d-%m-%Y')" >> "$GITHUB_OUTPUT"
+        run: echo "NOMBRE=Trabajo Final - Murillo - Herrera - $(date +'%d-%m-%Y')" >> "$GITHUB_OUTPUT"
 
       - name: Render, Protect and Sign documents
         env:
@@ -52,7 +52,7 @@ jobs:
 
           # --- 3. Dynamic Variables ---
           BUILD_DATE=$(date +'%d-%m-%Y')
-          ANEXO_NAME="Informe/Anexo - Murillo, Herrera - ${BUILD_DATE}.pdf"
+          ANEXO_NAME="Informe/Anexo - Murillo - Herrera - ${BUILD_DATE}.pdf"
           INFORME_NAME="Informe/${{ steps.nombre.outputs.NOMBRE }}.pdf"
 
           # --- 4. Rename & Sign Loop ---
