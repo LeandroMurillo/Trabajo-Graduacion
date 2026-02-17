@@ -1,13 +1,18 @@
 import type { DataModel, DataSource } from '@toolpad/core/Crud';
-import type { GridFilterModel, GridPaginationModel, GridSortModel } from '@mui/x-data-grid';
+import type {
+	GridFilterModel,
+	GridFilterOperator,
+	GridPaginationModel,
+	GridSortModel,
+} from '@mui/x-data-grid';
+import { getGridStringOperators } from '@mui/x-data-grid';
 import { fetchJson } from './utils';
 
 export interface Cuota extends DataModel {
-	id: string;
-	idCuota: number;
-	idEmpresa: number;
+	id: number;
 	empresa: string;
-	monto: string;
+	url: string;
+	monto: number;
 	fechaPago: string;
 }
 
@@ -22,70 +27,66 @@ type CuotasDataSource = DataSource<Cuota> & Required<Pick<DataSource<Cuota>, 'ge
 const API_ROOT = import.meta.env.VITE_API_URL as string;
 const API_BASE = `${API_ROOT}/superadmin/cuotas`;
 
+const onlyContains: GridFilterOperator[] = getGridStringOperators().filter(
+	(op) => op.value === 'contains',
+);
+
 interface CuotaRaw {
-	idEmpresa?: number | string;
-	idCuota?: number | string;
+	id?: number;
 	empresa?: string;
-	monto?: string;
+	url?: string;
+	monto?: number;
 	fechaPago?: string;
 }
 
 function mapCuota(row: CuotaRaw): Cuota {
-	const idEmpresa = Number(row.idEmpresa);
-	const idCuota = Number(row.idCuota);
-
 	return {
-		id: `${idEmpresa}-${idCuota}`,
-		idCuota,
-		idEmpresa,
+		id: Number(row.id),
 		empresa: String(row.empresa ?? ''),
-		monto: String(row.monto ?? ''),
+		url: String(row.url ?? ''),
+		monto: typeof row.monto === 'string' ? Number(row.monto) : Number(row.monto ?? 0),
 		fechaPago: String(row.fechaPago ?? ''),
 	};
 }
 
 export const cuotasDataSource: CuotasDataSource = {
 	fields: [
-		{ field: 'idCuota', headerName: 'ID', type: 'number', width: 90 },
-		{ field: 'empresa', headerName: 'Empresa', width: 220 },
-		{ field: 'monto', headerName: 'Monto', width: 140 },
+		{ field: 'id', headerName: 'ID', type: 'number', width: 90, filterable: false },
+		{
+			field: 'empresa',
+			headerName: 'Empresa',
+			width: 220,
+			filterable: true,
+			filterOperators: onlyContains,
+		},
+		{ field: 'url', headerName: 'Slug', width: 180, filterable: false },
+		{ field: 'monto', headerName: 'Monto', type: 'number', width: 140, filterable: false },
 		{
 			field: 'fechaPago',
 			headerName: 'Fecha de pago',
 			type: 'date',
 			width: 160,
 			valueGetter: (value: string | number | Date | null) => (value ? new Date(value) : null),
+			filterable: false,
 		},
 	],
 
-	async getMany(params: GetManyParams) {
-		const page = params.paginationModel.page ?? 0;
-		const pageSize = params.paginationModel.pageSize ?? 25;
-
-		const sortField = params.sortModel?.[0]?.field ?? null;
-		const sortDir = params.sortModel?.[0]?.sort ?? null;
+	async getMany({ paginationModel, sortModel, filterModel }: GetManyParams) {
+		const page = paginationModel.page ?? 0;
+		const pageSize = paginationModel.pageSize ?? 25;
 
 		const url = new URL(API_BASE);
-		url.searchParams.set('page', String(page + 1));
+		url.searchParams.set('page', String(page));
 		url.searchParams.set('pageSize', String(pageSize));
+		url.searchParams.set('sort', sortModel?.length ? JSON.stringify(sortModel) : '[]');
 
-		if (sortField && sortDir) {
-			const normalizedSortField = sortField === 'id' ? 'idCuota' : sortField;
-			url.searchParams.set('sortBy', normalizedSortField);
-			url.searchParams.set('sortDir', sortDir);
-		}
+		const filterItems = filterModel?.items ?? [];
+		url.searchParams.set('filter', filterItems.length ? JSON.stringify(filterItems) : '[]');
 
 		const res = await fetchJson(url.toString());
 
-		const rawItems = Array.isArray(res?.items)
-			? res.items
-			: Array.isArray(res?.data)
-				? res.data
-				: Array.isArray(res)
-					? res
-					: [];
-
-		const itemCount = Number(res?.itemCount ?? res?.total ?? rawItems.length);
+		const rawItems = Array.isArray(res?.items) ? res.items : [];
+		const itemCount = Number(res?.itemCount ?? 0);
 
 		return {
 			items: rawItems.map(mapCuota),

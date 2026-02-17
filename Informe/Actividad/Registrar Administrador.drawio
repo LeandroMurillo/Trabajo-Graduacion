@@ -1,188 +1,186 @@
-<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0" version="29.3.0">
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36" version="29.3.8">
   <diagram name="Página-1" id="9PSPX-aOGX__WNJ34gG8">
-    <mxGraphModel dx="803" dy="580" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+    <mxGraphModel dx="786" dy="423" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
-        <mxCell id="IVUfIxKTZZv3_LD7kG5y-6" parent="1" style="rounded=0;whiteSpace=wrap;strokeColor=#0F8B8D;fontColor=#143642;fillColor=none;verticalAlign=top;fontFamily=Arimo Nerd Font;labelBackgroundColor=none;html=1;" value="Superadministrador" vertex="1">
-          <mxGeometry height="1070" width="210" x="20" y="40" as="geometry" />
+        <mxCell id="IVUfIxKTZZv3_LD7kG5y-6" parent="1" style="rounded=0;whiteSpace=wrap;strokeColor=#0F8B8D;fontColor=#143642;fillColor=none;verticalAlign=top;fontFamily=Arial;labelBackgroundColor=none;html=1;" value="Superadministrador" vertex="1">
+          <mxGeometry height="1080" width="210" x="20" y="40" as="geometry" />
         </mxCell>
-        <mxCell id="vX0-nyg-rzqHEZjBwQVW-1" edge="1" parent="1" source="IVUfIxKTZZv3_LD7kG5y-1" style="edgeStyle=elbowEdgeStyle;shape=connector;curved=0;rounded=1;orthogonalLoop=1;jettySize=auto;elbow=vertical;html=1;strokeColor=#A8201A;align=center;verticalAlign=middle;fontFamily=Arimo Nerd Font;fontSize=12;fontColor=default;labelBackgroundColor=none;resizable=0;startSize=8;endArrow=classic;endSize=8;shadow=1;" target="IVUfIxKTZZv3_LD7kG5y-2" value="">
+        <mxCell id="vX0-nyg-rzqHEZjBwQVW-1" edge="1" parent="1" source="IVUfIxKTZZv3_LD7kG5y-1" style="edgeStyle=elbowEdgeStyle;shape=connector;curved=0;rounded=1;orthogonalLoop=1;jettySize=auto;elbow=vertical;html=1;strokeColor=#A8201A;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=12;fontColor=default;labelBackgroundColor=none;resizable=0;startSize=8;endArrow=classic;endSize=8;shadow=1;" target="IVUfIxKTZZv3_LD7kG5y-2" value="">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="IVUfIxKTZZv3_LD7kG5y-1" parent="1" style="ellipse;whiteSpace=wrap;aspect=fixed;rounded=1;labelBackgroundColor=none;fillColor=#FAE5C7;strokeColor=#0F8B8D;fontColor=#143642;fontFamily=Arimo Nerd Font;html=1;shadow=1;" value="" vertex="1">
+        <mxCell id="IVUfIxKTZZv3_LD7kG5y-1" parent="1" style="ellipse;whiteSpace=wrap;aspect=fixed;rounded=1;labelBackgroundColor=none;fillColor=#FAE5C7;strokeColor=#0F8B8D;fontColor=#143642;fontFamily=Arial;html=1;shadow=1;" value="" vertex="1">
           <mxGeometry height="40" width="40" x="105" y="110" as="geometry" />
         </mxCell>
-        <mxCell id="XaGkbeAYPzQFVitOS1kv-1" edge="1" parent="1" source="IVUfIxKTZZv3_LD7kG5y-2" style="edgeStyle=elbowEdgeStyle;shape=connector;curved=0;rounded=1;orthogonalLoop=1;jettySize=auto;elbow=vertical;html=1;shadow=1;strokeColor=#A8201A;align=center;verticalAlign=middle;fontFamily=Arimo Nerd Font;fontSize=12;fontColor=default;labelBackgroundColor=none;resizable=0;startSize=8;endArrow=classic;endSize=8;" target="0zscgz5cWm1JYymeTCS0-1" value="">
+        <mxCell id="XaGkbeAYPzQFVitOS1kv-1" edge="1" parent="1" source="IVUfIxKTZZv3_LD7kG5y-2" style="edgeStyle=elbowEdgeStyle;shape=connector;curved=0;rounded=1;orthogonalLoop=1;jettySize=auto;elbow=vertical;html=1;shadow=1;strokeColor=#A8201A;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=12;fontColor=default;labelBackgroundColor=none;resizable=0;startSize=8;endArrow=classic;endSize=8;" target="0zscgz5cWm1JYymeTCS0-1" value="">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="IVUfIxKTZZv3_LD7kG5y-2" parent="1" style="rounded=1;whiteSpace=wrap;labelBackgroundColor=none;fillColor=#FAE5C7;strokeColor=#0F8B8D;fontColor=#143642;fontFamily=Arimo Nerd Font;html=1;shadow=1;" value="Desea registrar a un administrador" vertex="1">
+        <mxCell id="IVUfIxKTZZv3_LD7kG5y-2" parent="1" style="rounded=1;whiteSpace=wrap;labelBackgroundColor=none;fillColor=#FAE5C7;strokeColor=#0F8B8D;fontColor=#143642;fontFamily=Arial;html=1;shadow=1;" value="Desea registrar a un administrador" vertex="1">
           <mxGeometry height="60" width="150" x="50" y="190" as="geometry" />
         </mxCell>
-        <mxCell id="DNTc8l9gZBxjtoVxKWfF-1" parent="1" style="rounded=0;whiteSpace=wrap;strokeColor=#0F8B8D;fontColor=#143642;fillColor=none;verticalAlign=top;fontFamily=Arimo Nerd Font;labelBackgroundColor=none;html=1;" value="SGVac" vertex="1">
-          <mxGeometry height="1070" width="440" x="230" y="40" as="geometry" />
+        <mxCell id="DNTc8l9gZBxjtoVxKWfF-1" parent="1" style="rounded=0;whiteSpace=wrap;strokeColor=#0F8B8D;fontColor=#143642;fillColor=none;verticalAlign=top;fontFamily=Arial;labelBackgroundColor=none;html=1;" value="SGVac" vertex="1">
+          <mxGeometry height="1080" width="450" x="230" y="40" as="geometry" />
         </mxCell>
-        <mxCell id="XaGkbeAYPzQFVitOS1kv-3" edge="1" parent="1" source="0zscgz5cWm1JYymeTCS0-1" style="edgeStyle=elbowEdgeStyle;shape=connector;curved=0;rounded=1;orthogonalLoop=1;jettySize=auto;elbow=vertical;html=1;shadow=1;strokeColor=#A8201A;align=center;verticalAlign=middle;fontFamily=Arimo Nerd Font;fontSize=12;fontColor=default;labelBackgroundColor=none;resizable=0;startSize=8;endArrow=classic;endSize=8;" target="XaGkbeAYPzQFVitOS1kv-2">
+        <mxCell id="XaGkbeAYPzQFVitOS1kv-3" edge="1" parent="1" source="0zscgz5cWm1JYymeTCS0-1" style="edgeStyle=elbowEdgeStyle;shape=connector;curved=0;rounded=1;orthogonalLoop=1;jettySize=auto;elbow=vertical;html=1;shadow=1;strokeColor=#A8201A;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=12;fontColor=default;labelBackgroundColor=none;resizable=0;startSize=8;endArrow=classic;endSize=8;" target="XaGkbeAYPzQFVitOS1kv-2">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="0zscgz5cWm1JYymeTCS0-1" parent="1" style="rounded=1;whiteSpace=wrap;labelBackgroundColor=none;fillColor=#FAE5C7;strokeColor=#0F8B8D;fontColor=#143642;fontFamily=Arimo Nerd Font;html=1;shadow=1;" value="Muestra formulario para ingresar datos" vertex="1">
+        <mxCell id="0zscgz5cWm1JYymeTCS0-1" parent="1" style="rounded=1;whiteSpace=wrap;labelBackgroundColor=none;fillColor=#FAE5C7;strokeColor=#0F8B8D;fontColor=#143642;fontFamily=Arial;html=1;shadow=1;" value="Muestra formulario para ingresar datos" vertex="1">
           <mxGeometry height="60" width="150" x="270" y="190" as="geometry" />
         </mxCell>
-        <mxCell id="XaGkbeAYPzQFVitOS1kv-21" edge="1" parent="1" source="nNrUFF6f1n4sBPa7KNR9-2" style="edgeStyle=elbowEdgeStyle;shape=connector;curved=0;rounded=1;orthogonalLoop=1;jettySize=auto;elbow=horizontal;html=1;shadow=1;strokeColor=#A8201A;align=center;verticalAlign=middle;fontFamily=Arimo Nerd Font;fontSize=12;fontColor=default;labelBackgroundColor=none;resizable=0;startSize=8;endArrow=classic;endSize=8;" target="XaGkbeAYPzQFVitOS1kv-20">
+        <mxCell id="XaGkbeAYPzQFVitOS1kv-21" edge="1" parent="1" source="nNrUFF6f1n4sBPa7KNR9-2" style="edgeStyle=elbowEdgeStyle;shape=connector;curved=0;rounded=1;orthogonalLoop=1;jettySize=auto;elbow=horizontal;html=1;shadow=1;strokeColor=#A8201A;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=12;fontColor=default;labelBackgroundColor=none;resizable=0;startSize=8;endArrow=classic;endSize=8;" target="XaGkbeAYPzQFVitOS1kv-20">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="XaGkbeAYPzQFVitOS1kv-29" connectable="0" parent="XaGkbeAYPzQFVitOS1kv-21" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=12;strokeColor=#0F8B8D;fontFamily=Arimo Nerd Font;fontColor=default;labelBackgroundColor=none;fillColor=#FAE5C7;" value="&lt;span style=&quot;background-color: light-dark(#ffffff, var(--ge-dark-color, #121212));&quot;&gt;NO&lt;/span&gt;" vertex="1">
+        <mxCell id="XaGkbeAYPzQFVitOS1kv-29" connectable="0" parent="XaGkbeAYPzQFVitOS1kv-21" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=12;strokeColor=#0F8B8D;fontFamily=Arial;fontColor=default;labelBackgroundColor=none;fillColor=#FAE5C7;" value="&lt;span style=&quot;background-color: light-dark(#ffffff, var(--ge-dark-color, #121212));&quot;&gt;NO&lt;/span&gt;" vertex="1">
           <mxGeometry relative="1" x="-0.0975" as="geometry">
             <mxPoint as="offset" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="XaGkbeAYPzQFVitOS1kv-31" edge="1" parent="1" source="nNrUFF6f1n4sBPa7KNR9-2" style="edgeStyle=elbowEdgeStyle;shape=connector;curved=0;rounded=1;orthogonalLoop=1;jettySize=auto;elbow=vertical;html=1;shadow=1;strokeColor=#A8201A;align=center;verticalAlign=middle;fontFamily=Arimo Nerd Font;fontSize=12;fontColor=default;labelBackgroundColor=none;resizable=0;startSize=8;endArrow=classic;endSize=8;" target="XaGkbeAYPzQFVitOS1kv-17" value="&lt;span style=&quot;background-color: light-dark(#ffffff, var(--ge-dark-color, #121212));&quot;&gt;SI&lt;/span&gt;">
+        <mxCell id="XaGkbeAYPzQFVitOS1kv-31" edge="1" parent="1" source="nNrUFF6f1n4sBPa7KNR9-2" style="edgeStyle=elbowEdgeStyle;shape=connector;curved=0;rounded=1;orthogonalLoop=1;jettySize=auto;elbow=vertical;html=1;shadow=1;strokeColor=#A8201A;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=12;fontColor=default;labelBackgroundColor=none;resizable=0;startSize=8;endArrow=classic;endSize=8;" target="XaGkbeAYPzQFVitOS1kv-17" value="&lt;span style=&quot;background-color: light-dark(#ffffff, var(--ge-dark-color, #121212));&quot;&gt;SI&lt;/span&gt;">
           <mxGeometry relative="1" x="0.0003" as="geometry">
             <mxPoint as="offset" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="nNrUFF6f1n4sBPa7KNR9-2" parent="1" style="rhombus;whiteSpace=wrap;strokeColor=#0F8B8D;fontFamily=Arimo Nerd Font;fontSize=12;fontColor=#143642;labelBackgroundColor=none;fillColor=#FAE5C7;textDirection=ltr;html=1;shadow=1;" value="Ingresó correo, empresa y contraseña?" vertex="1">
+        <mxCell id="nNrUFF6f1n4sBPa7KNR9-2" parent="1" style="rhombus;whiteSpace=wrap;strokeColor=#0F8B8D;fontFamily=Arial;fontSize=12;fontColor=#143642;labelBackgroundColor=none;fillColor=#FAE5C7;textDirection=ltr;html=1;shadow=1;" value="Ingresó correo, empresa y contraseña?" vertex="1">
           <mxGeometry height="80" width="172.5" x="258.75" y="320" as="geometry" />
         </mxCell>
-        <mxCell id="XaGkbeAYPzQFVitOS1kv-16" edge="1" parent="1" source="XaGkbeAYPzQFVitOS1kv-2" style="edgeStyle=elbowEdgeStyle;shape=connector;curved=0;rounded=1;orthogonalLoop=1;jettySize=auto;elbow=vertical;html=1;shadow=1;strokeColor=#A8201A;align=center;verticalAlign=middle;fontFamily=Arimo Nerd Font;fontSize=12;fontColor=default;labelBackgroundColor=none;resizable=0;startSize=8;endArrow=classic;endSize=8;" target="nNrUFF6f1n4sBPa7KNR9-2" value="">
+        <mxCell id="XaGkbeAYPzQFVitOS1kv-16" edge="1" parent="1" source="XaGkbeAYPzQFVitOS1kv-2" style="edgeStyle=elbowEdgeStyle;shape=connector;curved=0;rounded=1;orthogonalLoop=1;jettySize=auto;elbow=vertical;html=1;shadow=1;strokeColor=#A8201A;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=12;fontColor=default;labelBackgroundColor=none;resizable=0;startSize=8;endArrow=classic;endSize=8;" target="nNrUFF6f1n4sBPa7KNR9-2" value="">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="XaGkbeAYPzQFVitOS1kv-2" parent="1" style="rounded=1;whiteSpace=wrap;labelBackgroundColor=none;fillColor=#FAE5C7;strokeColor=#0F8B8D;fontColor=#143642;fontFamily=Arimo Nerd Font;html=1;shadow=1;" value="Ingresa datos" vertex="1">
+        <mxCell id="XaGkbeAYPzQFVitOS1kv-2" parent="1" style="rounded=1;whiteSpace=wrap;labelBackgroundColor=none;fillColor=#FAE5C7;strokeColor=#0F8B8D;fontColor=#143642;fontFamily=Arial;html=1;shadow=1;" value="Ingresa datos" vertex="1">
           <mxGeometry height="60" width="150" x="50" y="330" as="geometry" />
         </mxCell>
-        <mxCell id="XaGkbeAYPzQFVitOS1kv-15" edge="1" parent="1" source="XaGkbeAYPzQFVitOS1kv-8" style="shape=connector;rounded=1;orthogonalLoop=1;jettySize=auto;elbow=vertical;html=1;shadow=1;strokeColor=#A8201A;align=center;verticalAlign=middle;fontFamily=Arimo Nerd Font;fontSize=12;fontColor=default;labelBackgroundColor=none;resizable=0;startSize=8;endArrow=none;endSize=8;endFill=0;dashed=1;" target="0zscgz5cWm1JYymeTCS0-1" value="">
+        <mxCell id="XaGkbeAYPzQFVitOS1kv-15" edge="1" parent="1" source="XaGkbeAYPzQFVitOS1kv-8" style="shape=connector;rounded=1;orthogonalLoop=1;jettySize=auto;elbow=vertical;html=1;shadow=1;strokeColor=#A8201A;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=12;fontColor=default;labelBackgroundColor=none;resizable=0;startSize=8;endArrow=none;endSize=8;endFill=0;dashed=1;" target="0zscgz5cWm1JYymeTCS0-1" value="">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="XaGkbeAYPzQFVitOS1kv-8" parent="1" style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;fontColor=#143642;darkOpacity=0.05;fillColor=#FAE5C7;strokeColor=none;fillStyle=solid;direction=west;gradientDirection=north;shadow=1;size=20;pointerEvents=1;labelBackgroundColor=none;" value="&lt;font face=&quot;Arimo Nerd Font&quot;&gt;Correo electrónico, empresa, contraseña y confirmación&lt;/font&gt;" vertex="1">
+        <mxCell id="XaGkbeAYPzQFVitOS1kv-8" parent="1" style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;fontColor=#143642;darkOpacity=0.05;fillColor=#FAE5C7;strokeColor=none;fillStyle=solid;direction=west;gradientDirection=north;shadow=1;size=20;pointerEvents=1;labelBackgroundColor=none;fontFamily=Arial;" value="&lt;font&gt;Correo electrónico, empresa, contraseña y confirmación&lt;/font&gt;" vertex="1">
           <mxGeometry height="60" width="190" x="250" y="100" as="geometry" />
         </mxCell>
-        <mxCell id="XaGkbeAYPzQFVitOS1kv-33" edge="1" parent="1" source="XaGkbeAYPzQFVitOS1kv-17" style="edgeStyle=elbowEdgeStyle;shape=connector;curved=0;rounded=1;orthogonalLoop=1;jettySize=auto;elbow=vertical;html=1;shadow=1;strokeColor=#A8201A;align=center;verticalAlign=middle;fontFamily=Arimo Nerd Font;fontSize=12;fontColor=default;labelBackgroundColor=none;resizable=0;startSize=8;endArrow=classic;endSize=8;" target="XaGkbeAYPzQFVitOS1kv-32" value="">
+        <mxCell id="XaGkbeAYPzQFVitOS1kv-33" edge="1" parent="1" source="XaGkbeAYPzQFVitOS1kv-17" style="edgeStyle=elbowEdgeStyle;shape=connector;curved=0;rounded=1;orthogonalLoop=1;jettySize=auto;elbow=vertical;html=1;shadow=1;strokeColor=#A8201A;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=12;fontColor=default;labelBackgroundColor=none;resizable=0;startSize=8;endArrow=classic;endSize=8;" target="XaGkbeAYPzQFVitOS1kv-32" value="">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="XaGkbeAYPzQFVitOS1kv-35" connectable="0" parent="XaGkbeAYPzQFVitOS1kv-33" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=12;strokeColor=#0F8B8D;fontFamily=Arimo Nerd Font;fontColor=default;labelBackgroundColor=none;fillColor=#FAE5C7;" value="&lt;span style=&quot;background-color: light-dark(#ffffff, var(--ge-dark-color, #121212));&quot;&gt;SI&lt;/span&gt;" vertex="1">
+        <mxCell id="XaGkbeAYPzQFVitOS1kv-35" connectable="0" parent="XaGkbeAYPzQFVitOS1kv-33" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=12;strokeColor=#0F8B8D;fontFamily=Arial;fontColor=default;labelBackgroundColor=none;fillColor=#FAE5C7;" value="&lt;span style=&quot;background-color: light-dark(#ffffff, var(--ge-dark-color, #121212));&quot;&gt;SI&lt;/span&gt;" vertex="1">
           <mxGeometry relative="1" x="-0.289" y="-1" as="geometry">
             <mxPoint x="22" y="-1" as="offset" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="XaGkbeAYPzQFVitOS1kv-38" edge="1" parent="1" source="XaGkbeAYPzQFVitOS1kv-17" style="edgeStyle=elbowEdgeStyle;shape=connector;curved=0;rounded=1;orthogonalLoop=1;jettySize=auto;elbow=vertical;html=1;shadow=1;strokeColor=#A8201A;align=center;verticalAlign=middle;fontFamily=Arimo Nerd Font;fontSize=12;fontColor=default;labelBackgroundColor=none;resizable=0;startSize=8;endArrow=classic;endSize=8;" target="XaGkbeAYPzQFVitOS1kv-36" value="">
-          <mxGeometry relative="1" as="geometry" />
+        <mxCell id="XaGkbeAYPzQFVitOS1kv-38" edge="1" parent="1" source="XaGkbeAYPzQFVitOS1kv-17" style="edgeStyle=elbowEdgeStyle;shape=connector;curved=0;rounded=1;orthogonalLoop=1;jettySize=auto;elbow=vertical;html=1;shadow=1;strokeColor=#A8201A;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=12;fontColor=default;labelBackgroundColor=none;resizable=0;startSize=8;endArrow=classic;endSize=8;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="m5apbkuJhZvFJ7Ny_5fc-2" value="">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="340" y="590" as="targetPoint" />
+          </mxGeometry>
         </mxCell>
-        <mxCell id="XaGkbeAYPzQFVitOS1kv-42" connectable="0" parent="XaGkbeAYPzQFVitOS1kv-38" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=12;strokeColor=#0F8B8D;fontFamily=Arimo Nerd Font;fontColor=default;labelBackgroundColor=none;fillColor=#FAE5C7;" value="&lt;span style=&quot;background-color: light-dark(#ffffff, var(--ge-dark-color, #121212));&quot;&gt;NO&lt;/span&gt;" vertex="1">
+        <mxCell id="XaGkbeAYPzQFVitOS1kv-42" connectable="0" parent="XaGkbeAYPzQFVitOS1kv-38" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=12;strokeColor=#0F8B8D;fontFamily=Arial;fontColor=default;labelBackgroundColor=none;fillColor=#FAE5C7;" value="&lt;span style=&quot;background-color: light-dark(#ffffff, var(--ge-dark-color, #121212));&quot;&gt;NO&lt;/span&gt;" vertex="1">
           <mxGeometry relative="1" x="-0.2144" y="1" as="geometry">
             <mxPoint as="offset" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="XaGkbeAYPzQFVitOS1kv-17" parent="1" style="rhombus;whiteSpace=wrap;strokeColor=#0F8B8D;fontFamily=Arimo Nerd Font;fontSize=12;fontColor=#143642;labelBackgroundColor=none;fillColor=#FAE5C7;textDirection=ltr;html=1;shadow=1;" value="Correo electrónico ya existe?" vertex="1">
+        <mxCell id="XaGkbeAYPzQFVitOS1kv-17" parent="1" style="rhombus;whiteSpace=wrap;strokeColor=#0F8B8D;fontFamily=Arial;fontSize=12;fontColor=#143642;labelBackgroundColor=none;fillColor=#FAE5C7;textDirection=ltr;html=1;shadow=1;" value="Ya existe&lt;div&gt;&amp;nbsp;el correo?&lt;/div&gt;" vertex="1">
           <mxGeometry height="80" width="115.31" x="287.34" y="460" as="geometry" />
         </mxCell>
-        <mxCell id="XaGkbeAYPzQFVitOS1kv-24" edge="1" parent="1" source="XaGkbeAYPzQFVitOS1kv-20" style="edgeStyle=elbowEdgeStyle;shape=connector;curved=0;rounded=1;orthogonalLoop=1;jettySize=auto;elbow=vertical;html=1;entryX=1;entryY=0.5;entryDx=0;entryDy=0;shadow=1;strokeColor=#A8201A;align=center;verticalAlign=middle;fontFamily=Arimo Nerd Font;fontSize=12;fontColor=default;labelBackgroundColor=none;resizable=0;startSize=8;endArrow=classic;endSize=8;" target="0zscgz5cWm1JYymeTCS0-1">
+        <mxCell id="XaGkbeAYPzQFVitOS1kv-24" edge="1" parent="1" source="XaGkbeAYPzQFVitOS1kv-20" style="edgeStyle=elbowEdgeStyle;shape=connector;curved=0;rounded=1;orthogonalLoop=1;jettySize=auto;elbow=vertical;html=1;entryX=1;entryY=0.5;entryDx=0;entryDy=0;shadow=1;strokeColor=#A8201A;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=12;fontColor=default;labelBackgroundColor=none;resizable=0;startSize=8;endArrow=classic;endSize=8;" target="0zscgz5cWm1JYymeTCS0-1">
           <mxGeometry relative="1" as="geometry">
             <Array as="points">
               <mxPoint x="565" y="220" />
             </Array>
           </mxGeometry>
         </mxCell>
-        <mxCell id="XaGkbeAYPzQFVitOS1kv-20" parent="1" style="rounded=1;whiteSpace=wrap;labelBackgroundColor=none;fillColor=#FAE5C7;strokeColor=#0F8B8D;fontColor=#143642;fontFamily=Arimo Nerd Font;html=1;shadow=1;" value="Muestra mensaje de datos inválidos" vertex="1">
+        <mxCell id="XaGkbeAYPzQFVitOS1kv-20" parent="1" style="rounded=1;whiteSpace=wrap;labelBackgroundColor=none;fillColor=#FAE5C7;strokeColor=#0F8B8D;fontColor=#143642;fontFamily=Arial;html=1;shadow=1;" value="Muestra mensaje de datos inválidos" vertex="1">
           <mxGeometry height="60" width="150" x="490" y="330" as="geometry" />
         </mxCell>
-        <mxCell id="XaGkbeAYPzQFVitOS1kv-28" connectable="0" parent="1" style="group" value="" vertex="1">
-          <mxGeometry height="40" width="40" x="105" y="1030" as="geometry" />
+        <mxCell id="XaGkbeAYPzQFVitOS1kv-28" connectable="0" parent="1" style="group;fontFamily=Arial;" value="" vertex="1">
+          <mxGeometry height="40" width="40" x="105" y="1040" as="geometry" />
         </mxCell>
-        <mxCell id="XaGkbeAYPzQFVitOS1kv-12" parent="XaGkbeAYPzQFVitOS1kv-28" style="ellipse;whiteSpace=wrap;aspect=fixed;rounded=1;labelBackgroundColor=none;fillColor=#FAE5C7;strokeColor=#0F8B8D;fontColor=#143642;fontFamily=Arimo Nerd Font;html=1;shadow=1;" value="" vertex="1">
+        <mxCell id="XaGkbeAYPzQFVitOS1kv-12" parent="XaGkbeAYPzQFVitOS1kv-28" style="ellipse;whiteSpace=wrap;aspect=fixed;rounded=1;labelBackgroundColor=none;fillColor=#FAE5C7;strokeColor=#0F8B8D;fontColor=#143642;fontFamily=Arial;html=1;shadow=1;" value="" vertex="1">
           <mxGeometry height="40" width="40" as="geometry" />
         </mxCell>
-        <mxCell id="XaGkbeAYPzQFVitOS1kv-13" parent="XaGkbeAYPzQFVitOS1kv-28" style="ellipse;whiteSpace=wrap;aspect=fixed;rounded=1;labelBackgroundColor=none;fillColor=light-dark(#36240A,#FAE5C7);strokeColor=#0F8B8D;fontColor=#143642;fontFamily=Arimo Nerd Font;html=1;shadow=1;" value="" vertex="1">
+        <mxCell id="XaGkbeAYPzQFVitOS1kv-13" parent="XaGkbeAYPzQFVitOS1kv-28" style="ellipse;whiteSpace=wrap;aspect=fixed;rounded=1;labelBackgroundColor=none;fillColor=light-dark(#36240A,#FAE5C7);strokeColor=#0F8B8D;fontColor=#143642;fontFamily=Arial;html=1;shadow=1;" value="" vertex="1">
           <mxGeometry height="20" width="20" x="10" y="10" as="geometry" />
         </mxCell>
-        <mxCell id="XaGkbeAYPzQFVitOS1kv-34" edge="1" parent="1" source="XaGkbeAYPzQFVitOS1kv-32" style="edgeStyle=elbowEdgeStyle;shape=connector;curved=0;rounded=1;orthogonalLoop=1;jettySize=auto;elbow=vertical;html=1;entryX=1;entryY=0.5;entryDx=0;entryDy=0;shadow=1;strokeColor=#A8201A;align=center;verticalAlign=middle;fontFamily=Arimo Nerd Font;fontSize=12;fontColor=default;labelBackgroundColor=none;resizable=0;startSize=8;endArrow=classic;endSize=8;" target="0zscgz5cWm1JYymeTCS0-1">
+        <mxCell id="XaGkbeAYPzQFVitOS1kv-34" edge="1" parent="1" source="XaGkbeAYPzQFVitOS1kv-32" style="edgeStyle=elbowEdgeStyle;shape=connector;curved=0;rounded=1;orthogonalLoop=1;jettySize=auto;elbow=vertical;html=1;entryX=1;entryY=0.5;entryDx=0;entryDy=0;shadow=1;strokeColor=#A8201A;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=12;fontColor=default;labelBackgroundColor=none;resizable=0;startSize=8;endArrow=classic;endSize=8;" target="0zscgz5cWm1JYymeTCS0-1">
           <mxGeometry relative="1" as="geometry">
             <Array as="points">
               <mxPoint x="660" y="360" />
             </Array>
           </mxGeometry>
         </mxCell>
-        <mxCell id="XaGkbeAYPzQFVitOS1kv-32" parent="1" style="rounded=1;whiteSpace=wrap;labelBackgroundColor=none;fillColor=#FAE5C7;strokeColor=#0F8B8D;fontColor=#143642;fontFamily=Arimo Nerd Font;html=1;shadow=1;" value="Muestra mensaje de correo de administrador ya existe" vertex="1">
+        <mxCell id="XaGkbeAYPzQFVitOS1kv-32" parent="1" style="rounded=1;whiteSpace=wrap;labelBackgroundColor=none;fillColor=#FAE5C7;strokeColor=#0F8B8D;fontColor=#143642;fontFamily=Arial;html=1;shadow=1;" value="Muestra mensaje&amp;nbsp;&lt;div&gt;&quot;el correo ya pertenece a otro administrador.&quot;&lt;/div&gt;" vertex="1">
           <mxGeometry height="60" width="150" x="490" y="470" as="geometry" />
         </mxCell>
-        <mxCell id="XaGkbeAYPzQFVitOS1kv-39" edge="1" parent="1" source="XaGkbeAYPzQFVitOS1kv-36" style="edgeStyle=elbowEdgeStyle;shape=connector;curved=0;rounded=1;orthogonalLoop=1;jettySize=auto;elbow=horizontal;html=1;shadow=1;strokeColor=#A8201A;align=center;verticalAlign=middle;fontFamily=Arimo Nerd Font;fontSize=12;fontColor=default;labelBackgroundColor=none;resizable=0;startSize=8;endArrow=classic;endSize=8;" target="XaGkbeAYPzQFVitOS1kv-37" value="">
+        <mxCell id="XaGkbeAYPzQFVitOS1kv-47" edge="1" parent="1" source="XaGkbeAYPzQFVitOS1kv-49" style="edgeStyle=elbowEdgeStyle;shape=connector;curved=0;rounded=1;orthogonalLoop=1;jettySize=auto;elbow=horizontal;html=1;shadow=1;strokeColor=#A8201A;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=12;fontColor=default;labelBackgroundColor=none;resizable=0;startSize=8;endArrow=classic;endSize=8;" target="XaGkbeAYPzQFVitOS1kv-50" value="">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="XaGkbeAYPzQFVitOS1kv-41" connectable="0" parent="XaGkbeAYPzQFVitOS1kv-39" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=12;strokeColor=#0F8B8D;fontFamily=Arimo Nerd Font;fontColor=default;labelBackgroundColor=none;fillColor=#FAE5C7;" value="&lt;span style=&quot;background-color: light-dark(#ffffff, var(--ge-dark-color, #121212));&quot;&gt;SI&lt;/span&gt;" vertex="1">
+        <mxCell id="XaGkbeAYPzQFVitOS1kv-48" connectable="0" parent="XaGkbeAYPzQFVitOS1kv-47" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=12;strokeColor=#0F8B8D;fontFamily=Arial;fontColor=default;labelBackgroundColor=none;fillColor=#FAE5C7;" value="&lt;span style=&quot;background-color: light-dark(#ffffff, var(--ge-dark-color, #121212));&quot;&gt;SI&lt;/span&gt;" vertex="1">
           <mxGeometry relative="1" x="-0.2992" y="2" as="geometry">
             <mxPoint x="8" y="2" as="offset" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="XaGkbeAYPzQFVitOS1kv-51" edge="1" parent="1" source="XaGkbeAYPzQFVitOS1kv-36" style="edgeStyle=elbowEdgeStyle;shape=connector;curved=0;rounded=1;orthogonalLoop=1;jettySize=auto;elbow=vertical;html=1;shadow=1;strokeColor=#A8201A;align=center;verticalAlign=middle;fontFamily=Arimo Nerd Font;fontSize=12;fontColor=default;labelBackgroundColor=none;resizable=0;startSize=8;endArrow=classic;endSize=8;" target="XaGkbeAYPzQFVitOS1kv-49" value="">
+        <mxCell id="XaGkbeAYPzQFVitOS1kv-56" edge="1" parent="1" source="XaGkbeAYPzQFVitOS1kv-49" style="edgeStyle=elbowEdgeStyle;shape=connector;curved=0;rounded=1;orthogonalLoop=1;jettySize=auto;elbow=vertical;html=1;shadow=1;strokeColor=#A8201A;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=12;fontColor=default;labelBackgroundColor=none;resizable=0;startSize=8;endArrow=classic;endSize=8;" target="XaGkbeAYPzQFVitOS1kv-54" value="">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="XaGkbeAYPzQFVitOS1kv-59" connectable="0" parent="XaGkbeAYPzQFVitOS1kv-51" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=12;strokeColor=#0F8B8D;fontFamily=Arimo Nerd Font;fontColor=default;labelBackgroundColor=none;fillColor=#FAE5C7;" value="&lt;span style=&quot;background-color: light-dark(#ffffff, var(--ge-dark-color, #121212));&quot;&gt;NO&lt;/span&gt;" vertex="1">
-          <mxGeometry relative="1" x="-0.229" y="-1" as="geometry">
-            <mxPoint as="offset" />
-          </mxGeometry>
-        </mxCell>
-        <mxCell id="XaGkbeAYPzQFVitOS1kv-36" parent="1" style="rhombus;whiteSpace=wrap;strokeColor=#0F8B8D;fontFamily=Arimo Nerd Font;fontSize=12;fontColor=#143642;labelBackgroundColor=none;fillColor=#FAE5C7;textDirection=ltr;html=1;shadow=1;" value="La empresa no existe o está inactiva?" vertex="1">
-          <mxGeometry height="80" width="142.66" x="273.66999999999996" y="600" as="geometry" />
-        </mxCell>
-        <mxCell id="XaGkbeAYPzQFVitOS1kv-40" edge="1" parent="1" source="XaGkbeAYPzQFVitOS1kv-37" style="edgeStyle=elbowEdgeStyle;shape=connector;curved=0;rounded=1;orthogonalLoop=1;jettySize=auto;elbow=vertical;html=1;shadow=1;strokeColor=#A8201A;align=center;verticalAlign=middle;fontFamily=Arimo Nerd Font;fontSize=12;fontColor=default;labelBackgroundColor=none;resizable=0;startSize=8;endArrow=classic;endSize=8;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" target="0zscgz5cWm1JYymeTCS0-1">
-          <mxGeometry relative="1" as="geometry">
-            <Array as="points">
-              <mxPoint x="660" y="220" />
-            </Array>
-            <mxPoint x="660" y="640" as="targetPoint" />
-          </mxGeometry>
-        </mxCell>
-        <mxCell id="XaGkbeAYPzQFVitOS1kv-37" parent="1" style="rounded=1;whiteSpace=wrap;labelBackgroundColor=none;fillColor=#FAE5C7;strokeColor=#0F8B8D;fontColor=#143642;fontFamily=Arimo Nerd Font;html=1;shadow=1;" value="Muestra mensaje de correo de empresa no existe o está inactiva" vertex="1">
-          <mxGeometry height="60" width="150" x="490" y="610" as="geometry" />
-        </mxCell>
-        <mxCell id="XaGkbeAYPzQFVitOS1kv-47" edge="1" parent="1" source="XaGkbeAYPzQFVitOS1kv-49" style="edgeStyle=elbowEdgeStyle;shape=connector;curved=0;rounded=1;orthogonalLoop=1;jettySize=auto;elbow=horizontal;html=1;shadow=1;strokeColor=#A8201A;align=center;verticalAlign=middle;fontFamily=Arimo Nerd Font;fontSize=12;fontColor=default;labelBackgroundColor=none;resizable=0;startSize=8;endArrow=classic;endSize=8;" target="XaGkbeAYPzQFVitOS1kv-50" value="">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="XaGkbeAYPzQFVitOS1kv-48" connectable="0" parent="XaGkbeAYPzQFVitOS1kv-47" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=12;strokeColor=#0F8B8D;fontFamily=Arimo Nerd Font;fontColor=default;labelBackgroundColor=none;fillColor=#FAE5C7;" value="&lt;span style=&quot;background-color: light-dark(#ffffff, var(--ge-dark-color, #121212));&quot;&gt;SI&lt;/span&gt;" vertex="1">
-          <mxGeometry relative="1" x="-0.2992" y="2" as="geometry">
-            <mxPoint x="8" y="2" as="offset" />
-          </mxGeometry>
-        </mxCell>
-        <mxCell id="XaGkbeAYPzQFVitOS1kv-56" edge="1" parent="1" source="XaGkbeAYPzQFVitOS1kv-49" style="edgeStyle=elbowEdgeStyle;shape=connector;curved=0;rounded=1;orthogonalLoop=1;jettySize=auto;elbow=vertical;html=1;shadow=1;strokeColor=#A8201A;align=center;verticalAlign=middle;fontFamily=Arimo Nerd Font;fontSize=12;fontColor=default;labelBackgroundColor=none;resizable=0;startSize=8;endArrow=classic;endSize=8;" target="XaGkbeAYPzQFVitOS1kv-54" value="">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="XaGkbeAYPzQFVitOS1kv-60" connectable="0" parent="XaGkbeAYPzQFVitOS1kv-56" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=12;strokeColor=#0F8B8D;fontFamily=Arimo Nerd Font;fontColor=default;labelBackgroundColor=none;fillColor=#FAE5C7;" value="&lt;span style=&quot;background-color: light-dark(#ffffff, var(--ge-dark-color, #121212));&quot;&gt;NO&lt;/span&gt;" vertex="1">
+        <mxCell id="XaGkbeAYPzQFVitOS1kv-60" connectable="0" parent="XaGkbeAYPzQFVitOS1kv-56" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=12;strokeColor=#0F8B8D;fontFamily=Arial;fontColor=default;labelBackgroundColor=none;fillColor=#FAE5C7;" value="&lt;span style=&quot;background-color: light-dark(#ffffff, var(--ge-dark-color, #121212));&quot;&gt;NO&lt;/span&gt;" vertex="1">
           <mxGeometry relative="1" x="-0.2067" as="geometry">
             <mxPoint as="offset" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="XaGkbeAYPzQFVitOS1kv-49" parent="1" style="rhombus;whiteSpace=wrap;strokeColor=#0F8B8D;fontFamily=Arimo Nerd Font;fontSize=12;fontColor=#143642;labelBackgroundColor=none;fillColor=#FAE5C7;textDirection=ltr;html=1;shadow=1;" value="Longitud de contraseña&lt;div&gt;&amp;nbsp;&amp;lt; 6&lt;/div&gt;" vertex="1">
-          <mxGeometry height="80" width="166.33" x="261.83" y="740" as="geometry" />
+        <mxCell id="XaGkbeAYPzQFVitOS1kv-49" parent="1" style="rhombus;whiteSpace=wrap;strokeColor=#0F8B8D;fontFamily=Arial;fontSize=12;fontColor=#143642;labelBackgroundColor=none;fillColor=#FAE5C7;textDirection=ltr;html=1;shadow=1;" value="Longitud de contraseña&lt;div&gt;&amp;nbsp;&amp;lt; 8&lt;/div&gt;" vertex="1">
+          <mxGeometry height="80" width="166.33" x="261.84" y="750" as="geometry" />
         </mxCell>
-        <mxCell id="XaGkbeAYPzQFVitOS1kv-50" parent="1" style="rounded=1;whiteSpace=wrap;labelBackgroundColor=none;fillColor=#FAE5C7;strokeColor=#0F8B8D;fontColor=#143642;fontFamily=Arimo Nerd Font;html=1;shadow=1;" value="Muestra mensaje de longitud de contraseña de&amp;nbsp;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(20, 54, 66), rgb(173, 202, 213));&quot;&gt;6 o más caracteres&lt;/span&gt;" vertex="1">
-          <mxGeometry height="60" width="150" x="490.00000000000006" y="750" as="geometry" />
+        <mxCell id="enbMYnICaPQ543zTofBo-1" edge="1" parent="1" source="XaGkbeAYPzQFVitOS1kv-50" style="edgeStyle=elbowEdgeStyle;shape=connector;curved=0;rounded=1;orthogonalLoop=1;jettySize=auto;elbow=vertical;html=1;entryX=1;entryY=0.5;entryDx=0;entryDy=0;shadow=1;strokeColor=#A8201A;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=12;fontColor=default;labelBackgroundColor=default;resizable=0;startSize=8;endArrow=classic;endSize=8;" target="0zscgz5cWm1JYymeTCS0-1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="660" y="480" />
+            </Array>
+          </mxGeometry>
         </mxCell>
-        <mxCell id="XaGkbeAYPzQFVitOS1kv-52" edge="1" parent="1" source="XaGkbeAYPzQFVitOS1kv-54" style="edgeStyle=elbowEdgeStyle;shape=connector;curved=0;rounded=1;orthogonalLoop=1;jettySize=auto;elbow=horizontal;html=1;shadow=1;strokeColor=#A8201A;align=center;verticalAlign=middle;fontFamily=Arimo Nerd Font;fontSize=12;fontColor=default;labelBackgroundColor=none;resizable=0;startSize=8;endArrow=classic;endSize=8;" target="XaGkbeAYPzQFVitOS1kv-55" value="">
+        <mxCell id="XaGkbeAYPzQFVitOS1kv-50" parent="1" style="rounded=1;whiteSpace=wrap;labelBackgroundColor=none;fillColor=#FAE5C7;strokeColor=#0F8B8D;fontColor=#143642;fontFamily=Arial;html=1;shadow=1;" value="Muestra mensaje&amp;nbsp;&lt;div&gt;&quot;La contraseña debe tener al menos 8 caracteres.&quot;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="60" width="150" x="490.00000000000006" y="760" as="geometry" />
+        </mxCell>
+        <mxCell id="XaGkbeAYPzQFVitOS1kv-52" edge="1" parent="1" source="XaGkbeAYPzQFVitOS1kv-54" style="edgeStyle=elbowEdgeStyle;shape=connector;curved=0;rounded=1;orthogonalLoop=1;jettySize=auto;elbow=horizontal;html=1;shadow=1;strokeColor=#A8201A;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=12;fontColor=default;labelBackgroundColor=none;resizable=0;startSize=8;endArrow=classic;endSize=8;" target="XaGkbeAYPzQFVitOS1kv-55" value="">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="XaGkbeAYPzQFVitOS1kv-53" connectable="0" parent="XaGkbeAYPzQFVitOS1kv-52" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=12;strokeColor=#0F8B8D;fontFamily=Arimo Nerd Font;fontColor=default;labelBackgroundColor=none;fillColor=#FAE5C7;" value="&lt;span style=&quot;background-color: light-dark(#ffffff, var(--ge-dark-color, #121212));&quot;&gt;SI&lt;/span&gt;" vertex="1">
+        <mxCell id="XaGkbeAYPzQFVitOS1kv-53" connectable="0" parent="XaGkbeAYPzQFVitOS1kv-52" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=12;strokeColor=#0F8B8D;fontFamily=Arial;fontColor=default;labelBackgroundColor=none;fillColor=#FAE5C7;" value="&lt;span style=&quot;background-color: light-dark(#ffffff, var(--ge-dark-color, #121212));&quot;&gt;SI&lt;/span&gt;" vertex="1">
           <mxGeometry relative="1" x="-0.2992" y="2" as="geometry">
             <mxPoint x="8" y="2" as="offset" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="XaGkbeAYPzQFVitOS1kv-64" edge="1" parent="1" source="XaGkbeAYPzQFVitOS1kv-54" style="edgeStyle=elbowEdgeStyle;shape=connector;curved=0;rounded=1;orthogonalLoop=1;jettySize=auto;elbow=vertical;html=1;shadow=1;strokeColor=#A8201A;align=center;verticalAlign=middle;fontFamily=Arimo Nerd Font;fontSize=12;fontColor=default;labelBackgroundColor=none;resizable=0;startSize=8;endArrow=classic;endSize=8;" target="XaGkbeAYPzQFVitOS1kv-61" value="">
+        <mxCell id="XaGkbeAYPzQFVitOS1kv-64" edge="1" parent="1" source="XaGkbeAYPzQFVitOS1kv-54" style="edgeStyle=elbowEdgeStyle;shape=connector;curved=0;rounded=1;orthogonalLoop=1;jettySize=auto;elbow=vertical;html=1;shadow=1;strokeColor=#A8201A;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=12;fontColor=default;labelBackgroundColor=none;resizable=0;startSize=8;endArrow=classic;endSize=8;" target="XaGkbeAYPzQFVitOS1kv-61" value="">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="XaGkbeAYPzQFVitOS1kv-65" connectable="0" parent="XaGkbeAYPzQFVitOS1kv-64" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=12;strokeColor=#0F8B8D;fontFamily=Arimo Nerd Font;fontColor=default;labelBackgroundColor=none;fillColor=#FAE5C7;" value="&lt;span style=&quot;background-color: light-dark(#ffffff, var(--ge-dark-color, #121212));&quot;&gt;NO&lt;/span&gt;" vertex="1">
+        <mxCell id="XaGkbeAYPzQFVitOS1kv-65" connectable="0" parent="XaGkbeAYPzQFVitOS1kv-64" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=12;strokeColor=#0F8B8D;fontFamily=Arial;fontColor=default;labelBackgroundColor=none;fillColor=#FAE5C7;" value="&lt;span style=&quot;background-color: light-dark(#ffffff, var(--ge-dark-color, #121212));&quot;&gt;NO&lt;/span&gt;" vertex="1">
           <mxGeometry relative="1" x="-0.0282" as="geometry">
             <mxPoint as="offset" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="XaGkbeAYPzQFVitOS1kv-54" parent="1" style="rhombus;whiteSpace=wrap;strokeColor=#0F8B8D;fontFamily=Arimo Nerd Font;fontSize=12;fontColor=#143642;labelBackgroundColor=none;fillColor=#FAE5C7;textDirection=ltr;html=1;shadow=1;" value="Contraseña != confirmación" vertex="1">
-          <mxGeometry height="80" width="142.66" x="273.66" y="880" as="geometry" />
+        <mxCell id="XaGkbeAYPzQFVitOS1kv-54" parent="1" style="rhombus;whiteSpace=wrap;strokeColor=#0F8B8D;fontFamily=Arial;fontSize=12;fontColor=#143642;labelBackgroundColor=none;fillColor=#FAE5C7;textDirection=ltr;html=1;shadow=1;" value="Contraseña != confirmación" vertex="1">
+          <mxGeometry height="80" width="142.66" x="273.66" y="890" as="geometry" />
         </mxCell>
-        <mxCell id="XaGkbeAYPzQFVitOS1kv-55" parent="1" style="rounded=1;whiteSpace=wrap;labelBackgroundColor=none;fillColor=#FAE5C7;strokeColor=#0F8B8D;fontColor=#143642;fontFamily=Arimo Nerd Font;html=1;shadow=1;" value="Muestra mensaje de contraseñas no coinciden" vertex="1">
-          <mxGeometry height="60" width="150" x="490.00000000000006" y="890" as="geometry" />
+        <mxCell id="enbMYnICaPQ543zTofBo-2" edge="1" parent="1" source="XaGkbeAYPzQFVitOS1kv-55" style="edgeStyle=elbowEdgeStyle;shape=connector;curved=0;rounded=1;orthogonalLoop=1;jettySize=auto;elbow=vertical;html=1;entryX=1;entryY=0.5;entryDx=0;entryDy=0;shadow=1;strokeColor=#A8201A;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=12;fontColor=default;labelBackgroundColor=default;resizable=0;startSize=8;endArrow=classic;endSize=8;" target="0zscgz5cWm1JYymeTCS0-1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="660" y="590" />
+            </Array>
+          </mxGeometry>
         </mxCell>
-        <mxCell id="XaGkbeAYPzQFVitOS1kv-63" edge="1" parent="1" source="XaGkbeAYPzQFVitOS1kv-61" style="edgeStyle=elbowEdgeStyle;shape=connector;curved=0;rounded=1;orthogonalLoop=1;jettySize=auto;elbow=vertical;html=1;shadow=1;strokeColor=#A8201A;align=center;verticalAlign=middle;fontFamily=Arimo Nerd Font;fontSize=12;fontColor=default;labelBackgroundColor=none;resizable=0;startSize=8;endArrow=classic;endSize=8;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" target="XaGkbeAYPzQFVitOS1kv-12" value="">
+        <mxCell id="XaGkbeAYPzQFVitOS1kv-55" parent="1" style="rounded=1;whiteSpace=wrap;labelBackgroundColor=none;fillColor=#FAE5C7;strokeColor=#0F8B8D;fontColor=#143642;fontFamily=Arial;html=1;shadow=1;" value="Muestra mensaje&amp;nbsp;&lt;div&gt;&quot;Las&amp;nbsp; contraseñas no coinciden.&quot;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="60" width="150" x="490.00000000000006" y="900" as="geometry" />
+        </mxCell>
+        <mxCell id="XaGkbeAYPzQFVitOS1kv-63" edge="1" parent="1" source="XaGkbeAYPzQFVitOS1kv-61" style="edgeStyle=elbowEdgeStyle;shape=connector;curved=0;rounded=1;orthogonalLoop=1;jettySize=auto;elbow=vertical;html=1;shadow=1;strokeColor=#A8201A;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=12;fontColor=default;labelBackgroundColor=none;resizable=0;startSize=8;endArrow=classic;endSize=8;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" target="XaGkbeAYPzQFVitOS1kv-12" value="">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="XaGkbeAYPzQFVitOS1kv-61" parent="1" style="rounded=1;whiteSpace=wrap;labelBackgroundColor=none;fillColor=#FAE5C7;strokeColor=#0F8B8D;fontColor=#143642;fontFamily=Arimo Nerd Font;html=1;shadow=1;" value="Da de alta al administrador" vertex="1">
-          <mxGeometry height="60" width="150" x="270.00000000000006" y="1020" as="geometry" />
+        <mxCell id="XaGkbeAYPzQFVitOS1kv-61" parent="1" style="rounded=1;whiteSpace=wrap;labelBackgroundColor=none;fillColor=#FAE5C7;strokeColor=#0F8B8D;fontColor=#143642;fontFamily=Arial;html=1;shadow=1;" value="Da de alta al administrador" vertex="1">
+          <mxGeometry height="60" width="150" x="270.00000000000006" y="1030" as="geometry" />
+        </mxCell>
+        <mxCell id="m5apbkuJhZvFJ7Ny_5fc-1" edge="1" parent="1" source="m5apbkuJhZvFJ7Ny_5fc-2" style="edgeStyle=elbowEdgeStyle;shape=connector;curved=0;rounded=1;orthogonalLoop=1;jettySize=auto;elbow=horizontal;html=1;shadow=1;strokeColor=#A8201A;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=12;fontColor=default;labelBackgroundColor=default;resizable=0;startSize=8;endArrow=classic;endSize=8;entryX=0;entryY=0.5;entryDx=0;entryDy=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;" target="m5apbkuJhZvFJ7Ny_5fc-3" value="SI">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="m5apbkuJhZvFJ7Ny_5fc-5" edge="1" parent="1" source="m5apbkuJhZvFJ7Ny_5fc-2" style="edgeStyle=elbowEdgeStyle;shape=connector;curved=0;rounded=1;orthogonalLoop=1;jettySize=auto;elbow=horizontal;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;shadow=1;strokeColor=#A8201A;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=12;fontColor=default;labelBackgroundColor=default;resizable=0;startSize=8;endArrow=classic;endSize=8;" target="XaGkbeAYPzQFVitOS1kv-49" value="NO">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="m5apbkuJhZvFJ7Ny_5fc-2" parent="1" style="rhombus;whiteSpace=wrap;strokeColor=#0F8B8D;fontFamily=Arial;fontSize=12;fontColor=#143642;labelBackgroundColor=none;fillColor=#FAE5C7;textDirection=ltr;html=1;shadow=1;" value="Falta la confirmación?" vertex="1">
+          <mxGeometry height="80" width="95" x="297.5" y="610" as="geometry" />
+        </mxCell>
+        <mxCell id="m5apbkuJhZvFJ7Ny_5fc-3" parent="1" style="rounded=1;whiteSpace=wrap;labelBackgroundColor=none;fillColor=#FAE5C7;strokeColor=#0F8B8D;fontColor=#143642;fontFamily=Arial;html=1;shadow=1;" value="Muestra mensaje&amp;nbsp;&lt;div&gt;&quot;Debe confirmar la contraseña.&quot;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="60" width="150" x="490" y="620" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>

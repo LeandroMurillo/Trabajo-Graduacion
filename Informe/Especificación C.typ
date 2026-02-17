@@ -51,7 +51,7 @@ Un actor interactúa con el sistema, pudiendo ser estos un usuario u otro sistem
   - #enlace(<CU06>)[CU06 - Modificar Empresa]
   - #enlace(<CU07>)[CU07 - Activar Empresa]
   - #enlace(<CU08>)[CU08 - Dar de baja Empresa]
-  //- #enlace(<CU09>)[CU09 - Borrar Empresa]
+  - #enlace(<CU09>)[CU09 - Borrar Empresa]
   - #enlace(<CU10>)[CU10 - Modificar Estilos de Empresa]
 
 #linebreak()
@@ -229,7 +229,7 @@ A continuación se encuentran los casos de uso más relevantes del sistema. Los 
 
     [Resumen:
 
-      Este caso de uso permite al superadministrador registrar un nuevo administrador en SGVac y vincularlo a una empresa.
+      Este caso de uso permite al superadministrador registrar un nuevo administrador en SGVac y vincularlo a una empresa activa.
     ],
 
     [Actores: Superadministrador (primario).],
@@ -252,7 +252,7 @@ A continuación se encuentran los casos de uso más relevantes del sistema. Los 
       1. El superadministrador elige la opción de añadir desde el menú de administradores.
       2. SGVac muestra un formulario para ingresar: correo electrónico, empresa, contraseña y confirmación de contraseña.
       3. El superadministrador completa los campos correo electrónico, contraseña y confirmación de contraseña y selecciona la empresa correspondiente.
-      4. SGVac valida los datos, registra al administrador, lo vincula a la empresa seleccionada y vuelve al caso de uso #enlace(<CU10>)[CU10 - Listar Administradores].
+      4. SGVac registra al administrador, lo vincula a la empresa seleccionada y vuelve al caso de uso #enlace(<CU10>)[CU10 - Listar Administradores].
     ],
 
     [Flujos Alternativos:
@@ -263,29 +263,29 @@ A continuación se encuentran los casos de uso más relevantes del sistema. Los 
         4. SGVac comunica al superadministrador que el correo, empresa, y/o contraseña son obligatorios.
         El escenario vuelve al punto 2.
 
-      - A2: el correo electrónico ya existe.
+      - A2: el correo ya existe.
 
         La secuencia A2 comienza en el punto 3 del escenario principal.
-        4. SGVac comunica al superadministrador que el correo electrónico ya existe.
+        4. SGVac comunica al superadministrador que ya existe un administrador con ese correo.
         El escenario vuelve al punto 2.
 
-      - A3: la empresa está inactiva.
+      - A3: el superadministrador ingresa una nueva contraseña pero no su confirmación.
 
         La secuencia A3 comienza en el punto 3 del escenario principal.
-        4. SGVac comunica al superadministrador que la empresa se encuentra inactiva.
-        El caso vuelve al punto 2.
+        4. SGVac comunica al superadministrador que debe confirmar la contraseña.
+        El escenario vuelve al punto 2.
 
-      - A4: el superadministrador introduce una contraseña con 5 caracteres o menos.
+      - A4: el administrador ingresa una contraseña con menos de 8 caracteres.
 
         La secuencia A4 comienza en el punto 3 del escenario principal.
-        4. SGVac comunica al superadministrador que la contraseña debe tener al menos 6 caracteres.
-        El caso vuelve al punto 2.
+        4. SGVac comunica al superadministrador que la contraseña debe tener al menos 8 caracteres.
+        El escenario vuelve al punto 2.
 
-      - A5: la contraseña no coincide con su confirmación.
+      - A5: la contraseña y su confirmación no coinciden.
 
         La secuencia A5 comienza en el punto 3 del escenario principal.
-        4. SGVac comunica al superadministrador que la contraseña no coincide con la confirmación.
-        El caso vuelve al punto 2.
+        4. SGVac comunica al superadministrador que las contraseñas no coinciden.
+        El escenario vuelve al punto 2.
     ],
   ),
 ) <CU12>

@@ -205,13 +205,17 @@ DROP TABLE IF EXISTS `proyecto`.`Cuotas`;
 CREATE TABLE IF NOT EXISTS `proyecto`.`Cuotas` (
   `idCuota` INT NOT NULL AUTO_INCREMENT,
   `idEmpresa` SMALLINT NOT NULL,
-  `monto` VARCHAR(45) NOT NULL,
+  `monto` DECIMAL(15,2) NOT NULL COMMENT
+    'Monto en pesos argentinos ARS',
   `fechaPago` DATE NOT NULL,
   PRIMARY KEY (`idCuota`),
 
   CONSTRAINT `FK_Cuotas_Empresas`
     FOREIGN KEY (`idEmpresa`) REFERENCES `proyecto`.`Empresas` (`idEmpresa`)
     ON DELETE NO ACTION ON UPDATE NO ACTION,
+
+  CONSTRAINT `check_cuotas_monto_positivo`
+    CHECK (`monto` >= 0),
 
   KEY `idx_cuotas_empresa` (`idEmpresa`),
   KEY `idx_cuotas_empresa_fechapago` (`idEmpresa`, `fechaPago`)

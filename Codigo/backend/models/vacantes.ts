@@ -1,15 +1,6 @@
 import db from '../database.js';
-import type { SortDir, EstadoVacante } from './types.ts';
-
-export type VacanteSortField =
-	| 'categoria'
-	| 'vacante'
-	| 'localidad'
-	| 'nivelExperiencia'
-	| 'fechaCreacion'
-	| 'fechaPublicacion'
-	| 'fechaCierre'
-	| 'estado';
+import type { Filtro } from '../schemas/filtroSchema.js';
+import type { EstadoVacante } from './types.ts';
 
 export type TipoTrabajo =
 	| 'Sin Especificar'
@@ -56,14 +47,6 @@ export interface VacanteAdmin {
 	nivelExperiencia: NivelExperiencia | null;
 	habilidades: string[];
 	estado: EstadoVacante;
-}
-
-export interface FiltroVacantesAvanzado {
-	categoria?: string | null;
-	offset?: number;
-	limit?: number;
-	sortField?: VacanteSortField;
-	sortDir?: SortDir;
 }
 
 export interface AltaVacanteData {
@@ -113,23 +96,14 @@ export default class Vacante {
 
 	static async dameVacantesAvanzado(
 		idEmpresa: number,
-		filtro: FiltroVacantesAvanzado,
+		filtro: Filtro,
 	): Promise<{ items: VacanteAdmin[]; itemCount: number }> {
-		const {
-			categoria = null,
-			offset = 0,
-			limit = 25,
-			sortField = 'fechaCreacion',
-			sortDir = 'desc',
-		} = filtro ?? {};
-
-		const [vacantes, meta] = await db.execute('CALL dameVacantesAvanzado(?, ?, ?, ?, ?, ?)', [
+		const [vacantes, meta] = await db.execute('CALL dameVacantesAvanzado(?, ?, ?, ?, ?)', [
 			idEmpresa,
-			categoria,
-			offset,
-			limit,
-			sortField,
-			sortDir,
+			filtro.page,
+			filtro.pageSize,
+			filtro.sort,
+			filtro.filter,
 		]);
 
 		const numeroFilas = meta?.[0]?.itemCount;

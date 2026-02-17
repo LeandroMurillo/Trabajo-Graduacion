@@ -1,8 +1,9 @@
 import bcrypt from 'bcryptjs';
 import { ZodError } from 'zod';
 
-import { EmpresaSchema } from '../schemas/empresaSchema.js';
+import { EmpresaSchema, cambiarEstadoEmpresaSchema } from '../schemas/empresaSchema.js';
 import AdministradorSchema from '../schemas/administradorSchema.js';
+import { FiltroSchema } from '../schemas/filtroSchema.js';
 
 import Empresa from '../models/empresas.js';
 import Administrador from '../models/administradores.js';
@@ -11,14 +12,14 @@ import Cuota from '../models/cuotas.js';
 export default class SuperadminController {
 	static async dameEmpresas(req, res) {
 		try {
-			const empresas = await Empresa.dameEmpresas();
+			const soloActivas = String(req.query.soloActivas ?? 'false') === 'true';
+			const empresas = await Empresa.dameEmpresas(soloActivas);
 			return res.status(200).json(empresas);
 		} catch (error) {
 			console.error('Error al obtener empresas:', error);
 			return res.status(500).json({ error: 'Error interno del servidor' });
 		}
 	}
-
 	static async dameEmpresa(req, res) {
 		try {
 			const idEmpresa = Number(req.params.id);
@@ -98,25 +99,43 @@ export default class SuperadminController {
 
 	static async cambiarEstadoEmpresa(req, res) {
 		try {
-			const idEmpresa = Number(req.params.id);
-			const { estado } = req.body;
+			const parsed = cambiarEstadoEmpresaSchema.parse({
+				id: req.params.id,
+				estado: req.body?.estado,
+			});
 
-			if (!Number.isInteger(idEmpresa) || idEmpresa <= 0) {
-				return res.status(400).json({ error: 'idEmpresa inválido.' });
-			}
+			await Empresa.cambiarEstadoEmpresa(parsed.id, parsed.estado);
 
-			const resultado = await Empresa.cambiarEstadoEmpresa(idEmpresa, estado);
-
-			if (!resultado) {
-				return res.status(500).json({ error: 'Respuesta inválida del SP.' });
-			}
-
-			if (resultado.mensaje === 'OK') {
-				return res.status(200).json({ message: 'Estado actualizado.' });
-			}
-
-			return res.status(400).json({ error: resultado.mensaje });
+			return res.sendStatus(204);
 		} catch (error) {
+			if (error?.issues) {
+				return res.status(400).json({
+					error: 'Datos inválidos.',
+					issues: error.issues,
+				});
+			}
+
+			if (error?.sqlState === '45000' || error?.code === 'ER_SIGNAL_EXCEPTION') {
+				switch (error.message) {
+					case 'EMPRESA_ID_INVALIDA':
+						return res.status(400).json({ error: 'idEmpresa inválido.' });
+
+					case 'EMPRESA_NO_EXISTE':
+						return res.status(404).json({ error: 'No se encontró la empresa.' });
+
+					case 'EMPRESA_SISTEMA_NO_MODIFICABLE':
+						return res
+							.status(409)
+							.json({ error: 'No se permite modificar la empresa del sistema.' });
+
+					case 'EMPRESA_YA_EN_ESE_ESTADO':
+						return res.status(409).json({ error: 'La empresa ya estaba en ese estado.' });
+
+					default:
+						return res.status(400).json({ error: 'Operación inválida.' });
+				}
+			}
+
 			console.error('AdminController.cambiarEstadoEmpresa:', error);
 			return res.status(500).json({ error: 'Error interno del servidor.' });
 		}
@@ -213,16 +232,11 @@ export default class SuperadminController {
 		try {
 			const { email, empresa, clave } = AdministradorSchema.altaAdministrador.parse(req.body);
 
-			const emailNorm = String(email ?? '')
-				.trim()
-				.toLowerCase();
-			const empresaNorm = String(empresa ?? '').trim();
-
-			const claveHash = await bcrypt.hash(String(clave), 10);
+			const claveHash = await bcrypt.hash(clave, 10);
 
 			const creado = await Administrador.altaAdministrador({
-				email: emailNorm,
-				empresa: empresaNorm,
+				email,
+				empresa,
 				claveHash,
 			});
 
@@ -235,11 +249,11 @@ export default class SuperadminController {
 				});
 			}
 
-			const sqlState = error?.sqlState || error?.sqlstate;
+			const sqlState = error?.sqlState;
 			const errno = error?.errno;
-			const code = String(error?.message ?? '');
+			const code = error?.sqlMessage;
 
-			if (sqlState === '23000' || errno === 1062 || code === 'EMAIL_DUPLICADO') {
+			if (errno === 1062 || (sqlState === '23000' && code === 'EMAIL_DUPLICADO')) {
 				return res.status(409).json({ error: 'Ya existe un administrador con ese correo.' });
 			}
 
@@ -254,45 +268,28 @@ export default class SuperadminController {
 				}
 			}
 
-			console.error('Error al crear administrador:', error);
 			return res.status(500).json({ error: 'Error interno del servidor.' });
 		}
 	}
 
 	static async modificaAdministrador(req, res) {
 		try {
-			const id = Number(req.params.id);
+			const { id } = AdministradorSchema.adminIdParams.parse(req.params);
+			const { email, empresa, clave } = AdministradorSchema.modificaAdministrador.parse(req.body);
 
-			if (!Number.isInteger(id) || id <= 0) {
-				return res.status(400).json({ message: 'ID_INVALIDO' });
-			}
+			const claveHash = clave ? await bcrypt.hash(clave, 10) : null;
 
-			const parsed = AdministradorSchema.modificaAdministrador.safeParse(req.body);
-			if (!parsed.success) {
-				const first = parsed.error.issues[0];
-				return res.status(400).json({ message: first?.message ?? 'DATOS_INVALIDOS' });
-			}
-
-			const { email, empresa, clave } = parsed.data;
-
-			const emailNorm = typeof email === 'string' ? String(email).trim().toLowerCase() : null;
-			const empresaNorm = typeof empresa === 'string' ? String(empresa).trim() : null;
-
-			let claveHash = null;
-			if (typeof clave === 'string' && clave.trim()) {
-				claveHash = await bcrypt.hash(String(clave).trim(), 10);
-			}
-
-			const data = {
-				email: emailNorm,
-				empresa: empresaNorm,
+			const administradorModificado = await Administrador.modificaAdministrador(id, {
+				email: email ?? null,
+				empresa: empresa ?? null,
 				claveHash,
-			};
+			});
 
-			const row = await Administrador.modificaAdministrador(id, data);
-			return res.status(200).json(row);
+			return res.status(200).json(administradorModificado);
 		} catch (error) {
 			const msg = String(error?.message ?? '');
+
+			console.log(error);
 
 			if (error?.sqlState === '45000' || error?.code === 'ER_SIGNAL_EXCEPTION') {
 				switch (msg) {
@@ -313,8 +310,8 @@ export default class SuperadminController {
 				}
 			}
 
-			if (error?.code === 'ER_DUP_ENTRY' || error?.errno === 1062) {
-				return res.status(409).json({ error: 'El correo ya pertenece a otro administrador.' });
+			if (error?.code === 'ER_DUP_ENTRY') {
+				return res.status(409).json({ error: 'Ya existe un administrador con ese correo.' });
 			}
 
 			console.error('modificaAdministrador:', error);
@@ -350,53 +347,18 @@ export default class SuperadminController {
 		}
 	}
 
-	static async listarCuotas(req, res) {
+	static async dameCuotas(req, res) {
 		try {
-			const idEmpresa =
-				req.query.idEmpresa === undefined ||
-				req.query.idEmpresa === null ||
-				req.query.idEmpresa === ''
-					? null
-					: Number.parseInt(String(req.query.idEmpresa), 10);
+			const query = FiltroSchema.parse(req.query);
 
-			if (idEmpresa !== null && !Number.isFinite(idEmpresa)) {
-				return res.status(400).json({ error: 'idEmpresa inválido.' });
-			}
+			const { items, itemCount } = await Cuota.dameCuotas(query);
 
-			const page = Math.max(1, Number.parseInt(String(req.query.page ?? '1'), 10) || 1);
-			const pageSize = Math.min(
-				200,
-				Math.max(1, Number.parseInt(String(req.query.pageSize ?? '25'), 10) || 25),
-			);
-
-			const sortDirRaw = String(req.query.sortDir ?? 'desc').toLowerCase();
-			const sortDir = sortDirRaw === 'asc' ? 'asc' : 'desc';
-
-			const sortByRaw = req.query.sortBy ? String(req.query.sortBy) : null;
-			const sortByMap = {
-				id: 'idCuota',
-				idCuota: 'idCuota',
-				idEmpresa: 'idEmpresa',
-				empresa: 'empresa',
-				monto: 'monto',
-				fechaPago: 'fechaPago',
-			};
-
-			const sortBy = sortByRaw ? (sortByMap[sortByRaw] ?? null) : null;
-
-			const items = await Cuota.dameCuotas(idEmpresa, page, pageSize, sortBy, sortDir);
-
-			// Opción B: itemCount = cantidad de items en esta página
-			const itemCount = items.length;
-
-			// opcional: normalizar monto a number
-			const normalizedItems = items.map((it) => ({
-				...it,
-				monto: typeof it.monto === 'string' ? Number(it.monto) : it.monto,
-			}));
-
-			return res.status(200).json({ items: normalizedItems, itemCount });
+			return res.status(200).json({ items, itemCount });
 		} catch (error) {
+			if (error?.name === 'ZodError') {
+				console.log('filter recibido:', req.query.filter);
+				return res.status(400).json({ error: 'Parámetros inválidos', issues: error.issues });
+			}
 			console.error('Error al obtener cuotas:', error);
 			return res.status(500).json({ error: 'Error interno del servidor' });
 		}

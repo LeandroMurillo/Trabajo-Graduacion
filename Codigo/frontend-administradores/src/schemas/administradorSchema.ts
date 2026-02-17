@@ -14,7 +14,7 @@ export const empresaSchema = z
 		required_error: 'Debe seleccionar una empresa.',
 	})
 	.trim()
-	.min(1, 'Debe seleccionar una empresa.')
+	.min(1, 'Debe seleccionar una empresa activa.')
 	.max(100, 'La empresa no puede superar 100 caracteres.');
 
 export const passwordSchema = z

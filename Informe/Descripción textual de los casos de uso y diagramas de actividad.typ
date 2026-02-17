@@ -199,6 +199,7 @@
   caption: [Diagrama de actividad: Listar Empresas],
 )
 
+// TODO: NI SIQUIERA ESTÁ HECHO!!!!!!!!!!!!
 #pagebreak()
 #figure(
   caption: [Modificar Empresa],
@@ -228,8 +229,8 @@
     [Escenario principal:
 
       1. El superadministrador ejecuta el #enlace(<CU04>)[CU04 - Listar Empresas] y elige la opción modificar de la empresa elegida.
-      2. El sistema muestra al superadministrador un formulario para que modifique la empresa.
-      3. El superadministrador introduce los datos de la empresa.
+      2. El sistema muestra al superadministrador un formulario para que modifique el nombre de la empresa y el _slug_ del sitio web.
+      3. El superadministrador introduce el nombre de la empresa y el _slug_ del sitio web.
       4. El sistema modifica la empresa y vuelve al #enlace(<CU04>)[CU04 - Listar Empresas].
     ],
 
@@ -257,9 +258,8 @@
 ) <CU06>
 
 #figure(
-  // TODO: NI SIQUIERA ESTÁ HECHO!!!!!!!!!!!!
   image("Actividad/Modificar Empresa.drawio.png", width: 100%),
-  //image-huerotate(read("Actividad/Modificar Empresa.drawio.png", encoding: none), amount: 100),
+  // image-huerotate(read("Actividad/Modificar Empresa.drawio.png", encoding: none), amount: 100),
   caption: [Diagrama de actividad: Modificar Empresas],
 )
 
@@ -349,8 +349,7 @@
   caption: [Diagrama de actividad: Dar de Baja Empresa],
 )
 
-// TODO: NO EXISTE !!!!!!!!
-/*#pagebreak()
+#pagebreak()
 #figure(
   caption: [Borrar Empresa],
   table(
@@ -360,13 +359,13 @@
 
     [Resumen:
 
-      Este caso de uso permite al superadministrador borrar una empresa existente.],
+      Este caso de uso permite al superadministrador borrar una empresa cliente existente, siempre y cuando esté en estado Inactiva.],
 
     [Actores: Superadministrador (primario).],
 
     [Personal involucrado y metas:
 
-      Superadministrador: quiere borrar una empresa existente de forma rápida y confiable.],
+      Superadministrador: quiere borrar una empresa cliente existente de forma rápida y confiable.],
 
     [Precondiciones:
 
@@ -374,19 +373,56 @@
 
     [Postcondiciones:
 
-      Se da de baja la empresa.],
+      Se borra la empresa.],
 
     [Escenario principal:
 
       1. El superadministrador ejecuta el #enlace(<CU04>)[CU04 - Listar Empresas] y elige la opción borrar la empresa elegida.
-      2. El sistema muestra al superadministrador una confirmación del borrado de la empresa.
+      2. SGVac muestra al superadministrador una confirmación del borrado de la empresa.
       3. El superadministrador confirma el borrado.
-      4. El sistema da de baja la empresa y vuelve al #enlace(<CU04>)[CU04 - Listar Empresas].
+      4. SGVac borra la empresa y vuelve al #enlace(<CU04>)[CU04 - Listar Empresas].
     ],
 
-    [Flujos alternativos: No hay.],
+    [Flujos alternativos:
+
+      - A1: el superadministrador no confirma el borrado de la empresa
+
+        La secuencia A1 comienza en el punto 2 del escenario principal.
+        3. El administrador decide no confirmar el borrado de la empresa.
+        El caso de uso termina.
+
+      - A2: la empresa a borrar está en estado Activa
+
+        La secuencia A2 comienza en el punto 3 del escenario principal.
+        3. SGVac informa al superadministrador que la empresa está activa y debe inactivar la empresa para borrarla.
+        El caso de uso termina.
+
+      - A3: la empresa a borrar tiene categorias asociadas
+
+        La secuencia A3 comienza en el punto 3 del escenario principal.
+        3. SGVac informa al superadministrador que no puede borrar la empresa porque tiene categorias asociadas.
+        El caso de uso termina.
+
+      - A4: la empresa a borrar tiene cuotas asociadas
+
+        La secuencia A4 comienza en el punto 3 del escenario principal.
+        3. SGVac informa al superadministrador que no puede borrar la empresa porque tiene cuotas asociadas.
+        El caso de uso termina.
+
+      - A5: la empresa a borrar tiene administradores asociadas
+
+        La secuencia A5 comienza en el punto 3 del escenario principal.
+        3. SGVac informa al superadministrador que no puede borrar la empresa porque tiene administradores asociadas.
+        El caso de uso termina.
+
+    ],
   ),
-) <CU09>*/
+) <CU09>
+
+#figure(
+  image("Actividad/Borrar Empresa.drawio.png", width: 100%),
+  caption: [Diagrama de actividad: Borrar Empresa],
+)
 
 #pagebreak()
 #figure(
@@ -530,41 +566,47 @@
     [Escenario principal:
 
       1. El superadministrador accede a la sección Administradores y selecciona un administrador existente para modificar.
-      2. SGVac muestra al superadministrador un formulario para que modifique el correo y la empresa del postulante y/o ingrese una nueva contraseña junto con su confirmación.
-      3. El superadministrador modifica el correo y la empresa del administrador y/o introduce una nueva contraseña junto con su confirmación.
+      2. SGVac muestra al superadministrador un formulario para que modifique el correo electrónico y la empresa (activa) del postulante y/o ingrese una nueva contraseña junto con su confirmación.
+      3. El superadministrador modifica el correo electrónico y la empresa del administrador y/o introduce una nueva contraseña junto con su confirmación.
       4. SGVac modifica el administrador y vuelve al #enlace(<CU11>)[CU11 - Listar Administradores].
     ],
 
     [Flujos alternativos:
 
-      - A1: el superadministrador no ingresa un correo válido o la empresa del administrador.
+      - A1: el superadministrador ingresa un correo vacío.
 
         La secuencia A1 comienza en el punto 3 del escenario principal.
-        4. SGVac comunica al administrador que el correo y la empresa del administrador son obligatorios o que el texto ingresado no es un correo válido.
+        4. SGVac comunica al superadministrador que el correo no puede estar vacío.
         El escenario vuelve al punto 2.
 
-      - A2: el correo del administrador ya existe.
+      - A2: el superadministrador ingresa un correo en un formato no válido.
 
         La secuencia A2 comienza en el punto 3 del escenario principal.
-        4. SGVac comunica al administrador que el correo ya pertenece a otro administrador.
+        4. SGVac comunica al superadministrador que el texto ingresado no es un correo válido.
         El escenario vuelve al punto 2.
 
-      - A3: el superadministrador ingresa una nueva contraseña pero no su confirmación.
+      - A3: el correo ya existe.
 
         La secuencia A3 comienza en el punto 3 del escenario principal.
-        4. SGVac comunica al administrador que debe confirmar la contraseña.
+        4. SGVac comunica al superadministrador que ya existe un administrador con ese correo.
         El escenario vuelve al punto 2.
 
-      - A4: el administrador ingresa una contraseña con menos de 8 caracteres.
+      - A4: el superadministrador ingresa una nueva contraseña pero no su confirmación.
 
         La secuencia A4 comienza en el punto 3 del escenario principal.
+        4. SGVac comunica al superadministrador que debe confirmar la contraseña.
+        El escenario vuelve al punto 2.
+
+      - A5: el administrador ingresa una contraseña con menos de 8 caracteres.
+
+        La secuencia A5 comienza en el punto 3 del escenario principal.
         4. SGVac comunica al superadministrador que la contraseña debe tener al menos 8 caracteres.
         El escenario vuelve al punto 2.
 
-      - A5: la contraseña y su confirmación no coinciden.
+      - A6: la contraseña y su confirmación no coinciden.
 
-        La secuencia A5 comienza en el punto 3 del escenario principal.
-        4. SGVac comunica al administrador que las contraseñas no coinciden.
+        La secuencia A6 comienza en el punto 3 del escenario principal.
+        4. SGVac comunica al superadministrador que las contraseñas no coinciden.
         El escenario vuelve al punto 2.
     ],
   ),
@@ -600,32 +642,22 @@
 
     [Postcondiciones:
 
-      Se da de baja el administrador.],
+      Se borra el administrador.],
 
     [Escenario principal:
 
       1. El superadministrador ejecuta el #enlace(<CU11>)[CU11 - Listar Administradores] y elige la opción borrar el administrador elegido.
-      2. El sistema muestra al superadministrador una confirmación del borrado del administrador.
+      2. SGVac muestra al superadministrador una confirmación del borrado del administrador.
       3. El superadministrador confirma el borrado.
-      4. El sistema da de baja al administrador y vuelve al#enlace(<CU11>)[CU11 - Listar Administradores].
+      4. SGVac borra el administrador y vuelve al #enlace(<CU11>)[CU11 - Listar Administradores].
     ],
 
     [Flujos alternativos:
 
-      - A1: el administrador no confirma los cambios realizados.
+      - A1: el superadministrador no confirma el borrado del administrador.
 
-        La secuencia A1 comienza en el punto 3 del escenario principal. \ El caso de uso termina.
-
-      - A2: el administrador es un superadministrador.
-
-        La secuencia A2 comienza en el punto 3 del escenario principal.
-        4. El sistema comunica al superadministrador que un superadministrador no puede ser borrado.
-        El caso de uso termina.
-
-      - A3: el administrador es el único de su empresa.
-
-        La secuencia A3 comienza en el punto 3 del escenario principal.
-        4. El sistema comunica al superadministrador que el administrador no se puede borrar el último administrador de una empresa.
+        La secuencia A1 comienza en el punto 2 del escenario principal.
+        3. El superadministrador decide no confirmar el borrado del administrador.
         El caso de uso termina.
     ],
   ),
@@ -885,10 +917,10 @@
 
     [Escenario principal:
 
-      1. El administrador ejecuta el CU03 - Buscar Categorías y elige la opción activar de la categoría elegida.
+      1. El administrador ejecuta el #enlace(<CU16>)[CU16 - Listar Categorías] y elige la opción activar de la categoría elegida.
       2. El sistema muestra al administrador una confirmación de la activación de la categoría.
       3. El administrador confirma la activación.
-      4. El sistema activa la categoría y vuelve al CU03 - Buscar Categorías.
+      4. El sistema activa la categoría y vuelve al #enlace(<CU16>)[CU16 - Listar Categorías].
     ],
 
     [Flujos alternativos:
@@ -941,7 +973,7 @@
 
     [Escenario principal:
 
-      1. El administrador ejecuta el #enlace(<CU15>)[CU15 - Listar Categorías] y elige la opción dar de baja de la categoría elegida.
+      1. El administrador ejecuta el #enlace(<CU16>)[CU16 - Listar Categorías] y elige la opción dar de baja de la categoría elegida.
       2. El sistema muestra al administrador una confirmación de la baja de la categoría.
       3. El administrador confirma la baja.
       4. El sistema da de baja la categoría y vuelve al #enlace(<CU16>)[CU16 - Listar Categorías].
@@ -1003,8 +1035,8 @@
 
     [Escenario principal:
 
-      1. El administrador ejecuta el #enlace(<CU16>)[CU16 - Listar Categorías] y elige la opción dar de baja de la categoría elegida.
-      2. El sistema muestra al administrador una confirmación de la baja de la categoría.
+      1. El administrador ejecuta el #enlace(<CU16>)[CU16 - Listar Categorías] y elige la opción de borrar la categoría elegida.
+      2. El sistema muestra al administrador una confirmación de la eliminación de la categoría.
       3. El administrador confirma el borrado.
       4. El sistema borra la categoría y vuelve al #enlace(<CU16>)[CU16 - Listar Categorías].
     ],
@@ -1385,9 +1417,9 @@
 
     [Escenario principal:
 
-      1. El Administrador accede al detalle (o edición) de una vacante de su empresa en estado Publicada.
+      1. El Administrador accede al detalle (o edición) de una vacante de su empresa en borrador.
       2. El Administrador selecciona la acción “Borrar”.
-      4. SGVac borra la vacante y vuelve a #enlace(<CU22>)[CU22 - Listar Vacantes Avanzado].
+      3. SGVac borra la vacante y vuelve a #enlace(<CU22>)[CU22 - Listar Vacantes Avanzado].
     ],
 
     [Flujos alternativos: No hay.],
@@ -1620,7 +1652,7 @@
       - A1: el administrador no confirma la activación del postulante.
 
         La secuencia A1 comienza en el punto 2 del escenario principal.
-        3. El administrador decide no confirmar la activación de la categoría.
+        3. El administrador decide no confirmar la activación del postulante.
         El caso de uso termina.
     ],
   ),
@@ -1850,7 +1882,7 @@
 
     [Escenario principal:
 
-      1. El postulante ejecuta el #enlace(<CU04>)[CU04 - Listar Empresas] y elige la opción dar de baja de la postulación elegida.
+      1. El postulante ejecuta el #enlace(<CU36>)[CU36 - Listar Mis Postulaciones] y elige la opción dar de baja de la postulación elegida.
       2. El sistema muestra al postulante una confirmación de la baja de la postulación.
       3. El postulante confirma la baja.
       4. El sistema borra la postulación.

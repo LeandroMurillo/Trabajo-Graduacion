@@ -3,10 +3,7 @@ import db from '../database.js';
 export type Genero = 'M' | 'F' | 'X';
 export type EstadoPostulante = 'P' | 'A' | 'I';
 
-export type Habilidades =
-	| string[]
-	| string
-	| null;
+export type Habilidades = string[] | string | null;
 
 export interface PostulanteListRow {
 	id: string;
@@ -64,6 +61,13 @@ export default class Postulante {
 		return (postulante ?? null) as PostulanteRow | null;
 	}
 
+	static async dameEstadoPostulante(id: string): Promise<EstadoPostulante> {
+		const [[row]] = await db.execute('CALL dameEstadoPostulante(?)', [id]);
+
+		const estado = row?.estado;
+		return estado as EstadoPostulante;
+	}
+
 	static async altaPostulante(data: AltaPostulanteData): Promise<string> {
 		const [[resultado]] = await db.execute('CALL altaPostulante(?, ?, ?, ?, ?, ?)', [
 			data.id,
@@ -101,5 +105,12 @@ export default class Postulante {
 
 		const mensaje = resultado?.mensaje;
 		return typeof mensaje === 'string' && mensaje.trim() ? mensaje : 'OK';
+	}
+
+	static async cambiarEstadoPostulante(
+		id: string,
+		estado: Exclude<EstadoPostulante, 'P'>,
+	): Promise<void> {
+		await db.execute('CALL cambiarEstadoPostulante(?, ?)', [id, estado]);
 	}
 }

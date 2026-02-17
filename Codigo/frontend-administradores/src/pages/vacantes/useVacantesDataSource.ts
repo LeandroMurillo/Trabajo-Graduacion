@@ -19,14 +19,8 @@ type Params = {
 function normalizeVacantePayload(input: Partial<Vacante>) {
 	return {
 		...input,
-
-		// DB: Vacantes.descripcion es TEXT NOT NULL => no mandes undefined
 		descripcion: input.descripcion ?? '',
-
-		// DB: nivelExperiencia enum NO tiene "Sin Especificar" y permite NULL
 		nivelExperiencia: input.nivelExperiencia === 'Sin Especificar' ? null : input.nivelExperiencia,
-
-		// CSV/string[] => JSON array (tu helper debería soportar ambos o al menos string)
 		habilidades: habilidadesCsvToJson((input as Record<string, unknown>)?.habilidades),
 	};
 }
@@ -70,10 +64,6 @@ export function useVacantesDataSource({ isCategoriaView, slug }: Params): DSWith
 			}) {
 				const params = new URLSearchParams();
 
-				if (isCategoriaView && slug) {
-					params.set('categoria', fromSlug(slug, 'lower'));
-				}
-
 				params.set('page', String(paginationModel.page));
 				params.set('pageSize', String(paginationModel.pageSize));
 
@@ -81,8 +71,15 @@ export function useVacantesDataSource({ isCategoriaView, slug }: Params): DSWith
 				const sortField = first?.field ? String(first.field) : 'fechaCreacion';
 				const sortDir = first?.sort === 'asc' ? 'asc' : 'desc';
 
-				params.set('sortField', sortField);
-				params.set('sortDir', sortDir);
+				params.set('sort', JSON.stringify([{ field: sortField, sort: sortDir }]));
+
+				const filter: Array<{ field: string; value?: unknown; operator?: string }> = [];
+
+				if (isCategoriaView && slug) {
+					filter.push({ field: 'categoria', value: fromSlug(slug, 'lower') });
+				}
+
+				params.set('filter', JSON.stringify(filter));
 
 				const url = `${API}/admin/vacantes?${params.toString()}`;
 				const res: { items: Vacante[]; itemCount: number } = await fetchJson(url);

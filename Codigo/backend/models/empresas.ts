@@ -1,5 +1,8 @@
+import type { z } from 'zod';
 import db from '../database.js';
-import { ResultadoMensajeRow, EstiloEmpresa } from './types.js';
+import { estiloEmpresaSchema } from '../schemas/empresaSchema.js';
+
+export type EstiloEmpresa = z.infer<typeof estiloEmpresaSchema> | null;
 
 export type EstadoEmpresa = 'A' | 'I';
 
@@ -21,8 +24,8 @@ export interface DameEmpresaPorSlugData {
 }
 
 export default class Empresa {
-	static async dameEmpresas(): Promise<EmpresaRow[]> {
-		const [empresas] = await db.execute('CALL dameEmpresas()', []);
+	static async dameEmpresas(soloActivas = false): Promise<EmpresaRow[]> {
+		const [empresas] = await db.execute('CALL dameEmpresas(?)', [soloActivas ? 1 : 0]);
 		return empresas as EmpresaRow[];
 	}
 
@@ -67,9 +70,7 @@ export default class Empresa {
 
 		const [[empresaCreada]] = await db.execute('CALL altaEmpresa(?, ?)', [empresa, url]);
 
-		if (!empresaCreada) {
-			throw new Error('ALTA_EMPRESA_SIN_RESULTADO');
-		}
+		if (!empresaCreada) throw new Error('ALTA_EMPRESA_SIN_RESULTADO');
 
 		return empresaCreada as EmpresaRow;
 	}
@@ -92,12 +93,8 @@ export default class Empresa {
 		return empresaActualizada as EmpresaRow;
 	}
 
-	static async cambiarEstadoEmpresa(
-		id: number,
-		estado: EstadoEmpresa,
-	): Promise<ResultadoMensajeRow> {
-		const [[row]] = await db.execute('CALL cambiarEstadoEmpresa(?, ?)', [id, estado]);
-		return row as ResultadoMensajeRow;
+	static async cambiarEstadoEmpresa(id: number, estado: EstadoEmpresa): Promise<void> {
+		await db.execute('CALL cambiarEstadoEmpresa(?, ?)', [id, estado]);
 	}
 
 	static async borraEmpresa(id: number): Promise<void> {
@@ -107,27 +104,20 @@ export default class Empresa {
 	static async dameEstiloEmpresa(idEmpresa: number): Promise<EstiloEmpresa> {
 		const [[row]] = await db.execute('CALL dameEstiloEmpresa(?)', [idEmpresa]);
 
-		if (!row) {
-			const err = new Error('EMPRESA_NO_ENCONTRADA');
-			err.name = 'NOT_FOUND';
-			throw err;
-		}
-
-		const raw = (row as { estilo: unknown }).estilo;
-
-		if (raw == null) return null;
-		if (typeof raw === 'string') return JSON.parse(raw) as EstiloEmpresa;
-
-		return raw as EstiloEmpresa;
+		const estilo = (row as { estilo: unknown }).estilo;
+		return estilo == null ? null : estiloEmpresaSchema.parse(estilo);
 	}
 
 	static async modificaEstiloEmpresa(
 		idEmpresa: number,
 		estilo: EstiloEmpresa,
-	): Promise<ResultadoMensajeRow> {
-		const [[row]] = await db.execute('CALL modificaEstiloEmpresa(?, ?)', [idEmpresa, estilo]);
+	): Promise<EstiloEmpresa> {
+		const [[row]] = await db.execute('CALL modificaEstiloEmpresa(?, ?)', [
+			idEmpresa,
+			estilo == null ? null : JSON.stringify(estilo),
+		]);
 
-		if (!row) throw new Error('SP_SIN_RESULTADO');
-		return row as ResultadoMensajeRow;
+		const saved = (row as { estilo: unknown }).estilo;
+		return saved == null ? null : estiloEmpresaSchema.parse(saved);
 	}
 }

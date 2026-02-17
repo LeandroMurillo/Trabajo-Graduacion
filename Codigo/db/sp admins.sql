@@ -31,6 +31,7 @@ DROP PROCEDURE IF EXISTS `borraVacante`;
 DROP PROCEDURE IF EXISTS `damePostulaciones`;
 DROP PROCEDURE IF EXISTS `borraPostulaciones`;
 DROP PROCEDURE IF EXISTS `damePostulantes`;
+DROP PROCEDURE IF EXISTS `cambiarEstadoPostulante`;
 
 -- ==========================
 -- Creación de Procedimientos Almacenados (Admin)
@@ -61,29 +62,31 @@ END//
 DELIMITER;
 
 DELIMITER //
-CREATE PROCEDURE `modificaEstiloEmpresa`(
-	IN pIdEmpresa SMALLINT,
-	IN pEstilo JSON
+CREATE PROCEDURE modificaEstiloEmpresa(
+  IN pIdEmpresa SMALLINT,
+  IN pEstilo JSON
 )
 BEGIN
-	-- Verificar que la empresa existe
-	IF NOT EXISTS (
-		SELECT 1
-		FROM Empresas
-		WHERE idEmpresa = pIdEmpresa
-	) THEN
-		SELECT 'ERROR: La empresa especificada no existe.' AS mensaje;
-	ELSE
-		-- Actualizar el campo estilo
-		UPDATE Empresas
-		SET estilo = pEstilo
-		WHERE idEmpresa = pIdEmpresa;
+  IF pIdEmpresa IS NULL OR pIdEmpresa <= 0 THEN
+    SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'EMPRESA_ID_INVALIDA';
+  END IF;
 
-		-- Confirmar éxito
-		SELECT 'OK' AS mensaje;
-	END IF;
+  IF NOT EXISTS (SELECT 1 FROM Empresas WHERE idEmpresa = pIdEmpresa) THEN
+    SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'EMPRESA_NO_ENCONTRADA';
+  END IF;
+
+  UPDATE Empresas
+  SET estilo = pEstilo
+  WHERE idEmpresa = pIdEmpresa
+  LIMIT 1;
+
+  SELECT estilo
+  FROM Empresas
+  WHERE idEmpresa = pIdEmpresa
+  LIMIT 1;
 END //
-DELIMITER;
+DELIMITER ;
+
 
 DELIMITER //
 CREATE PROCEDURE `dameCategorias`(
@@ -340,34 +343,172 @@ DELIMITER ;
 DELIMITER //
 CREATE PROCEDURE dameVacantesAvanzado(
   IN pIdEmpresa  SMALLINT,
-  IN pCategoria  VARCHAR(50),
-  IN pOffset     INT,
-  IN pLimit      INT,
-  IN pSortField  VARCHAR(32),
-  IN pSortDir    VARCHAR(4)
+  IN pPage       INT,
+  IN pPageSize   INT,
+  IN pSort       LONGTEXT,
+  IN pFilter     LONGTEXT
 )
 BEGIN
-  DECLARE vDir VARCHAR(4);
-  DECLARE vOrderCol VARCHAR(64);
-  DECLARE vCategoria VARCHAR(50);
+  DECLARE vPage INT DEFAULT 0;
+  DECLARE vPageSize INT DEFAULT 25;
+  DECLARE vOffset INT DEFAULT 0;
 
-  SET vCategoria = NULLIF(TRIM(pCategoria), '');
-  SET vDir = IF(UPPER(pSortDir) = 'ASC', 'ASC', 'DESC');
+  DECLARE vSortField VARCHAR(64) DEFAULT NULL;
+  DECLARE vSortDir VARCHAR(4) DEFAULT 'DESC';
+  DECLARE vOrderExpr VARCHAR(256) DEFAULT 'v.fechaCreacion';
 
-  SET vOrderCol = CASE pSortField
-    WHEN 'categoria'        THEN 'c.categoria'
-    WHEN 'vacante'          THEN 'v.vacante'
-    WHEN 'localidad'        THEN 'v.localidad'
-    WHEN 'nivelExperiencia' THEN 'v.nivelExperiencia'
-    WHEN 'fechaCreacion'    THEN 'v.fechaCreacion'
-    WHEN 'fechaPublicacion' THEN 'v.fechaPublicacion'
-    WHEN 'fechaCierre'      THEN 'v.fechaCierre'
-    WHEN 'estado'           THEN 'v.estado'
-    ELSE 'v.fechaCreacion'
-  END;
+  DECLARE vCategoriaLike VARCHAR(255) DEFAULT NULL;
 
-  /* ====== 1) query de items (paginada) ====== */
-  SET @sqlItems = CONCAT(
+  DECLARE vVacanteLike VARCHAR(255) DEFAULT NULL;
+  DECLARE vLocalidadLike VARCHAR(255) DEFAULT NULL;
+  DECLARE vEstado VARCHAR(8) DEFAULT NULL;
+  DECLARE vNivel VARCHAR(32) DEFAULT NULL;
+
+  IF pIdEmpresa IS NULL OR pIdEmpresa <= 0 THEN
+    SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'EMPRESA_INVALIDA';
+  END IF;
+
+  SET vPage = IFNULL(pPage, 0);
+  IF vPage < 0 THEN SET vPage = 0; END IF;
+
+  SET vPageSize = IFNULL(pPageSize, 25);
+  IF vPageSize < 1 THEN SET vPageSize = 25; END IF;
+  IF vPageSize > 200 THEN SET vPageSize = 200; END IF;
+
+  SET vOffset = vPage * vPageSize;
+
+  -- ===== sort (primer criterio) =====
+  IF pSort IS NOT NULL
+     AND JSON_VALID(pSort)
+     AND JSON_TYPE(pSort) = 'ARRAY'
+     AND JSON_LENGTH(pSort) > 0 THEN
+
+    SET vSortField = JSON_UNQUOTE(JSON_EXTRACT(pSort, '$[0].field'));
+    SET vSortDir   = UPPER(JSON_UNQUOTE(JSON_EXTRACT(pSort, '$[0].sort')));
+
+    SET vSortField = NULLIF(TRIM(IFNULL(vSortField, '')), '');
+    IF vSortDir NOT IN ('ASC','DESC') THEN SET vSortDir = 'DESC'; END IF;
+  END IF;
+
+  -- ===== filter =====
+  IF pFilter IS NOT NULL
+     AND JSON_VALID(pFilter)
+     AND JSON_TYPE(pFilter) = 'ARRAY'
+     AND JSON_LENGTH(pFilter) > 0 THEN
+
+    -- categoria: LIKE (consistente con cuotas)
+    SELECT NULLIF(TRIM(jt.value), '')
+      INTO vCategoriaLike
+    FROM JSON_TABLE(
+      pFilter, '$[*]'
+      COLUMNS(
+        field VARCHAR(64) PATH '$.field',
+        value VARCHAR(255) PATH '$.value' NULL ON ERROR
+      )
+    ) jt
+    WHERE jt.field = 'categoria'
+      AND jt.value IS NOT NULL
+      AND jt.value <> ''
+    LIMIT 1;
+
+    IF vCategoriaLike IS NOT NULL THEN
+      SET vCategoriaLike = CONCAT('%', vCategoriaLike, '%');
+    END IF;
+
+    -- vacante/titulo: LIKE
+    SELECT NULLIF(TRIM(jt.value), '')
+      INTO vVacanteLike
+    FROM JSON_TABLE(
+      pFilter, '$[*]'
+      COLUMNS(
+        field VARCHAR(64) PATH '$.field',
+        value VARCHAR(255) PATH '$.value' NULL ON ERROR
+      )
+    ) jt
+    WHERE jt.field IN ('vacante','titulo')
+      AND jt.value IS NOT NULL
+      AND jt.value <> ''
+    LIMIT 1;
+
+    IF vVacanteLike IS NOT NULL THEN
+      SET vVacanteLike = CONCAT('%', vVacanteLike, '%');
+    END IF;
+
+    -- localidad: LIKE
+    SELECT NULLIF(TRIM(jt.value), '')
+      INTO vLocalidadLike
+    FROM JSON_TABLE(
+      pFilter, '$[*]'
+      COLUMNS(
+        field VARCHAR(64) PATH '$.field',
+        value VARCHAR(255) PATH '$.value' NULL ON ERROR
+      )
+    ) jt
+    WHERE jt.field = 'localidad'
+      AND jt.value IS NOT NULL
+      AND jt.value <> ''
+    LIMIT 1;
+
+    IF vLocalidadLike IS NOT NULL THEN
+      SET vLocalidadLike = CONCAT('%', vLocalidadLike, '%');
+    END IF;
+
+    -- estado: exact
+    SELECT NULLIF(TRIM(jt.value), '')
+      INTO vEstado
+    FROM JSON_TABLE(
+      pFilter, '$[*]'
+      COLUMNS(
+        field VARCHAR(64) PATH '$.field',
+        value VARCHAR(32) PATH '$.value' NULL ON ERROR
+      )
+    ) jt
+    WHERE jt.field = 'estado'
+      AND jt.value IS NOT NULL
+      AND jt.value <> ''
+    LIMIT 1;
+
+    -- nivelExperiencia: exact
+    SELECT NULLIF(TRIM(jt.value), '')
+      INTO vNivel
+    FROM JSON_TABLE(
+      pFilter, '$[*]'
+      COLUMNS(
+        field VARCHAR(64) PATH '$.field',
+        value VARCHAR(32) PATH '$.value' NULL ON ERROR
+      )
+    ) jt
+    WHERE jt.field = 'nivelExperiencia'
+      AND jt.value IS NOT NULL
+      AND jt.value <> ''
+    LIMIT 1;
+
+  END IF;
+
+  -- ===== map sort.field =====
+  -- Nota: para fechas, forzamos "NULL al final" tanto en ASC como en DESC.
+  IF vSortField = 'categoria' THEN
+    SET vOrderExpr = 'c.categoria';
+  ELSEIF vSortField IN ('titulo','vacante') THEN
+    SET vOrderExpr = 'v.vacante';
+  ELSEIF vSortField = 'localidad' THEN
+    SET vOrderExpr = 'v.localidad';
+  ELSEIF vSortField = 'nivelExperiencia' THEN
+    SET vOrderExpr = 'v.nivelExperiencia';
+  ELSEIF vSortField IN ('publicacion','fechaPublicacion') THEN
+    SET vOrderExpr = 'CASE WHEN v.fechaPublicacion IS NULL THEN 1 ELSE 0 END, v.fechaPublicacion';
+  ELSEIF vSortField IN ('cierre','fechaCierre') THEN
+    SET vOrderExpr = 'CASE WHEN v.fechaCierre IS NULL THEN 1 ELSE 0 END, v.fechaCierre';
+  ELSEIF vSortField = 'estado' THEN
+    SET vOrderExpr = 'v.estado';
+  ELSEIF vSortField = 'fechaCreacion' THEN
+    SET vOrderExpr = 'v.fechaCreacion';
+  ELSE
+    SET vOrderExpr = 'v.fechaCreacion';
+  END IF;
+
+  -- ===== items =====
+  SET @sql = CONCAT(
     'SELECT ',
     '  v.idVacante AS id, ',
     '  c.categoria AS categoria, ',
@@ -387,38 +528,60 @@ BEGIN
     '  ON c.idEmpresa = v.idEmpresa ',
     ' AND c.idCategoria = v.idCategoria ',
     'WHERE v.idEmpresa = ? ',
-    '  AND (? IS NULL OR c.categoria = ?) ',
-    'ORDER BY ', vOrderCol, ' ', vDir, ', v.idVacante DESC ',
+    '  AND (? IS NULL OR c.categoria LIKE ?) ',
+    '  AND (? IS NULL OR v.vacante LIKE ?) ',
+    '  AND (? IS NULL OR v.localidad LIKE ?) ',
+    '  AND (? IS NULL OR v.estado = ?) ',
+    '  AND (? IS NULL OR v.nivelExperiencia = ?) ',
+    'ORDER BY ', vOrderExpr, ' ', vSortDir, ', v.idVacante DESC ',
     'LIMIT ? OFFSET ?'
   );
 
-  PREPARE stmtItems FROM @sqlItems;
+  PREPARE stmt FROM @sql;
 
-  SET @p1 = pIdEmpresa;
-  SET @p2 = vCategoria;
-  SET @p3 = vCategoria;
-  SET @p4 = pLimit;
-  SET @p5 = pOffset;
+  SET @p1  = pIdEmpresa;
 
-  EXECUTE stmtItems USING @p1, @p2, @p3, @p4, @p5;
-  DEALLOCATE PREPARE stmtItems;
+  SET @p2  = vCategoriaLike;
+  SET @p3  = vCategoriaLike;
 
-  /* ====== 2) query de count (total) ====== */
-  SET @sqlCount = CONCAT(
-    'SELECT COUNT(*) AS itemCount ',
-    'FROM Vacantes v ',
-    'INNER JOIN Categorias c ',
-    '  ON c.idEmpresa = v.idEmpresa ',
-    ' AND c.idCategoria = v.idCategoria ',
-    'WHERE v.idEmpresa = ? ',
-    '  AND (? IS NULL OR c.categoria = ?) '
-  );
+  SET @p4  = vVacanteLike;
+  SET @p5  = vVacanteLike;
 
-  PREPARE stmtCount FROM @sqlCount;
+  SET @p6  = vLocalidadLike;
+  SET @p7  = vLocalidadLike;
 
-  /* reutilizamos @p1..@p3 */
-  EXECUTE stmtCount USING @p1, @p2, @p3;
-  DEALLOCATE PREPARE stmtCount;
+  SET @p8  = vEstado;
+  SET @p9  = vEstado;
+
+  SET @p10 = vNivel;
+  SET @p11 = vNivel;
+
+  SET @p12 = vPageSize;
+  SET @p13 = vOffset;
+
+  EXECUTE stmt USING
+    @p1,
+    @p2, @p3,
+    @p4, @p5,
+    @p6, @p7,
+    @p8, @p9,
+    @p10, @p11,
+    @p12, @p13;
+
+  DEALLOCATE PREPARE stmt;
+
+  -- ===== count =====
+  SELECT COUNT(*) AS itemCount
+  FROM Vacantes v
+  INNER JOIN Categorias c
+    ON c.idEmpresa = v.idEmpresa
+   AND c.idCategoria = v.idCategoria
+  WHERE v.idEmpresa = pIdEmpresa
+    AND (vCategoriaLike IS NULL OR c.categoria LIKE vCategoriaLike)
+    AND (vVacanteLike IS NULL OR v.vacante LIKE vVacanteLike)
+    AND (vLocalidadLike IS NULL OR v.localidad LIKE vLocalidadLike)
+    AND (vEstado IS NULL OR v.estado = vEstado)
+    AND (vNivel IS NULL OR v.nivelExperiencia = vNivel);
 
 END//
 DELIMITER ;
@@ -808,7 +971,6 @@ END //
 DELIMITER ;
 
 DELIMITER //
-
 CREATE PROCEDURE damePostulantes(
   IN pIdEmpresa SMALLINT
 )
@@ -836,7 +998,29 @@ BEGIN
     p.fechaNacimiento DESC,
     p.idPostulante ASC;
 END //
+DELIMITER ;
 
+DELIMITER //
+CREATE PROCEDURE cambiarEstadoPostulante(
+	IN pIdPostulante CHAR(28),
+	IN pEstado ENUM('A','I')
+)
+BEGIN
+	DECLARE vCount INT DEFAULT 0;
+
+	SELECT COUNT(*) INTO vCount
+	FROM Postulantes
+	WHERE idPostulante = pIdPostulante
+	LIMIT 1;
+
+	IF vCount = 0 THEN
+		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'POSTULANTE_NO_EXISTE';
+	END IF;
+
+	UPDATE Postulantes
+	SET estado = pEstado
+	WHERE idPostulante = pIdPostulante;
+END //
 DELIMITER ;
 
 -- ==========================

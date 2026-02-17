@@ -176,7 +176,7 @@ export async function loginPostulante(email: string, password: string): Promise<
 		method: 'POST',
 		headers: { 'Content-Type': 'application/json' },
 		credentials: 'include',
-		body: JSON.stringify({ email, contraseña: password }),
+		body: JSON.stringify({ email, password }),
 	});
 
 	if (!res.ok) {

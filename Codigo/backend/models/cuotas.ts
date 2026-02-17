@@ -1,33 +1,26 @@
-// src/models/Cuota.ts
 import db from '../database.js';
-import type { SortDir } from './types.ts';
-
-export type CuotaSortBy = 'idCuota' | 'idEmpresa' | 'empresa' | 'monto' | 'fechaPago';
+import type { Filtro } from '../schemas/filtroSchema.js';
 
 export interface CuotaRow {
-	idCuota: number;
-	idEmpresa: number;
+	id: number;
 	empresa: string;
-	monto: string;
+	url: string;
+	monto: number;
 	fechaPago: string;
 }
 
 export default class Cuota {
-	static async dameCuotas(
-		idEmpresa: number | null = null,
-		page = 1,
-		pageSize = 25,
-		sortBy: CuotaSortBy | null = null,
-		sortDir: SortDir = 'desc',
-	): Promise<CuotaRow[]> {
-		const [cuotas] = await db.execute('CALL dameCuotas(?, ?, ?, ?, ?)', [
-			idEmpresa,
-			page,
-			pageSize,
-			sortBy,
-			sortDir,
+	static async dameCuotas(filtro: Filtro): Promise<{ items: CuotaRow[]; itemCount: number }> {
+		const [cuotas, meta] = await db.execute('CALL dameCuotas(?, ?, ?, ?)', [
+			filtro.page,
+			filtro.pageSize,
+			filtro.sort,
+			filtro.filter,
 		]);
 
-		return Array.isArray(cuotas) ? (cuotas as CuotaRow[]) : [];
+		const numeroFilas = meta?.[0]?.itemCount;
+		const itemCount = Number(numeroFilas);
+
+		return { items: cuotas as CuotaRow[], itemCount };
 	}
 }

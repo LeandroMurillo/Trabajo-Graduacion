@@ -6,7 +6,10 @@ const categoria = z.preprocess(
 		.string({ required_error: 'El nombre de la categoría es obligatorio.' })
 		.min(1, 'La categoría no puede estar vacía.')
 		.max(50, 'La categoría no puede superar 50 caracteres.')
-		.regex(/^[\p{L}\p{N} ._-]+$/u, 'La categoría contiene caracteres inválidos.'),
+		.regex(
+			/^(?=.*\p{L})[\p{L} ]+$/u,
+			'La categoría contiene caracteres inválidos. Solo letras y espacios.',
+		),
 );
 
 const orden = z.coerce

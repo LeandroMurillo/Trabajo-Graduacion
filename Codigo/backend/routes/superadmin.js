@@ -16,4 +16,4 @@ superadminRoutes.post('/administradores', SuperadminController.altaAdministrador
 superadminRoutes.put('/administradores/:id', SuperadminController.modificaAdministrador);
 superadminRoutes.delete('/administradores/:id', SuperadminController.borraAdministrador);
 
-superadminRoutes.get('/cuotas', SuperadminController.listarCuotas);
+superadminRoutes.get('/cuotas', SuperadminController.dameCuotas);

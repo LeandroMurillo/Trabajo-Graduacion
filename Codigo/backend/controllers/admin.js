@@ -4,9 +4,15 @@ import Vacante from '../models/vacantes.js';
 import Postulacion from '../models/postulaciones.js';
 import Categoria from '../models/categorias.js';
 import Postulante from '../models/postulantes.js';
-import { estiloEmpresaSchema } from '../schemas/empresaSchema.js';
+import {
+	modificaEstiloEmpresaSchema,
+	estiloEmpresaColorsSchema,
+	estiloEmpresaSchema,
+} from '../schemas/empresaSchema.js';
 import CategoriaSchema from '../schemas/categoriaSchema.js';
 import VacanteSchema from '../schemas/vacanteSchema.js';
+import { cambiarEstadoPostulanteBodySchema } from '../schemas/postulanteSchema.js';
+import { FiltroSchema } from '../schemas/filtroSchema.js';
 import Curriculum from '../models/curriculums.js';
 
 export default class AdminController {
@@ -29,20 +35,33 @@ export default class AdminController {
 
 			const estilo = await Empresa.dameEstiloEmpresa(idEmpresa);
 
-			if (estilo == null) {
-				return res.status(404).json({ error: 'No se encontró el estilo de la empresa.' });
-			}
+			const primaryColor =
+				estilo?.palette?.primary?.main ?? estiloEmpresaColorsSchema.parse({}).primaryColor;
 
-			return res.status(200).json(estilo);
+			return res.status(200).json({
+				id: String(idEmpresa),
+				primaryColor,
+			});
 		} catch (error) {
-			const msg = String(error?.message ?? '');
+			if (error?.sqlState === '45000' || error?.code === 'ER_SIGNAL_EXCEPTION') {
+				const msg = String(error?.sqlMessage ?? error?.message ?? '');
 
-			if (error?.name === 'NOT_FOUND' || msg.includes('EMPRESA_NO_ENCONTRADA')) {
-				return res.status(404).json({ error: 'Empresa no encontrada.' });
+				if (msg.includes('EMPRESA_ID_INVALIDA')) {
+					return res.status(400).json({ error: 'Empresa inválida.' });
+				}
+
+				if (msg.includes('EMPRESA_NO_ENCONTRADA')) {
+					return res.status(404).json({ error: 'Empresa no encontrada.' });
+				}
+
+				return res.status(409).json({ error: 'Operación no permitida.' });
 			}
 
-			console.error('Error al obtener estilo empresa:', error);
-			return res.status(500).json({ error: 'Error interno del servidor' });
+			console.error('Error al obtener estilo empresa:', {
+				name: error?.name,
+				message: error?.message,
+			});
+			return res.status(500).json({ error: 'Error interno del servidor.' });
 		}
 	}
 
@@ -51,42 +70,50 @@ export default class AdminController {
 			const idEmpresa = AdminController.getIdEmpresa(req, res);
 			if (!idEmpresa) return;
 
-			const { primaryColor, secondaryColor, errorColor } = req.body;
+			const { primaryColor } = modificaEstiloEmpresaSchema.parse(req.body);
 
-			const datosValidados = estiloEmpresaSchema.parse({
-				primaryColor,
-				secondaryColor,
-				errorColor,
-			});
+			const defaults = estiloEmpresaColorsSchema.parse({});
 
-			const estilo = {
+			const estilo = estiloEmpresaSchema.parse({
 				cssVariables: true,
 				palette: {
-					primary: { main: datosValidados.primaryColor },
-					secondary: { main: datosValidados.secondaryColor },
-					error: { main: datosValidados.errorColor },
+					primary: { main: primaryColor },
+					secondary: { main: defaults.secondaryColor },
+					error: { main: defaults.errorColor },
 				},
-			};
+			});
 
-			const { mensaje } = await Empresa.modificaEstiloEmpresa(idEmpresa, estilo);
+			const estiloGuardado = await Empresa.modificaEstiloEmpresa(idEmpresa, estilo);
 
-			if (mensaje !== 'OK') {
-				return res.status(400).json({ error: mensaje });
-			}
+			const savedPrimary = estiloGuardado?.palette?.primary?.main ?? primaryColor;
 
 			return res.status(200).json({
-				primaryColor: datosValidados.primaryColor,
-				secondaryColor: datosValidados.secondaryColor,
-				errorColor: datosValidados.errorColor,
+				id: String(idEmpresa),
+				primaryColor: savedPrimary,
 			});
 		} catch (error) {
-			const msg = String(error?.message ?? '');
-
-			if (error?.name === 'NOT_FOUND' || msg.includes('EMPRESA_NO_ENCONTRADA')) {
-				return res.status(404).json({ error: 'Empresa no encontrada.' });
+			if (error instanceof ZodError) {
+				return res.status(400).json({ error: 'Validación fallida', issues: error.issues });
 			}
 
-			console.error('Error al modificar estilo:', error);
+			if (error?.sqlState === '45000' || error?.code === 'ER_SIGNAL_EXCEPTION') {
+				const msg = String(error?.sqlMessage ?? error?.message ?? '');
+
+				if (msg.includes('EMPRESA_ID_INVALIDA')) {
+					return res.status(400).json({ error: 'Empresa inválida.' });
+				}
+
+				if (msg.includes('EMPRESA_NO_ENCONTRADA')) {
+					return res.status(404).json({ error: 'Empresa no encontrada.' });
+				}
+
+				return res.status(409).json({ error: 'Operación no permitida.' });
+			}
+
+			console.error('Error al modificar estilo empresa:', {
+				name: error?.name,
+				message: error?.message,
+			});
 			return res.status(500).json({ error: 'Error interno del servidor.' });
 		}
 	}
@@ -359,26 +386,19 @@ export default class AdminController {
 		if (!idEmpresa) return;
 
 		try {
-			const { categoria, offset, pageSize, sortField, sortDir } = VacanteSchema.dameVacantes.parse(
-				req.query,
-			);
+			const query = FiltroSchema.parse(req.query);
 
-			const { items, itemCount } = await Vacante.dameVacantesAvanzado(idEmpresa, {
-				categoria,
-				offset,
-				limit: pageSize,
-				sortField,
-				sortDir,
-			});
+			const { items, itemCount } = await Vacante.dameVacantesAvanzado(idEmpresa, query);
 
 			return res.status(200).json({ items, itemCount });
 		} catch (error) {
-			console.error('Error al obtener vacantes (admin):', error?.message ?? error);
-
-			if (error?.issues) {
-				return res.status(400).json({ error: 'Parámetros inválidos.', issues: error.issues });
+			if (error?.name === 'ZodError') {
+				console.log('sort recibido:', req.query.sort);
+				console.log('filter recibido:', req.query.filter);
+				return res.status(400).json({ error: 'Parámetros inválidos', issues: error.issues });
 			}
 
+			console.error('Error al obtener vacantes:', error);
 			return res.status(500).json({ error: 'Error interno del servidor' });
 		}
 	}
@@ -533,6 +553,44 @@ export default class AdminController {
 			return res.status(200).json(postulantes);
 		} catch (error) {
 			console.error('Error al obtener postulantes:', error);
+			return res.status(500).json({ error: 'Error interno del servidor' });
+		}
+	}
+
+	static async cambiarEstadoPostulante(req, res) {
+		try {
+			const idEmpresa = AdminController.getIdEmpresa(req, res);
+			if (!idEmpresa) return;
+
+			const idPostulante = String(req.params.id ?? '').trim();
+			if (!idPostulante) {
+				return res.status(400).json({ error: 'Parámetros inválidos.' });
+			}
+
+			const { estado } = cambiarEstadoPostulanteBodySchema.parse(req.body);
+
+			await Postulante.cambiarEstadoPostulante(idPostulante, estado);
+
+			return res.sendStatus(204);
+		} catch (error) {
+			if (error?.issues) {
+				return res.status(400).json({
+					error: 'Body inválido.',
+					issues: error.issues,
+				});
+			}
+
+			if (error?.sqlState === '45000' || error?.code === 'ER_SIGNAL_EXCEPTION') {
+				switch (error.message) {
+					case 'POSTULANTE_NO_EXISTE':
+						return res.status(404).json({ error: 'No se encontró el postulante.' });
+
+					default:
+						return res.status(409).json({ error: 'No se pudo cambiar el estado.' });
+				}
+			}
+
+			console.error('Error al cambiar estado de postulante:', error);
 			return res.status(500).json({ error: 'Error interno del servidor' });
 		}
 	}

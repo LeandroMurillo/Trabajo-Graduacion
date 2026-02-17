@@ -16,7 +16,7 @@ import VacanteCreate from './pages/vacantes/VacanteCreate';
 import PostulacionCrud from './pages/PostulacionCrud';
 import PostulanteList from './pages/PostulanteCrud';
 
-import Estilos from './pages/Estilos/Estilos';
+import Estilos from './pages/Estilos/EditarEstilos';
 
 import CuotasList from './pages/CuotasList';
 

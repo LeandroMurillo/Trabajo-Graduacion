@@ -1,10 +1,9 @@
-// src/data/estilos.ts
 import type { DataSource } from '@toolpad/core/Crud';
 import { Stack, TextField, Typography } from '@mui/material';
 
 export type Estilos = {
 	id: string;
-	primaryColor: string; // HEX: #RRGGBB
+	primaryColor: string;
 };
 
 export const estilosDataSource: DataSource<Estilos> = {

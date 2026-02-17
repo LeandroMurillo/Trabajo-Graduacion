@@ -23,6 +23,7 @@ DROP PROCEDURE IF EXISTS `dameVacantes`;
 DROP PROCEDURE IF EXISTS `altaPostulacionUsuario`;
 DROP PROCEDURE IF EXISTS `modificaPostulante`;
 DROP PROCEDURE IF EXISTS `loginUsuario`;
+DROP PROCEDURE IF EXISTS `dameEstadoPostulante`;
 DROP PROCEDURE IF EXISTS `altaPostulante`;
 DROP PROCEDURE IF EXISTS `cambiarClaveUsuario`;
 
@@ -42,14 +43,21 @@ BEGIN
 END//
 DELIMITER ;
 
-
 DELIMITER //
-CREATE PROCEDURE `dameEstiloEmpresa`(
-	IN pIdEmpresa SMALLINT
-)
+CREATE PROCEDURE dameEstiloEmpresa(IN pIdEmpresa SMALLINT)
 BEGIN
-	SELECT estilo FROM Empresas
-	WHERE idEmpresa = pIdEmpresa;
+  IF pIdEmpresa IS NULL OR pIdEmpresa <= 0 THEN
+    SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'EMPRESA_ID_INVALIDA';
+  END IF;
+
+  IF NOT EXISTS (SELECT 1 FROM Empresas WHERE idEmpresa = pIdEmpresa) THEN
+    SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'EMPRESA_NO_ENCONTRADA';
+  END IF;
+
+  SELECT estilo
+  FROM Empresas
+  WHERE idEmpresa = pIdEmpresa
+  LIMIT 1;
 END //
 DELIMITER ;
 
@@ -318,6 +326,27 @@ BEGIN
 			pId AS id,
 			pClave AS claveHasheada;
 	END IF;
+END //
+DELIMITER ;
+
+DELIMITER //
+CREATE PROCEDURE dameEstadoPostulante(
+	IN pIdPostulante CHAR(28)
+)
+BEGIN
+	DECLARE vEstado ENUM('P','A','I') DEFAULT NULL;
+
+	SELECT estado
+	INTO vEstado
+	FROM Postulantes
+	WHERE idPostulante = pIdPostulante
+	LIMIT 1;
+
+	IF vEstado IS NULL THEN
+		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'POSTULANTE_NO_EXISTE';
+	END IF;
+
+	SELECT vEstado AS estado;
 END //
 DELIMITER ;
 

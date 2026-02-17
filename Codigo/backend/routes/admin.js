@@ -17,8 +17,12 @@ adminRoutes.get('/vacantes/:id', AdminController.dameVacanteAdmin);
 adminRoutes.put('/vacantes/:id', AdminController.modificaVacante);
 adminRoutes.delete('/vacantes/:id', AdminController.borraVacante);
 
-adminRoutes.get('/postulaciones/:idPostulacion/curriculum', AdminController.dameCurriculumPostulacion);
+adminRoutes.get(
+	'/postulaciones/:idPostulacion/curriculum',
+	AdminController.dameCurriculumPostulacion,
+);
 adminRoutes.get('/postulantes', AdminController.damePostulantes);
+adminRoutes.patch('/postulantes/:id/estado', AdminController.cambiarEstadoPostulante);
 adminRoutes.get('/vacantes/:idVacante/postulaciones', AdminController.damePostulacionesPorVacante);
 adminRoutes.get(
 	'/postulantes/:idPostulante/postulaciones',

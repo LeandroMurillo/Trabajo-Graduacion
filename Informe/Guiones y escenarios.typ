@@ -2068,9 +2068,9 @@ Además, se incluyen controles de utilidad global en la cabecera, como el botón
 \
 Este escenario muestra el listado histórico de las aplicaciones realizadas por el postulante.
 
-En el encabezado se visualiza el título "Mis postulaciones". El cuerpo principal presenta una lista de tarjetas, donde cada una representa una postulación. En cada tarjeta se detalla el puesto al que se aplicó (PO_08_09), la categoría correspondiente (PO_08_10) y la fecha de postulación (PO_08_11). El estado de la solicitud se muestra mediante una etiqueta visual.
+En el encabezado se visualiza el título "Mis postulaciones". El cuerpo principal presenta una lista de tarjetas, donde cada una representa una postulación. En cada tarjeta se detalla el puesto al que se aplicó (PO_09_09), la categoría correspondiente (PO_09_10) y la fecha de postulación (PO_09_11). El estado de la solicitud se muestra mediante una etiqueta visual.
 
-Finalmente, cada tarjeta incluye un botón de acción "Dar de baja" (PO_08_12), que permite al usuario retirar su postulación de la vacante si así lo desea y un botón "Ver vacante" (PO_08_13) para cambiar a la vacante postulada.
+Finalmente, cada tarjeta incluye un botón de acción "Dar de baja" (PO_09_12), que permite al usuario retirar su postulación de la vacante si así lo desea y un botón "Ver vacante" (PO_09_13) para cambiar a la vacante postulada.
 
 #pagebreak()
 #figure(

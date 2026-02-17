@@ -12,19 +12,18 @@ Los objetivos de esta tarea son identificar a los responsables de cada una de la
 - Grupo de superadministradores: son las personas encargadas de gestionar la plataforma de empleos de forma global y gestionar el acceso de las empresas clientes a la plataforma.
 - Grupo de postulantes: son las personas que están en condiciones legales de solicitar un empleo en el sitio de la empresa.
 
-Es de destacar la necesidad de una participación activa de los usuarios del futuro sistema en las actividades de desarrollo del mismo, con objeto de conseguir la máxima adecuación del sistema a sus necesidades y facilitar el conocimiento paulatino, permitiendo una rápida implantación.
+Cabe destacar la necesidad de una participación activa de los usuarios del futuro sistema en las actividades de desarrollo del mismo, con el objetivo de lograr la máxima adecuación del sistema a sus necesidades y facilitando su conocimiento progresivo, lo que permitirá una rápida implantación.
 
 == Catálogo de requisitos del sistema
 
-El objetivo de la especificación es definir en forma clara, precisa, completa y verificable todas las funcionalidades y restricciones del sistema que se desea construir. Esta documentación está sujeta a revisiones por el grupo de administradores que se recogerán por medio de sucesivas
-versiones del documento, hasta alcanzar su aprobación por parte del comité ejecutivo o gerentes de la empresa que solicita la página de internet. Una vez aprobado, servirá de base al equipo para la construcción del nuevo sistema.
+El objetivo de la especificación es definir en forma clara, precisa, completa y verificable todas las funcionalidades y restricciones del sistema que se desea construir. Esta documentación está sujeta a revisiones por el grupo de administradores que se recogerán por medio de sucesivas versiones del documento, hasta alcanzar su aprobación por parte del comité ejecutivo o Gerentes de la empresa que solicita la página de internet. Una vez aprobado, servirá de base al equipo para la construcción del nuevo sistema.
 Esta especificación se ha realizado de acuerdo al estándar "_IEEE Recommended Practice for Software Requirements Specifications_ (IEEE/ANSI 830-1993)".
 
 == Objetivos y alcances del sistema
 
-El proyecto consiste en desarrollar una plataforma de empleos multiempresa que brinde a las empresas clientes, recursos para ofrecer y administrar sus vacantes de empleo. Cada empresa a través de una aplicación _web responsive_ puede gestionar sus vacantes, las categorías a las que estas pertenecen y sus postulantes. Además, la empresa debe tener la ilusión de que este sistema está hecho exclusivamente para ella.
+El proyecto consiste en desarrollar una plataforma de empleos multiempresa que brinde a las empresas clientes, recursos para ofrecer y administrar sus vacantes de empleo. Cada empresa a través de una aplicación _web responsive_ puede gestionar sus vacantes, las categorías a las que estas pertenecen y sus postulantes. Además, el sistema debe ofrecer una apariencia personalizada, de modo que la empresa perciba la plataforma como un entorno exclusivo.
 
-Debe permitir además a las personas, registrarse como postulante en la empresa, aplicar a una o más vacantes/* , modificar sus postulaciones */, ver su historial de vacantes y modificar su perfil.
+Además debe permitir a las personas a registrarse como postulante, postularse a una o más vacantes, ver su historial de vacantes y modificar su perfil.
 
 == Definiciones, acrónimos y abreviaturas
 
@@ -46,7 +45,7 @@ Debe permitir además a las personas, registrarse como postulante en la empresa,
 
 == Descripción general
 
-Esta sección nos presenta una descripción general del sistema con el fin de conocer las funciones que debe soportar, los datos asociados, las restricciones impuestas y cualquier otro factor que pueda influir en la construcción del mismo.
+Esta sección ofrece una descripción general del sistema con el propósito de identificar las funciones que debe soportar, los datos asociados, las restricciones impuestas y cualquier otro factor que pueda influir en su desarrollo.
 
 La plataforma de empleos multiempresa será administrada globalmente por un equipo de superadministradores, quienes asignarán recursos a cada empresa cliente y delegarán autoridad a sus respectivos grupos de administradores para gestionar de forma independiente los sitios web de empleos de cada empresa.
 
@@ -71,7 +70,7 @@ Grupo de Postulantes:
 Los postulantes serán personas que tengan un correo electrónico, la posibilidad de ingresar al sitio y que estén en condiciones legales de acceder a una vacante; que cumpla la edad legal mínima y que sea una persona capaz bajo la ley.
 Para registrarse en el sitio web de empleos de una empresa, primero, los postulantes deberán completar los siguientes datos: correo electrónico, contraseña, apellidos, nombres, fecha de nacimiento y género. Es importante que el usuario confirme estos datos antes de avanzar al siguiente paso de registro. La dirección de correo electrónico es obligatoria y única por empresa. La contraseña deberá tener una longitud mínima de 6 caracteres. Finalmente, se le enviará un correo electrónico a la dirección provista para activar la cuenta de usuario.
 
-Una vez que un postulante se encuentre activo pudiendo iniciar sesión, podrá agregar su currículum, editar sus datos personales, buscar y aplicar a vacantes según la categoría, y ver sus vacantes aplicadas.
+Una vez que un postulante se encuentre activo y habilitado para iniciar sesión, podrá cargar su currículum, editar sus datos personales, buscar y aplicar a vacantes según la categoría, y ver sus vacantes aplicadas.
 
 Un postulante puede darse de baja por comportamiento inapropiado, contrario a las políticas de la empresa. El postulante pendiente es aquel que está en el proceso de registro y confirmación.
 

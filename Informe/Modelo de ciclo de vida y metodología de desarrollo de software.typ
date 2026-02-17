@@ -3,7 +3,7 @@
 
 El ciclo de vida del software es la estructura que nos permite organizar el desarrollo desde la idea inicial hasta que el sistema deja de utilizarse. Básicamente, define el orden de las etapas y qué criterios debemos cumplir para avanzar de una fase a otra.
 
-Para nuestro proyecto, seleccionar el modelo adecuado es clave. Sin una estructura clara, sería muy difícil planificar tiempos, estimar costos o coordinar el trabajo. El ciclo de vida nos da el marco necesario para asignar recursos y dirigir el proyecto de manera efectiva, asegurando que no solo escribamos código, sino que construyamos una solución que realmente resuelva la necesidad planteada.
+Para el desarrollo del proyecto, la selección del modelo adecuado resulta fundamental. Sin una estructura clara, sería difícil planificar tiempos, estimar costos o coordinar el trabajo. El ciclo de vida nos da el marco necesario para asignar recursos y dirigir el proyecto de manera efectiva, garantizando que no solo escribamos código, sino que se construya una solución que responda realmente a la necesidad planteada.
 
 La elección del modelo depende mucho del tipo de problema y del entorno. En nuestro caso, al tratarse de un sistema web con múltiples roles y requisitos de personalización, necesitamos un enfoque que nos permita adaptarnos a cambios y validar decisiones sobre la marcha.
 

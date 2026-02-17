@@ -41,8 +41,7 @@ function PageWrapper(props: PageContainerProps) {
 	return <SmartPageContainer {...props} routeSpecs={administradoresRouteSpecs} />;
 }
 
-const EMPRESAS_API = `${import.meta.env.VITE_API_URL}/superadmin/empresas`;
-
+const EMPRESAS_API = `${import.meta.env.VITE_API_URL}/superadmin/empresas?soloActivas=true`;
 interface EmpresaRow {
 	empresa?: string;
 	nombre?: string;
@@ -53,14 +52,12 @@ export default function AdminCrud() {
 	const rootPath = empresa ? `/${empresa}/administradores` : '/administradores';
 
 	const [empresaOptions, setEmpresaOptions] = React.useState<EmpresaOption[]>([]);
-	const [loadingEmpresas, setLoadingEmpresas] = React.useState(true);
 
 	React.useEffect(() => {
 		let alive = true;
 
 		(async () => {
 			try {
-				setLoadingEmpresas(true);
 				const data = await fetchJson(EMPRESAS_API);
 
 				const options: EmpresaOption[] = (Array.isArray(data) ? data : [])
@@ -71,17 +68,9 @@ export default function AdminCrud() {
 					})
 					.filter((o) => o.value.length > 0);
 
-				if (!alive) return;
-				setEmpresaOptions(options);
-			} catch (err) {
-				console.error('Error cargando empresas:', err);
-				if (!alive) return;
-				setEmpresaOptions([]);
-			} finally {
-				// CORRECCIÓN: No usar return dentro de finally
-				if (alive) {
-					setLoadingEmpresas(false);
-				}
+				if (alive) setEmpresaOptions(options);
+			} catch {
+				if (alive) setEmpresaOptions([]);
 			}
 		})();
 
@@ -94,10 +83,6 @@ export default function AdminCrud() {
 		() => createAdministradorDataSource(empresaOptions),
 		[empresaOptions],
 	);
-
-	if (loadingEmpresas) {
-		return <div>Cargando empresas...</div>;
-	}
 
 	return (
 		<Crud<Administrador>

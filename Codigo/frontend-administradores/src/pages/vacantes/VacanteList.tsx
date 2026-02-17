@@ -21,8 +21,8 @@ export default function VacanteList() {
 	const { empresa, slug } = useParams<{ empresa: string; slug?: string }>();
 	const navigate = useNavigate();
 
-	const rootPath = React.useMemo(() => pathname.replace(/\/new$/, ''), [pathname]);
-	const isCategoriaView = /\/categorias\/[^/]+\/vacantes(?:\/)?(?:[^/]*)?$/.test(rootPath);
+	const rootPath = React.useMemo(() => pathname.replace(/\/(new|edit)$/, ''), [pathname]);
+	const isCategoriaView = Boolean(slug);
 
 	const dataSource = useVacantesDataSource({ isCategoriaView, slug });
 
@@ -30,10 +30,12 @@ export default function VacanteList() {
 
 	const handleCreateClick = React.useCallback(() => {
 		if (!empresa) return;
+
 		if (isCategoriaView && slug) {
 			navigate(`/${empresa}/categorias/${slug}/vacantes/new`);
 			return;
 		}
+
 		navigate(`/${empresa}/vacantes/new`);
 	}, [empresa, isCategoriaView, slug, navigate]);
 
@@ -43,7 +45,6 @@ export default function VacanteList() {
 
 			const idStr = encodeURIComponent(String(id));
 
-			// Si ya estás en vista categoría, el slug canónico ya lo tenés
 			if (isCategoriaView && slug) {
 				navigate(`/${empresa}/categorias/${slug}/vacantes/${idStr}/edit`);
 				return;
@@ -76,6 +77,7 @@ export default function VacanteList() {
 					pageSizeOptions: [25],
 					sortingMode: 'server',
 					disableColumnMenu: true,
+
 					columnVisibilityModel: {
 						id: false,
 						categoria: !isCategoriaView,
@@ -86,6 +88,7 @@ export default function VacanteList() {
 						habilidades: false,
 						nivelExperiencia: false,
 					},
+
 					onRowClick: (params: { row: Vacante }) => {
 						const row = params.row;
 						const vacSlug = encodeURIComponent(slugify(row.vacante));

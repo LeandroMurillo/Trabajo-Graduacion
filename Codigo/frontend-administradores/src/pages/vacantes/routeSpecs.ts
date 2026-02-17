@@ -30,7 +30,6 @@ export const routeSpecs = [
 		title: (params: P) => `Vacantes de ${fromSlug(params.slug, 'lower')}`,
 		breadcrumbs: [
 			{ title: 'categorías', path: (p: P) => `/${p.empresa}/categorias` },
-			// ✅ (opcional) lo dejo NO clickeable como lo tenías
 			{ title: (p: P) => fromSlug(p.slug, 'lower') },
 		],
 	},

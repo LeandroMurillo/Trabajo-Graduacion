@@ -190,6 +190,11 @@
   #fecha-str
 ]
 
+// Reiniciar contador para el contenido
+#counter(page).update(0)
+
+#include "Dedicatoria.typ"
+
 // CORRECCIÓN DE HYDRA Y ENCABEZADOS
 #set page(
   margin: (left: 31.7mm, right: 31.7mm, top: 25.4mm, bottom: 25.4mm),
@@ -256,13 +261,8 @@
   link(url, [#body ])
 }
 
-// Reiniciar contador para el contenido
-#counter(page).update(1)
-
-// = Agradecimientos // (Opcional)
-
 // Índice
-// #pagebreak()
+#pagebreak()
 #outline(
   title: "Tabla de contenido",
   depth: 2,

@@ -1,12 +1,16 @@
-import { z } from 'zod';
+import { z, ZodError } from 'zod';
 import Curriculum from '../models/curriculums.js';
 import Postulacion from '../models/postulaciones.js';
 import CurriculumSchemas from '../schemas/curriculumSchema.js';
 import PostulacionSchemas from '../schemas/postulacionSchema.js';
-import { modificarDatosPerfilSchema } from '../schemas/postulanteSchema.js';
+import { modificarDatosPerfilBodySchema } from '../schemas/postulanteSchema.js';
 
 import Postulante from '../models/postulantes.js';
 import { verificarCookieDeSession, revocarSesionPorCookie } from '../firebase/auth.js';
+
+function getUidFromDecoded(decoded) {
+	return decoded?.user_id || decoded?.sub || decoded?.uid || null;
+}
 
 export default class ProtectedController {
 	static async verifySessionCookie(req, res, next) {
@@ -14,18 +18,30 @@ export default class ProtectedController {
 
 		try {
 			if (!sessionCookie) {
-				throw new Error('No hay token de sesión.');
+				return res.status(401).json({ error: 'No hay token de sesión.' });
 			}
 
-			req.user = await verificarCookieDeSession(sessionCookie);
+			const decoded = await verificarCookieDeSession(sessionCookie);
 
-			/*if (!req.user.email_verified) {
-				throw new Error('Email no verificado.');
-			}*/
+			const uid = getUidFromDecoded(decoded);
+			if (!uid) {
+				res.clearCookie('session', { httpOnly: true });
+				return res.status(401).json({ error: 'Sesión inválida.' });
+			}
 
-			next();
+			const estado = await Postulante.dameEstadoPostulante(uid);
+			if (estado === 'I') {
+				res.clearCookie('session', { httpOnly: true });
+				return res.status(403).json({ error: 'Cuenta inactiva.' });
+			}
+
+			// ✅ Unificamos: siempre req.user.uid
+			req.user = { ...decoded, uid };
+
+			return next();
 		} catch (error) {
 			console.error(error);
+			res.clearCookie('session', { httpOnly: true });
 			return res.status(403).json({ error: 'Acceso denegado.' });
 		}
 	}
@@ -40,13 +56,25 @@ export default class ProtectedController {
 
 			const decoded = await verificarCookieDeSession(sessionCookie);
 
+			const uid = getUidFromDecoded(decoded);
+			if (!uid) {
+				res.clearCookie('session', { httpOnly: true });
+				return res.status(200).json({ user: null });
+			}
+
+			const estado = await Postulante.dameEstadoPostulante(uid);
+			if (estado === 'I') {
+				res.clearCookie('session', { httpOnly: true });
+				return res.status(200).json({ user: null });
+			}
+
 			return res.json({
 				user: {
 					email: decoded.email,
 					name: decoded.name || null,
 					image: decoded.picture || null,
 					idEmpresa: decoded.idEmpresa,
-					uid: decoded.uid,
+					uid, // ✅ consistente
 				},
 			});
 		} catch (error) {
@@ -56,7 +84,7 @@ export default class ProtectedController {
 	}
 
 	static async damePostulante(req, res) {
-		const idPostulante = req.user.user_id;
+		const idPostulante = req.user.uid;
 
 		try {
 			const postulante = await Postulante.damePostulante(idPostulante);
@@ -74,10 +102,10 @@ export default class ProtectedController {
 
 	static async modificaPostulante(req, res) {
 		try {
-			const parsed = modificarDatosPerfilSchema.parse({
-				...req.body,
-				idPostulante: req.user.uid,
-			});
+			const body = modificarDatosPerfilBodySchema.parse(req.body);
+			const parsed = { id: req.user.uid, ...body };
+
+			console.log(parsed);
 
 			const mensaje = await Postulante.modificaPostulante(parsed);
 
@@ -89,10 +117,10 @@ export default class ProtectedController {
 				message: 'Datos personales actualizados exitosamente.',
 			});
 		} catch (error) {
-			if (error?.errors) {
+			if (error instanceof ZodError) {
 				return res.status(400).json({
 					error: 'Datos inválidos en la petición.',
-					issues: error.errors,
+					issues: error.issues,
 				});
 			}
 
@@ -134,7 +162,7 @@ export default class ProtectedController {
 	}
 
 	static async altaCurriculum(req, res) {
-		const idPostulante = req.user?.uid;
+		const idPostulante = req.user.uid;
 
 		try {
 			const { hash } = req.body || {};
@@ -192,7 +220,7 @@ export default class ProtectedController {
 
 	static async altaPostulacion(req, res) {
 		const idEmpresa = req.idEmpresa;
-		const idPostulante = req.user.user_id;
+		const idPostulante = req.user.uid;
 
 		try {
 			const { idVacante } = PostulacionSchemas.altaPostulacion.parse(req.body);
@@ -233,7 +261,7 @@ export default class ProtectedController {
 
 	static async borraPostulacion(req, res) {
 		const idEmpresa = req.idEmpresa;
-		const idPostulante = req.user.user_id;
+		const idPostulante = req.user.uid;
 
 		const idPostulacion = Number(req.params.id);
 		if (!Number.isInteger(idPostulacion) || idPostulacion <= 0) {
@@ -263,7 +291,7 @@ export default class ProtectedController {
 
 	static async dameMisPostulaciones(req, res) {
 		const idEmpresa = req.idEmpresa;
-		const idPostulante = req.user.user_id;
+		const idPostulante = req.user.uid;
 
 		try {
 			const postulaciones = await Postulacion.dameMisPostulaciones(idEmpresa, idPostulante);

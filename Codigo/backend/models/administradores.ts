@@ -35,7 +35,7 @@ export interface AdminAuthResult {
 		id: number;
 		email: string;
 		rol: RolAdministrador;
-		idEmpresa: number | null;
+		idEmpresa: number;
 	};
 	empresaSlug: string;
 }
@@ -62,8 +62,8 @@ export default class Administrador {
 		if (!ok) return null;
 
 		const payload = {
-			idAdmin: admin.idAdministrador,
-			idEmpresa: admin.idEmpresa ?? null,
+			idAdministrador: admin.idAdministrador,
+			idEmpresa: admin.idEmpresa,
 			email: admin.email,
 			rol: admin.rol,
 		};
@@ -76,7 +76,7 @@ export default class Administrador {
 				id: admin.idAdministrador,
 				email: admin.email,
 				rol: admin.rol,
-				idEmpresa: admin.idEmpresa ?? null,
+				idEmpresa: admin.idEmpresa,
 			},
 			empresaSlug: admin.empresaSlug,
 		};
@@ -117,26 +117,22 @@ export default class Administrador {
 		id: number,
 		data: ModificaAdministradorData,
 	): Promise<AdministradorRow> {
-		const email = (data.email ?? '').trim();
-		const empresa = (data.empresa ?? '').trim();
-		const claveHash = (data.claveHash ?? '').trim();
+		const pEmail = data.email ?? null;
+		const pEmpresa = data.empresa ?? null;
+		const pClaveHash = data.claveHash ?? null;
 
-		const pEmail = email ? email : null;
-		const pEmpresa = empresa ? empresa : null;
-		const pClaveHash = claveHash ? claveHash : null;
-
-		const [[empresaModificada]] = await db.execute('CALL modificaAdministrador(?, ?, ?, ?)', [
+		const [[administradorModificado]] = await db.execute('CALL modificaAdministrador(?, ?, ?, ?)', [
 			id,
 			pEmail,
 			pEmpresa,
 			pClaveHash,
 		]);
 
-		if (!empresaModificada) {
+		if (!administradorModificado) {
 			throw new Error('MODIFICA_ADMINISTRADOR_SIN_RESULTADO');
 		}
 
-		return empresaModificada as AdministradorRow;
+		return administradorModificado as AdministradorRow;
 	}
 
 	static async borraAdministrador(id: number): Promise<void> {

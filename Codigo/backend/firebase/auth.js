@@ -5,6 +5,7 @@ import {
 	applyActionCode,
 } from 'firebase/auth';
 import { firebaseAuth, firebaseAdminAuth } from './firebaseConfig.js';
+import Postulante from '../models/postulantes.ts';
 
 export async function crearUsuarioConCorreoYContraseña(email, password, extra = {}) {
 	try {
@@ -60,16 +61,22 @@ export async function loginConCredenciales(idEmpresa, email, contraseña) {
 	try {
 		const userCredential = await signInWithEmailAndPassword(firebaseAuth, email, contraseña);
 
-		await firebaseAdminAuth.setCustomUserClaims(userCredential.user.uid, {
-			idEmpresa,
-		});
+		const uid = userCredential.user.uid;
+
+		const estado = await Postulante.dameEstadoPostulante(uid);
+
+		if (estado === 'I') {
+			const err = new Error('POSTULANTE_INACTIVO');
+			err.code = 'POSTULANTE_INACTIVO';
+			throw err;
+		}
+
+		await firebaseAdminAuth.setCustomUserClaims(uid, { idEmpresa });
 
 		const idToken = await userCredential.user.getIdToken(true);
 
 		const expiresIn = 60 * 60 * 24 * 5 * 1000; // 5 días
-		const sessionCookie = await firebaseAdminAuth.createSessionCookie(idToken, {
-			expiresIn,
-		});
+		const sessionCookie = await firebaseAdminAuth.createSessionCookie(idToken, { expiresIn });
 
 		const options = {
 			maxAge: expiresIn,
@@ -79,7 +86,11 @@ export async function loginConCredenciales(idEmpresa, email, contraseña) {
 
 		return { sessionCookie, options };
 	} catch (error) {
-		console.error('Error in loginConCredenciales:', error);
+		if (error?.sqlState === '45000' || error?.code === 'ER_SIGNAL_EXCEPTION') {
+			const msg = String(error?.message ?? error?.sqlMessage ?? '');
+			error.code = msg;
+		}
+
 		throw error;
 	}
 }
@@ -87,25 +98,34 @@ export async function loginConCredenciales(idEmpresa, email, contraseña) {
 export async function verificarCookieDeSession(sessionCookie) {
 	try {
 		const decodedClaims = await firebaseAdminAuth.verifySessionCookie(sessionCookie, true);
+
+		const uid = decodedClaims.sub;
+
+		const estado = await Postulante.dameEstadoPostulante(uid);
+		if (estado === 'I') {
+			const err = new Error('POSTULANTE_INACTIVO');
+			err.code = 'POSTULANTE_INACTIVO';
+			throw err;
+		}
+
 		return decodedClaims;
 	} catch (error) {
-		console.error('Error in verificarCookieDeSession:', error);
+		if (error?.sqlState === '45000' || error?.code === 'ER_SIGNAL_EXCEPTION') {
+			const msg = String(error?.message ?? error?.sqlMessage ?? '');
+			error.code = msg;
+		}
+
 		throw error;
 	}
 }
 
 export async function revocarSesionPorCookie(sessionCookie) {
-	try {
-		if (!sessionCookie) {
-			throw new Error('No hay token de sesión.');
-		}
-
-		const decodedClaims = await firebaseAdminAuth.verifySessionCookie(sessionCookie, true);
-		await firebaseAdminAuth.revokeRefreshTokens(decodedClaims.sub);
-
-		return { success: true };
-	} catch (error) {
-		console.error('Error in revocarSesionPorCookie:', error);
-		throw error;
+	if (!sessionCookie) {
+		throw new Error('No hay token de sesión.');
 	}
+
+	const decodedClaims = await firebaseAdminAuth.verifySessionCookie(sessionCookie, true);
+	await firebaseAdminAuth.revokeRefreshTokens(decodedClaims.sub);
+
+	return { success: true };
 }

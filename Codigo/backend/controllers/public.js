@@ -1,5 +1,6 @@
 import express from 'express';
 import cookieParser from 'cookie-parser';
+import { ZodError } from 'zod';
 import Empresa from '../models/empresas.js';
 import Postulante from '../models/postulantes.js';
 import Categoria from '../models/categorias.js';
@@ -238,18 +239,36 @@ export default class PublicController {
 
 	static async login(req, res) {
 		try {
-			const { email, contraseña } = loginSchema.parse(req.body);
+			const { email, password } = loginSchema.parse(req.body);
 
-			const { sessionCookie, options } = await loginConCredenciales(
-				req.idEmpresa,
-				email,
-				contraseña,
-			);
+			const { sessionCookie, options } = await loginConCredenciales(req.idEmpresa, email, password);
+
 			res.cookie('session', sessionCookie, options);
 			return res.status(200).json({ status: 'success' });
 		} catch (error) {
+			if (error instanceof ZodError) {
+				return res.status(400).json({ error: 'Body inválido.', issues: error.issues });
+			}
+
+			const code = String(error?.code ?? error?.message ?? '');
+
+			if (code === 'POSTULANTE_INACTIVO') {
+				return res.status(403).json({
+					error:
+						'Su cuenta ha sido suspendida temporalmente por incumplir con las normas de nuestra plataforma.',
+				});
+			}
+
+			if (code === 'POSTULANTE_NO_EXISTE') {
+				return res.status(404).json({ error: 'No se encontró el usuario.' });
+			}
+
+			if (String(error?.code ?? '').startsWith('auth/')) {
+				return res.status(401).json({ error: 'Credenciales inválidas.' });
+			}
+
 			console.error('Error during login:', error);
-			return res.status(500).json({ error: error.message || 'Internal server error' });
+			return res.status(500).json({ error: 'Error interno del servidor' });
 		}
 	}
 

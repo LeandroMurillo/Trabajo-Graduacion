@@ -1,0 +1,83 @@
+name: Release Informe
+
+# Controls when the workflow will run
+on:
+  push:
+    tags:
+      - 'v*' # Triggers on tags like v1.0, v2025.1, etc.
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+permissions:
+  contents: write # REQUIRED to create releases
+
+jobs:
+  build-and-release:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-24.04
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Typst
+        uses: typst-community/setup-typst@v4
+
+      - name: Install system dependencies
+        run: sudo apt-get update && sudo apt-get install -y qpdf gnupg
+
+      - name: Set dynamic document name
+        id: nombre
+        run: echo "NOMBRE=Trabajo Final - Murillo, Herrera - $(date +'%d-%m-%Y')" >> "$GITHUB_OUTPUT"
+
+      - name: Render, Protect and Sign documents
+        env:
+          # Pulls the password from GitHub Secrets into an Env Var
+          PGP_PRIVATE_KEY: ${{ secrets.PGP_PRIVATE_KEY }}
+          PGP_PASSPHRASE: ${{ secrets.PGP_PASSPHRASE }}
+        run: |
+          # --- 0. Robust Import PGP Key ---
+          printf "%s" "$PGP_PRIVATE_KEY" | gpg --batch --import
+
+          # --- 1. Compile with Typst ---
+          typst compile --pdf-standard=a-3u --font-path=Informe Informe/anexo.typ
+          typst compile --pdf-standard=a-3u --font-path=Informe Informe/informe.typ
+
+          # --- 2. Protect with qpdf ---
+          qpdf --replace-input --encrypt "" "$PGP_PASSPHRASE" 256 --modify=none -- Informe/anexo.pdf
+          qpdf --replace-input --encrypt "" "$PGP_PASSPHRASE" 256 --modify=none -- Informe/informe.pdf
+
+          # --- 3. Dynamic Variables ---
+          BUILD_DATE=$(date +'%d-%m-%Y')
+          ANEXO_NAME="Informe/Anexo - Murillo, Herrera - ${BUILD_DATE}.pdf"
+          INFORME_NAME="Informe/${{ steps.nombre.outputs.NOMBRE }}.pdf"
+
+          # --- 4. Rename & Sign Loop ---
+          mv -v Informe/anexo.pdf "$ANEXO_NAME"
+          mv -v Informe/informe.pdf "$INFORME_NAME"
+
+          for FILE in "$ANEXO_NAME" "$INFORME_NAME"; do
+             echo "Signing $FILE..."
+             gpg --batch --yes --pinentry-mode loopback \
+                 --passphrase "$PGP_PASSPHRASE" \
+                 --detach-sign --armor \
+                 --output "${FILE}.asc" \
+                 "$FILE"
+
+             echo "Verifying signature for $FILE..."
+             gpg --verify "${FILE}.asc" "$FILE"
+          done
+
+      - name: Create Release and Upload Assets
+        uses: softprops/action-gh-release@v2
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          files: |
+            Informe/${{ steps.nombre.outputs.NOMBRE }}*.pdf
+            Informe/${{ steps.nombre.outputs.NOMBRE }}*.asc
+          generate_release_notes: true
+          draft: false
+          prerelease: false

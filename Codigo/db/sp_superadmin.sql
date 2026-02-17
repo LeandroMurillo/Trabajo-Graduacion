@@ -31,7 +31,7 @@ DROP PROCEDURE IF EXISTS `dameCuotas`;
 -- ==========================
 
 DELIMITER //
-CREATE PROCEDURE dameEmpresas()
+CREATE PROCEDURE dameEmpresas(IN pSoloActivas TINYINT)
 BEGIN
 	SELECT
 		idEmpresa AS id,
@@ -39,7 +39,9 @@ BEGIN
 		url,
 		estado
 	FROM Empresas
-	WHERE esSistema = 0
+	WHERE
+		esSistema = 0
+		AND (pSoloActivas = 0 OR estado = 'A')
 	ORDER BY idEmpresa DESC;
 END //
 DELIMITER ;
@@ -108,43 +110,39 @@ DELIMITER ;
 
 DELIMITER //
 CREATE PROCEDURE cambiarEstadoEmpresa(
-  IN pIdEmpresa SMALLINT,
-  IN pEstado CHAR(1)
+  IN pIdEmpresa SMALLINT UNSIGNED,
+  IN pEstado ENUM('A','I')
 )
-sp:BEGIN
-  DECLARE vEstadoActual CHAR(1);
+BEGIN
+  DECLARE vEstadoActual ENUM('A','I');
+  DECLARE vEsSistema TINYINT(1);
 
-  IF pEstado IS NULL OR pEstado NOT IN ('A','I') THEN
-    SELECT 'El estado debe ser A (activa) o I (inactiva).' AS mensaje;
-    LEAVE sp;
+  IF pIdEmpresa IS NULL OR pIdEmpresa = 0 THEN
+    SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'EMPRESA_ID_INVALIDA';
   END IF;
 
-  SELECT estado
-    INTO vEstadoActual
-  FROM Empresas
-  WHERE idEmpresa = pIdEmpresa
+  SELECT e.estado, e.esSistema
+    INTO vEstadoActual, vEsSistema
+  FROM Empresas e
+  WHERE e.idEmpresa = pIdEmpresa
   LIMIT 1;
 
   IF vEstadoActual IS NULL THEN
-    SELECT 'La empresa indicada no existe.' AS mensaje;
-    LEAVE sp;
+    SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'EMPRESA_NO_EXISTE';
   END IF;
 
-  IF pIdEmpresa = 1 THEN
-    SELECT 'No se permite modificar la empresa del sistema.' AS mensaje;
-    LEAVE sp;
+  IF vEsSistema = 1 THEN
+    SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'EMPRESA_SISTEMA_NO_MODIFICABLE';
   END IF;
 
   IF vEstadoActual = pEstado THEN
-    SELECT 'La empresa ya estaba en ese estado.' AS mensaje;
-    LEAVE sp;
+    SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'EMPRESA_YA_EN_ESE_ESTADO';
   END IF;
 
   UPDATE Empresas
   SET estado = pEstado
   WHERE idEmpresa = pIdEmpresa;
 
-  SELECT 'OK' AS mensaje;
 END //
 DELIMITER ;
 
@@ -433,54 +431,132 @@ DELIMITER ;
 
 DELIMITER //
 CREATE PROCEDURE dameCuotas(
-  IN pIdEmpresa SMALLINT,   -- NULL = todas
   IN pPage INT,
   IN pPageSize INT,
-  IN pSortBy VARCHAR(50),
-  IN pSortDir VARCHAR(4)
+  IN pSort LONGTEXT,
+  IN pFilter LONGTEXT
 )
 BEGIN
-  DECLARE vOffset INT DEFAULT 0;
-  DECLARE vPage INT DEFAULT 1;
+  DECLARE vPage INT DEFAULT 0;
   DECLARE vPageSize INT DEFAULT 25;
-  DECLARE vSortBy VARCHAR(50);
-  DECLARE vSortDir VARCHAR(4);
+  DECLARE vOffset INT DEFAULT 0;
 
-  SET vPage = IFNULL(pPage, 1);
-  IF vPage < 1 THEN SET vPage = 1; END IF;
+  DECLARE vSortField VARCHAR(64) DEFAULT NULL;
+  DECLARE vSortDir VARCHAR(4) DEFAULT 'DESC';
+  DECLARE vOrderExpr VARCHAR(128) DEFAULT 'c.fechaPago';
+
+  DECLARE vEmpresaLike VARCHAR(255) DEFAULT NULL;
+  DECLARE vUrlLike VARCHAR(255) DEFAULT NULL;
+
+  SET vPage = IFNULL(pPage, 0);
+  IF vPage < 0 THEN SET vPage = 0; END IF;
 
   SET vPageSize = IFNULL(pPageSize, 25);
   IF vPageSize < 1 THEN SET vPageSize = 25; END IF;
   IF vPageSize > 200 THEN SET vPageSize = 200; END IF;
 
-  SET vOffset = (vPage - 1) * vPageSize;
+  SET vOffset = vPage * vPageSize;
 
-  SET vSortDir = UPPER(IFNULL(pSortDir, 'DESC'));
-  IF vSortDir NOT IN ('ASC', 'DESC') THEN
-    SET vSortDir = 'DESC';
+  -- sort (primer criterio)
+  IF pSort IS NOT NULL
+     AND JSON_VALID(pSort)
+     AND JSON_TYPE(pSort) = 'ARRAY'
+     AND JSON_LENGTH(pSort) > 0 THEN
+
+    SET vSortField = JSON_UNQUOTE(JSON_EXTRACT(pSort, '$[0].field'));
+    SET vSortDir   = UPPER(JSON_UNQUOTE(JSON_EXTRACT(pSort, '$[0].sort')));
+
+    SET vSortField = NULLIF(TRIM(IFNULL(vSortField, '')), '');
+    IF vSortDir NOT IN ('ASC','DESC') THEN SET vSortDir = 'DESC'; END IF;
   END IF;
 
-  SET vSortBy = IFNULL(pSortBy, 'fechaPago');
-  IF vSortBy NOT IN ('idCuota', 'idEmpresa', 'empresa', 'monto', 'fechaPago') THEN
-    SET vSortBy = 'fechaPago';
+  -- filter: empresa y url
+  IF pFilter IS NOT NULL
+     AND JSON_VALID(pFilter)
+     AND JSON_TYPE(pFilter) = 'ARRAY'
+     AND JSON_LENGTH(pFilter) > 0 THEN
+
+    -- empresa
+    SELECT NULLIF(TRIM(jt.value), '')
+      INTO vEmpresaLike
+    FROM JSON_TABLE(
+      pFilter, '$[*]'
+      COLUMNS(
+        field VARCHAR(64) PATH '$.field',
+        value VARCHAR(255) PATH '$.value' NULL ON ERROR
+      )
+    ) AS jt
+    WHERE jt.field = 'empresa'
+      AND jt.value IS NOT NULL
+      AND jt.value <> ''
+    LIMIT 1;
+
+    IF vEmpresaLike IS NOT NULL THEN
+      SET vEmpresaLike = CONCAT('%', vEmpresaLike, '%');
+    END IF;
+
+    -- url
+    SELECT NULLIF(TRIM(jt.value), '')
+      INTO vUrlLike
+    FROM JSON_TABLE(
+      pFilter, '$[*]'
+      COLUMNS(
+        field VARCHAR(64) PATH '$.field',
+        value VARCHAR(255) PATH '$.value' NULL ON ERROR
+      )
+    ) AS jt
+    WHERE jt.field = 'url'
+      AND jt.value IS NOT NULL
+      AND jt.value <> ''
+    LIMIT 1;
+
+    IF vUrlLike IS NOT NULL THEN
+      SET vUrlLike = CONCAT('%', vUrlLike, '%');
+    END IF;
+
   END IF;
 
+  -- map sort.field
+  IF vSortField = 'id' THEN
+    SET vOrderExpr = 'c.idCuota';
+  ELSEIF vSortField = 'empresa' THEN
+    SET vOrderExpr = 'e.empresa';
+  ELSEIF vSortField = 'url' THEN
+    SET vOrderExpr = 'e.url';
+  ELSEIF vSortField = 'monto' THEN
+    SET vOrderExpr = 'c.monto';
+  ELSEIF vSortField = 'fechaPago' THEN
+    SET vOrderExpr = 'c.fechaPago';
+  ELSE
+    SET vOrderExpr = 'c.fechaPago';
+  END IF;
+
+  -- items
   SET @sql = CONCAT(
-    'SELECT c.idCuota, c.idEmpresa, e.empresa AS empresa, c.monto, c.fechaPago
+    'SELECT c.idCuota AS id, e.empresa AS empresa, e.url AS url, c.monto, c.fechaPago
      FROM Cuotas c
      JOIN Empresas e ON e.idEmpresa = c.idEmpresa
-     WHERE (? IS NULL OR c.idEmpresa = ?)
-     ORDER BY ', vSortBy, ' ', vSortDir, ', c.idEmpresa ASC, c.idCuota DESC
+     WHERE (? IS NULL OR e.empresa LIKE ?)
+       AND (? IS NULL OR e.url LIKE ?)
+     ORDER BY ', vOrderExpr, ' ', vSortDir, ', c.idCuota DESC
      LIMIT ? OFFSET ?'
   );
 
   PREPARE stmt FROM @sql;
-  SET @p1 = pIdEmpresa;
-  SET @p2 = pIdEmpresa;
-  SET @p3 = vPageSize;
-  SET @p4 = vOffset;
-  EXECUTE stmt USING @p1, @p2, @p3, @p4;
+  SET @p1 = vEmpresaLike;
+  SET @p2 = vEmpresaLike;
+  SET @p3 = vUrlLike;
+  SET @p4 = vUrlLike;
+  SET @p5 = vPageSize;
+  SET @p6 = vOffset;
+  EXECUTE stmt USING @p1, @p2, @p3, @p4, @p5, @p6;
   DEALLOCATE PREPARE stmt;
+
+  -- count
+  SELECT COUNT(*) AS itemCount
+  FROM Cuotas c
+  JOIN Empresas e ON e.idEmpresa = c.idEmpresa
+  WHERE (vEmpresaLike IS NULL OR e.empresa LIKE vEmpresaLike)
+    AND (vUrlLike IS NULL OR e.url LIKE vUrlLike);
 END//
 DELIMITER ;
-
