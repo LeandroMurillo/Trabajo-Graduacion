@@ -106,3 +106,12 @@ export interface Postulacion {
 export interface RestablecerClaveResponse {
 	message: string;
 }
+
+export interface ValidarResetResponse {
+	ok: true;
+	email: string;
+}
+
+export interface confirmarNuevaContraseñaResponse {
+	ok: true;
+}

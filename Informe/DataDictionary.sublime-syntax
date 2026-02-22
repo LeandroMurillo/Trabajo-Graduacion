@@ -1,0 +1,92 @@
+%YAML 1.2
+---
+# Sublime Text syntax definition for Data Dictionary formats
+name: Data Dictionary
+file_extensions:
+  - dd
+  - dict
+  - txt
+scope: source.datadict
+
+contexts:
+  main:
+    # 1. Section Headers (e.g., TABLAS, DOMINIOS / ENUMERADOS)
+    - match: '^(TABLAS|DOMINIOS / ENUMERADOS)$'
+      scope: markup.heading.datadict entity.name.section.datadict
+
+    # 2. Table Definitions (e.g., EMPRESAS = { )
+    - match: '^([A-Z_]+)\s*(=)\s*(\{)'
+      captures:
+        1: entity.name.class.datadict
+        2: keyword.operator.assignment.datadict
+        3: punctuation.section.block.begin.datadict
+      push: table_body
+
+    # 3. Enumeration Definitions (e.g., Empresas.estado = )
+    - match: '^([A-Z][a-zA-Z0-9_]+)(\.)([a-zA-Z0-9_]+)\s*(=)\s*'
+      captures:
+        1: entity.name.class.datadict
+        2: punctuation.accessor.dot.datadict
+        3: variable.other.member.datadict
+        4: keyword.operator.assignment.datadict
+      push: enum_definition
+
+  table_body:
+    # Exit table body on closing brace
+    - match: '\}'
+      scope: punctuation.section.block.end.datadict
+      pop: true
+
+    # Operators (+)
+    - match: '\+'
+      scope: keyword.operator.datadict
+
+    # Primary/Foreign Keys (e.g., @idEmpresa)
+    - match: '@[a-zA-Z0-9_]+'
+      scope: entity.other.attribute-name.id.datadict
+
+    # Optional Fields (e.g., (estilo))
+    - match: '\([^)]+\)'
+      scope: variable.parameter.optional.datadict
+
+    # Standard Fields (e.g., empresa)
+    - match: '[a-zA-Z0-9_]+'
+      scope: variable.other.datadict
+
+  enum_definition:
+    # Exit enum line at the end of the line
+    - match: '\n'
+      pop: true
+
+    # Enter the array of enum values (e.g., [A|I])
+    - match: '\['
+      scope: punctuation.section.brackets.begin.datadict
+      push: enum_array
+
+    # Description Key (e.g., A:)
+    - match: '\b([A-Za-z0-9_]+)(:)'
+      captures:
+        1: constant.language.datadict
+        2: punctuation.separator.datadict
+
+    # Separator (-)
+    - match: '-'
+      scope: keyword.operator.datadict
+
+    # The literal description (e.g., Activa)
+    - match: '[^:\-\n]+'
+      scope: string.unquoted.datadict
+
+  enum_array:
+    # Exit array on closing bracket
+    - match: '\]'
+      scope: punctuation.section.brackets.end.datadict
+      pop: true
+
+    # Value Separator (|)
+    - match: '\|'
+      scope: keyword.operator.datadict
+
+    # The actual enum values (e.g., Tiempo Completo, M, F)
+    - match: '[^\|\]]+'
+      scope: constant.character.datadict

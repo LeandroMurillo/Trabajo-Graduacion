@@ -1,8 +1,10 @@
+import { useSession } from '../SessionContext';
 import React, { useEffect, useState } from 'react';
 import {
 	TextField,
 	Button,
 	Box,
+	Chip,
 	CircularProgress,
 	Typography,
 	MenuItem,
@@ -13,6 +15,7 @@ import { damePostulante, actualizarPostulante } from '../api';
 import type { Postulante } from '../types';
 
 export default function PaginaPerfilPostulante() {
+	const { refreshSession } = useSession();
 	const [loading, setLoading] = useState(true);
 	const [saving, setSaving] = useState(false);
 	const [mensaje, setMensaje] = useState<{
@@ -20,7 +23,6 @@ export default function PaginaPerfilPostulante() {
 		texto: string;
 	} | null>(null);
 
-	// Inicializamos con strings vacíos para evitar "uncontrolled input" warnings
 	const [editPerfil, setEditPerfil] = useState<Postulante>({
 		nombres: '',
 		apellidos: '',
@@ -48,18 +50,60 @@ export default function PaginaPerfilPostulante() {
 		},
 	];
 
+	const [habilidadInput, setHabilidadInput] = useState('');
+	const MAX_HABILIDAD_LEN = 20;
+	const MAX_HABILIDADES = 5;
+	const habilidadesLlenas = editPerfil.habilidades.length >= MAX_HABILIDADES;
+	const chipColors = ['secondary', 'success', 'info', 'warning', 'error'] as const;
+
+	function normalizarHabilidad(s: string) {
+		const limpio = s.trim().replace(/\s+/g, ' ');
+		if (!limpio) return '';
+
+		const title = limpio
+			.toLowerCase()
+			.split(' ')
+			.map((w) => (w ? w[0].toUpperCase() + w.slice(1) : ''))
+			.join(' ');
+
+		return title.length <= MAX_HABILIDAD_LEN ? title : '';
+	}
+
+	function agregarHabilidad(raw: string) {
+		const h = normalizarHabilidad(raw);
+		if (!h) return;
+
+		setEditPerfil((prev) => {
+			if (prev.habilidades.length >= MAX_HABILIDADES) return prev;
+
+			const existe = prev.habilidades.some((x) => x.toLowerCase() === h.toLowerCase());
+			if (existe) return prev;
+
+			return {
+				...prev,
+				habilidades: [...prev.habilidades, h],
+			};
+		});
+
+		setHabilidadInput('');
+	}
+
+	function borrarHabilidad(h: string) {
+		setEditPerfil((prev) => ({
+			...prev,
+			habilidades: prev.habilidades.filter((x) => x !== h),
+		}));
+	}
+
 	useEffect(() => {
 		damePostulante()
 			.then((data) => {
-				// Convertimos nulls a strings vacíos para manejo seguro en el form
 				const safeData = {
 					...data,
 					cuil: data.cuil || '',
 					localidad: data.localidad || '',
 					telefono: data.telefono || '',
 					habilidades: data.habilidades || [],
-					// Si la fecha viene como ISO string, la dejamos así para que el input type="date" la lea,
-					// o si viene vacía la dejamos vacía.
 				};
 				setEditPerfil(safeData);
 				setLoading(false);
@@ -107,19 +151,12 @@ export default function PaginaPerfilPostulante() {
 			}
 		});
 
-		// 4. Habilidades: El backend espera string, pero en frontend manejamos array o string
-		if (Array.isArray(editPerfil.habilidades)) {
-			// Si el usuario no editó, podría seguir siendo array. Lo convertimos.
-			// Si tu backend espera un string simple, lo unimos.
-			// OJO: Tu esquema dice z.string(), asegúrate de qué formato espera.
-			// Si espera CSV:
-			payload.habilidades = editPerfil.habilidades.join(', ');
-		}
+		payload.habilidades = editPerfil.habilidades;
 
 		try {
 			await actualizarPostulante(payload);
+			await refreshSession();
 			setMensaje({ tipo: 'success', texto: 'Datos actualizados correctamente' });
-			// Opcional: recargar datos reales para confirmar
 		} catch (error) {
 			console.error(error);
 			setMensaje({ tipo: 'error', texto: 'Error al guardar los cambios' });
@@ -209,12 +246,7 @@ export default function PaginaPerfilPostulante() {
 				label='Fecha de Nacimiento'
 				name='fechaNacimiento'
 				type='date'
-				// Convertimos la fecha completa ISO a YYYY-MM-DD para el input
-				value={
-					editPerfil.fechaNacimiento
-						? editPerfil.fechaNacimiento.split('T')[0]
-						: ''
-				}
+				value={editPerfil.fechaNacimiento ? editPerfil.fechaNacimiento.split('T')[0] : ''}
 				onChange={handleChange}
 				fullWidth
 				margin='normal'
@@ -237,31 +269,50 @@ export default function PaginaPerfilPostulante() {
 				fullWidth
 				margin='normal'
 			/>
-			<TextField
-				label='Habilidades'
-				name='habilidades'
-				value={editPerfil.habilidades}
-				onChange={handleChange}
-				fullWidth
-				margin='normal'
-				disabled // TODO: no funca
-			/>
+			<Box sx={{ mt: 2 }}>
+				<TextField
+					label='Habilidades'
+					value={habilidadInput}
+					onChange={(e) => setHabilidadInput(e.target.value)}
+					fullWidth
+					margin='normal'
+					onKeyDown={(e) => {
+						if (e.key === 'Enter') {
+							e.preventDefault();
+							agregarHabilidad(habilidadInput);
+						}
+					}}
+					disabled={habilidadesLlenas}
+					helperText={habilidadesLlenas ? `No se puede agregar más habilidades` : ``}
+					InputProps={{
+						endAdornment: (
+							<Button
+								onClick={() => agregarHabilidad(habilidadInput)}
+								disabled={habilidadesLlenas || !habilidadInput.trim()}
+							>
+								Agregar
+							</Button>
+						),
+					}}
+				/>
 
-			<Button
-				type='submit'
-				variant='contained'
-				color='primary'
-				sx={{ mt: 2 }}
-				disabled={saving}
-			>
+				<Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap', mt: 1 }}>
+					{editPerfil.habilidades.map((h, i) => (
+						<Chip
+							key={h}
+							label={h}
+							color={chipColors[i % chipColors.length]}
+							onDelete={() => borrarHabilidad(h)}
+						/>
+					))}
+				</Box>
+			</Box>
+
+			<Button type='submit' variant='contained' color='primary' sx={{ mt: 2 }} disabled={saving}>
 				{saving ? 'Guardando...' : 'Guardar cambios'}
 			</Button>
 
-			<Snackbar
-				open={!!mensaje}
-				autoHideDuration={6000}
-				onClose={() => setMensaje(null)}
-			>
+			<Snackbar open={!!mensaje} autoHideDuration={6000} onClose={() => setMensaje(null)}>
 				<Alert severity={mensaje?.tipo} onClose={() => setMensaje(null)}>
 					{mensaje?.texto}
 				</Alert>

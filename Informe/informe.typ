@@ -185,7 +185,7 @@
 
 #align(center)[
   #v(.5cm)
-  #image("img/EscudoUNT.jpeg", width: 42%)
+  #image("Img/EscudoUNT.jpeg", width: 42%)
   #v(.5cm)
   #fecha-str
 ]
@@ -257,10 +257,6 @@
   supplement: "Fig.",
 )
 
-#let enlace(url, body) = {
-  link(url, [#body ])
-}
-
 // Índice
 #pagebreak()
 #outline(
@@ -276,21 +272,6 @@
 
 #include "Especificación C.typ"
 
-#include "Conclusiones.typ"
-
-#include "Bibliografía.typ"
-
-#pagebreak()
-= Anexos
-
-#set heading(numbering: none);
-
-== Código fuente
-
-El código del sistema y de este informe se puede encontrar en el siguiente enlace:
-
-#align(center)[#enlace("https://github.com/LeandroMurillo/Trabajo-Graduacion")[https://github.com/LeandroMurillo/Trabajo-Graduacion]]
-
 #include "Diagrama de clases.typ"
 
 #include "Identificación de roles, sus funciones y restricciones.typ"
@@ -303,4 +284,41 @@ El código del sistema y de este informe se puede encontrar en el siguiente enla
 
 #include "Pruebas.typ"
 
-#include "Descripción textual de los casos de uso y diagramas de actividad.typ"
+#include "Conclusiones.typ"
+
+#include "Bibliografía.typ"
+
+#pagebreak()
+= Anexos
+
+#set heading(numbering: none);
+
+#include "Anexo Diagramas de casos de uso.typ"
+
+#include "Anexo Descripción textual de los casos de uso y diagramas de actividad.typ"
+
+#include "Anexo Ficha técnica de clases.typ"
+
+#include "Anexo Diagramas de transición de escenarios.typ"
+
+#include "Anexo Elección del lenguaje de programación.typ"
+
+#pagebreak()
+== Modelo físico de datos
+
+#let sql-code(file-path) = {
+  block(
+    inset: 12pt,
+    radius: 4pt,
+    width: 100%,
+    stroke: 0.5pt + rgb("#333333"),
+    {
+      set text(font: "Arimo Nerd Font", size: 11pt)
+
+      // Read the file and specify the language for highlighting
+      raw(read(file-path), lang: "sql", block: true)
+    },
+  )
+}
+
+#sql-code("../Codigo/db/proyecto_script.sql")

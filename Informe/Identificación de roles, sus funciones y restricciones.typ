@@ -8,11 +8,9 @@ Los usuarios finales en el sistema pueden cumplir uno de los siguientes roles:
 - Postulante
 
 #linebreak()
-
 === Funciones de los usuarios por rol
 
 #linebreak()
-
 ==== Rol Superadministrador
 
 - Autenticación
@@ -20,19 +18,17 @@ Los usuarios finales en el sistema pueden cumplir uno de los siguientes roles:
   - Iniciar Sesión Administrador
   - Cerrar Sesión
 
-#linebreak()
-
+#pagebreak()
 - Gestión Empresas
 
   - Listar Empresas
   - Nueva Empresa
   - Modificar Empresa
   - Activar Empresa
-  - Dar de baja Empresa
+  - Dar de Baja Empresa
   - Borrar Empresa
 
 #linebreak()
-
 - Gestión Administrador
 
   - Listar Administradores
@@ -41,13 +37,11 @@ Los usuarios finales en el sistema pueden cumplir uno de los siguientes roles:
   - Borrar Administrador
 
 #linebreak()
-
 - Gestión Cuotas
 
   - Listar Cuotas
 
 #linebreak()
-
 ==== Rol Administrador
 
 - Autenticación
@@ -56,24 +50,21 @@ Los usuarios finales en el sistema pueden cumplir uno de los siguientes roles:
   - Cerrar Sesión
 
 #linebreak()
-
 - Gestión Empresas
 
   - Modificar Estilos de Empresa
 
 #linebreak()
-
 - Gestión Categorías
 
-  - Listar categorías
+  - Listar Categorías
   - Nueva Categoría
   - Modificar Categoría
   - Activar Categoría
   - Dar De Baja Categoría
   - Borrar Categoría
 
-#linebreak()
-
+#pagebreak()
 - Gestión Vacantes
 
   - Listar Vacantes Avanzado
@@ -84,20 +75,19 @@ Los usuarios finales en el sistema pueden cumplir uno de los siguientes roles:
   - Borrar vacante
 
 #linebreak()
-
 - Gestión Postulantes
 
   - Listar Postulantes
+  - Inactivar Postulante
+  - Reactivar Postulante
 
 #linebreak()
-
 - Gestión Postulaciones
 
   - Listar Postulaciones de una Vacante
   - Listar Postulaciones de un Postulante
 
 #linebreak()
-
 ==== Rol Postulante
 
 - Autenticación
@@ -106,24 +96,26 @@ Los usuarios finales en el sistema pueden cumplir uno de los siguientes roles:
   - Cerrar Sesión
 
 #linebreak()
-
 - Gestión Vacantes
 
   - Listar Vacantes
 
 #linebreak()
+- Gestión Postulantes
 
+  - Activar Postulante
+  - Restablecer Contraseña
+  - Cambiar Contraseña
+
+#linebreak()
 - Gestión Postulaciones
 
   - Listar Mis Postulaciones
   - Nueva Postulación
   - Dar De Baja Postulación
 
-#linebreak()
-
+#pagebreak()
 - Gestión currículums
 
-  - Ver currículum
-  - Cargar currículum
-
-#linebreak()
+  - Ver Currículum
+  - Cargar Currículum

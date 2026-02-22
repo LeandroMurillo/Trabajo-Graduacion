@@ -131,14 +131,14 @@ export default function App() {
 
 	const TP_SESSION: TPBaseSession | null = session
 		? {
-			user: {
-				id: String(session.usuario.id),
-				name:
-					(session.usuario as { nombre?: string }).nombre ?? session.usuario.email.split('@')[0],
-				email: session.usuario.email,
-				image: (session.usuario as { imagen?: string }).imagen ?? undefined,
-			},
-		}
+				user: {
+					id: String(session.usuario.id),
+					name:
+						(session.usuario as { nombre?: string }).nombre ?? session.usuario.email.split('@')[0],
+					email: session.usuario.email,
+					image: (session.usuario as { imagen?: string }).imagen ?? undefined,
+				},
+			}
 		: null;
 
 	const isAuthRoute = location.pathname.startsWith('/sign-in');

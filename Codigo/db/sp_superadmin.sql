@@ -7,12 +7,12 @@
 -- Configuración inicial
 -- ==========================
 SET @OLD_FOREIGN_KEY_CHECKS = @@FOREIGN_KEY_CHECKS;
+
 SET FOREIGN_KEY_CHECKS = 0;
 
 -- ==========================
 -- Eliminación de SP existentes (si es necesario)
 -- ==========================
-
 DROP PROCEDURE IF EXISTS `dameEmpresas`;
 DROP PROCEDURE IF EXISTS `dameEmpresa`;
 DROP PROCEDURE IF EXISTS `altaEmpresa`;
@@ -31,23 +31,25 @@ DROP PROCEDURE IF EXISTS `dameCuotas`;
 -- ==========================
 
 DELIMITER //
+
 CREATE PROCEDURE dameEmpresas(IN pSoloActivas TINYINT)
 BEGIN
-	SELECT
-		idEmpresa AS id,
-		empresa,
-		url,
-		estado
-	FROM Empresas
-	WHERE
-		esSistema = 0
-		AND (pSoloActivas = 0 OR estado = 'A')
-	ORDER BY idEmpresa DESC;
+  SELECT
+    idEmpresa AS id,
+    empresa,
+    url,
+    estado
+  FROM Empresas
+  WHERE
+    esSistema = 0
+    AND (pSoloActivas = 0 OR estado = 'A')
+  ORDER BY idEmpresa DESC;
 END //
+
 DELIMITER ;
 
 CREATE PROCEDURE dameEmpresa(
-	IN pIdEmpresa SMALLINT
+  IN pIdEmpresa SMALLINT
 )
 BEGIN
   SELECT
@@ -56,13 +58,14 @@ BEGIN
     e.url,
     e.estado
   FROM Empresas e
-  WHERE e.idEmpresa = pIdEmpresa 
+  WHERE e.idEmpresa = pIdEmpresa
   AND e.esSistema = 0
   LIMIT 1;
 END //
 DELIMITER ;
 
 DELIMITER //
+
 CREATE PROCEDURE altaEmpresa(
   IN pEmpresa VARCHAR(100),
   IN pUrl     VARCHAR(100)
@@ -81,9 +84,11 @@ BEGIN
     AND esSistema = 0
   LIMIT 1;
 END //
+
 DELIMITER ;
 
 DELIMITER //
+
 CREATE PROCEDURE modificaEmpresa(
   IN pIdEmpresa SMALLINT,
   IN pEmpresa   VARCHAR(100),
@@ -102,13 +107,15 @@ BEGIN
     url,
     estado
   FROM Empresas
-  WHERE idEmpresa = pIdEmpresa 
+  WHERE idEmpresa = pIdEmpresa
   AND esSistema = 0
   LIMIT 1;
 END //
+
 DELIMITER ;
 
 DELIMITER //
+
 CREATE PROCEDURE cambiarEstadoEmpresa(
   IN pIdEmpresa SMALLINT UNSIGNED,
   IN pEstado ENUM('A','I')
@@ -144,9 +151,11 @@ BEGIN
   WHERE idEmpresa = pIdEmpresa;
 
 END //
+
 DELIMITER ;
 
 DELIMITER //
+
 CREATE PROCEDURE borraEmpresa(
   IN pIdEmpresa SMALLINT
 )
@@ -204,25 +213,29 @@ BEGIN
   COMMIT;
 
 END //
+
 DELIMITER ;
 
 DELIMITER //
+
 CREATE PROCEDURE dameAdministradores()
 BEGIN
-	SELECT
-		a.idAdministrador AS id,
-		a.email,
-		e.empresa,
-		a.rol
-	FROM Administradores a
-	JOIN Empresas e
-		USING (idEmpresa)
-	WHERE e.esSistema = 0
-	ORDER BY a.idAdministrador DESC;
+  SELECT
+    a.idAdministrador AS id,
+    a.email,
+    e.empresa,
+    a.rol
+  FROM Administradores a
+  JOIN Empresas e
+    USING (idEmpresa)
+  WHERE e.esSistema = 0
+  ORDER BY a.idAdministrador DESC;
 END //
+
 DELIMITER ;
 
 DELIMITER //
+
 CREATE PROCEDURE dameAdministrador(
   IN pIdAdministrador SMALLINT
 )
@@ -247,20 +260,22 @@ BEGIN
   WHERE a.idAdministrador = pIdAdministrador
   LIMIT 1;
 END //
+
 DELIMITER ;
 
 DELIMITER //
+
 CREATE PROCEDURE altaAdministrador(
-	IN pEmail         VARCHAR(256),
-	IN pNombreEmpresa VARCHAR(100),
-	IN pClaveHash     VARCHAR(60)
+  IN pEmail         VARCHAR(256),
+  IN pNombreEmpresa VARCHAR(100),
+  IN pClaveHash     VARCHAR(60)
 )
 proc: BEGIN
-	DECLARE vCount INT DEFAULT 0;
-	DECLARE vIdEmpresa SMALLINT DEFAULT NULL;
-	DECLARE vIdAdministrador SMALLINT DEFAULT NULL;
+  DECLARE vCount INT DEFAULT 0;
+  DECLARE vIdEmpresa SMALLINT DEFAULT NULL;
+  DECLARE vIdAdministrador SMALLINT DEFAULT NULL;
 
-	-- 1) Resolver idEmpresa por nombre (insensible a mayúsculas/espacios)
+  -- 1) Resolver idEmpresa por nombre (insensible a mayúsculas/espacios)
   SELECT e.idEmpresa
   INTO vIdEmpresa
   FROM `proyecto`.`Empresas` e
@@ -270,56 +285,58 @@ proc: BEGIN
   LIMIT 1;
 
 
-	IF vIdEmpresa IS NULL THEN
-		SIGNAL SQLSTATE '45000'
-			SET MESSAGE_TEXT = 'EMPRESA_INEXISTENTE';
-	END IF;
+  IF vIdEmpresa IS NULL THEN
+    SIGNAL SQLSTATE '45000'
+      SET MESSAGE_TEXT = 'EMPRESA_INEXISTENTE';
+  END IF;
 
-	-- 2) Empresa activa
-	SELECT COUNT(*) INTO vCount
-	FROM `proyecto`.`Empresas`
-	WHERE idEmpresa = vIdEmpresa
-	  AND estado = 'A'
-	LIMIT 1;
+  -- 2) Empresa activa
+  SELECT COUNT(*) INTO vCount
+  FROM `proyecto`.`Empresas`
+  WHERE idEmpresa = vIdEmpresa
+    AND estado = 'A'
+  LIMIT 1;
 
-	IF vCount = 0 THEN
-		SIGNAL SQLSTATE '45000'
-			SET MESSAGE_TEXT = 'EMPRESA_INACTIVA';
-	END IF;
+  IF vCount = 0 THEN
+    SIGNAL SQLSTATE '45000'
+      SET MESSAGE_TEXT = 'EMPRESA_INACTIVA';
+  END IF;
 
-	SELECT COUNT(*) INTO vCount
-	FROM `proyecto`.`Administradores`
-	WHERE idEmpresa = vIdEmpresa
-	  AND email = TRIM(LOWER(pEmail))
-	LIMIT 1;
+  SELECT COUNT(*) INTO vCount
+  FROM `proyecto`.`Administradores`
+  WHERE idEmpresa = vIdEmpresa
+    AND email = TRIM(LOWER(pEmail))
+  LIMIT 1;
 
-	IF vCount > 0 THEN
-		SIGNAL SQLSTATE '23000'
-			SET MESSAGE_TEXT = 'EMAIL_DUPLICADO';
-	END IF;
+  IF vCount > 0 THEN
+    SIGNAL SQLSTATE '23000'
+      SET MESSAGE_TEXT = 'EMAIL_DUPLICADO';
+  END IF;
 
-	-- 4) Insertar con rol ADMIN
-	INSERT INTO `proyecto`.`Administradores`
-		(idEmpresa, email, clave, rol)
-	VALUES
-		(vIdEmpresa, TRIM(LOWER(pEmail)), pClaveHash, 'ADMIN');
+  -- 4) Insertar con rol ADMIN
+  INSERT INTO `proyecto`.`Administradores`
+    (idEmpresa, email, clave, rol)
+  VALUES
+    (vIdEmpresa, TRIM(LOWER(pEmail)), pClaveHash, 'ADMIN');
 
-	SET vIdAdministrador = LAST_INSERT_ID();
+  SET vIdAdministrador = LAST_INSERT_ID();
 
-	-- 5) Retornar fila creada
-	SELECT
-		a.idAdministrador AS id,
-		a.email,
-		e.empresa,
-		a.rol
-	FROM `proyecto`.`Administradores` a
-	JOIN `proyecto`.`Empresas` e USING (idEmpresa)
-	WHERE a.idAdministrador = vIdAdministrador
-	LIMIT 1;
-END//
+  -- 5) Retornar fila creada
+  SELECT
+    a.idAdministrador AS id,
+    a.email,
+    e.empresa,
+    a.rol
+  FROM `proyecto`.`Administradores` a
+  JOIN `proyecto`.`Empresas` e USING (idEmpresa)
+  WHERE a.idAdministrador = vIdAdministrador
+  LIMIT 1;
+END //
+
 DELIMITER ;
 
 DELIMITER //
+
 CREATE PROCEDURE modificaAdministrador(
   IN pIdAdministrador SMALLINT,
   IN pEmail          VARCHAR(256),
@@ -375,9 +392,11 @@ proc: BEGIN
   WHERE a.idAdministrador = pIdAdministrador
   LIMIT 1;
 END //
+
 DELIMITER ;
 
 DELIMITER //
+
 CREATE PROCEDURE borraAdministrador(
   IN pIdAdministrador SMALLINT
 )
@@ -426,10 +445,12 @@ BEGIN
   WHERE idAdministrador = pIdAdministrador;
 
   COMMIT;
-END//
+END //
+
 DELIMITER ;
 
 DELIMITER //
+
 CREATE PROCEDURE dameCuotas(
   IN pPage INT,
   IN pPageSize INT,
@@ -558,5 +579,6 @@ BEGIN
   JOIN Empresas e ON e.idEmpresa = c.idEmpresa
   WHERE (vEmpresaLike IS NULL OR e.empresa LIKE vEmpresaLike)
     AND (vUrlLike IS NULL OR e.url LIKE vUrlLike);
-END//
+END //
+
 DELIMITER ;

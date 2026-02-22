@@ -3,9 +3,9 @@
   #set text(style: "italic", size: 12pt, tracking: 0.5pt)
   #set par(leading: 1em)
 
-  "Quiero expresar mi más sincero agradecimiento a mis seres queridos, a mi familia y a mi pareja, por acompañarme a lo largo de este camino recorrido en esta casa de altos estudios y por haber sido una fuente permanente de apoyo, fortaleza y aliento durante todo el proceso."
+  "Quiero expresar mi más sincero agradecimiento a mis seres queridos, a mi familia y a mi pareja, por acompañarme a lo largo de este camino recorrido en esta casa de altos estudios y por haber sido una fuente permanente de apoyo, fortaleza y aliento durante todo el proceso"
 
-  #text(size: 2pt)[Mozart me estaba esperando.]
+  #text(size: 2pt)[Mozart me estaba esperando]
 ]
 
 #page(margin: (left: 5cm, right: 3cm, top: 2cm, bottom: 4cm))[

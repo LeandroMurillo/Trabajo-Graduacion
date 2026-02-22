@@ -6,7 +6,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 import App from './App';
 import Layout from './Layout';
-
+import AuthAction from './pages/AuthAction';
 import CredentialsSignInPage from './pages/paginaLogin';
 import DashboardPage from './pages';
 import NotFound from './pages/notFound';
@@ -15,6 +15,7 @@ import paginaPerfilPostulante from './pages/paginaPerfilPostulante';
 import Registro from './pages/registro';
 import RestablecerContraseña from './pages/RestablecerContraseña';
 import PaginaVacante from './pages/paginaVacante';
+import NuevaContraseña from './pages/NuevaContraseña';
 
 const queryClient = new QueryClient();
 
@@ -23,6 +24,10 @@ const router = createBrowserRouter([
 		Component: App,
 		errorElement: <NotFound />,
 		children: [
+			{
+				path: '/auth/action',
+				Component: AuthAction,
+			},
 			{
 				path: '/:empresa',
 				Component: Layout,
@@ -68,6 +73,11 @@ const router = createBrowserRouter([
 						path: 'forgot-password',
 						Component: RestablecerContraseña,
 						handle: { title: 'Restablecer contraseña' },
+					},
+					{
+						path: 'reset-password',
+						Component: NuevaContraseña,
+						handle: { title: 'Nueva contraseña' },
 					},
 				],
 			},

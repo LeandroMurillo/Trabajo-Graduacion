@@ -1,0 +1,37 @@
+EMPRESAS = {@idEmpresa + empresa + url + (estilo) + estado + esSistema}
+
+CATEGORIAS = {@idCategoria + @idEmpresa + categoria + orden + estado}
+
+VACANTES = {@idVacante + @idCategoria + @idEmpresa + vacante + descripcion + tipoTrabajo + modalidad + fechaCreacion + (fechaPublicacion) + (fechaCierre) + (localidad) + (nivelExperiencia) + habilidades + estado}
+
+POSTULANTES = {@idPostulante + nombres + apellidos + email + (cuil) + genero + fechaNacimiento + (localidad) + (telefono) + (observaciones) + (habilidades) + estado}
+
+CURRICULUMS = {@idCurriculum + @idPostulante + curriculum + fecha + hash + pdf + estado}
+
+POSTULACIONES = {@idPostulacion + @idCurriculum + @idPostulante + @idVacante + @idEmpresa + fechaPostulacion + estado}
+
+CUOTAS = {@idCuota + @idEmpresa + monto + fechaPago}
+
+ADMINISTRADORES = {@idAdministrador + @idEmpresa + email + clave + rol}
+
+Empresas.estado = [A|I] A: Activa - I: Inactiva
+
+Categorias.estado = [A|I] A: Activa - I: Inactiva
+
+Vacantes.estado = [B|P|C] B: Borrador - P: Publicada - C: Cerrada
+
+Vacantes.tipoTrabajo = [Sin Especificar|Tiempo Completo|Medio Tiempo|Remoto|Híbrido]
+
+Vacantes.modalidad = [Sin Especificar|Presencial|Remoto|Híbrido]
+
+Vacantes.nivelExperiencia = [Junior|SemiSenior|Senior]
+
+Postulantes.genero = [M|F|X] M: Masculino - F: Femenino - X: Prefiero no decirlo
+
+Postulantes.estado = [P|A|I] P: Pendiente - A: Activo - I: Inactivo
+
+Curriculums.estado = [A|I] A: Activo - I: Inactivo
+
+Postulaciones.estado = [F|0|I] F: Favorito - 0: Default - I: Ignorar
+
+Administradores.rol = [SUPERADMIN|ADMIN]

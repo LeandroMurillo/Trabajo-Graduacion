@@ -3,8 +3,6 @@ import db from '../database.js';
 export type Genero = 'M' | 'F' | 'X';
 export type EstadoPostulante = 'P' | 'A' | 'I';
 
-export type Habilidades = string[] | string | null;
-
 export interface PostulanteListRow {
 	id: string;
 	nombres: string;
@@ -16,6 +14,7 @@ export interface PostulanteListRow {
 	localidad: string | null;
 	telefono: string | null;
 	observaciones: string | null;
+	habilidades: string[];
 	estado: EstadoPostulante;
 }
 
@@ -28,7 +27,7 @@ export interface PostulanteRow {
 	fechaNacimiento: string;
 	localidad: string | null;
 	telefono: string | null;
-	habilidades: Habilidades;
+	habilidades: string[] | null;
 }
 
 interface AltaPostulanteData {
@@ -48,6 +47,7 @@ interface ModificaPostulanteData {
 	genero?: Genero | null;
 	localidad?: string | null;
 	telefono?: string | null;
+	habilidades?: string[] | null;
 }
 
 export default class Postulante {
@@ -91,9 +91,12 @@ export default class Postulante {
 			genero = null,
 			localidad = null,
 			telefono = null,
+			habilidades = null,
 		} = data;
 
-		const [[resultado]] = await db.execute('CALL modificaPostulante(?, ?, ?, ?, ?, ?, ?)', [
+		const habilidadesJson = habilidades == null ? null : JSON.stringify(habilidades);
+
+		const [[resultado]] = await db.execute('CALL modificaPostulante(?, ?, ?, ?, ?, ?, ?, ?)', [
 			id,
 			nombres,
 			apellidos,
@@ -101,16 +104,31 @@ export default class Postulante {
 			genero,
 			localidad,
 			telefono,
+			habilidadesJson,
 		]);
 
 		const mensaje = resultado?.mensaje;
 		return typeof mensaje === 'string' && mensaje.trim() ? mensaje : 'OK';
 	}
 
-	static async cambiarEstadoPostulante(
-		id: string,
-		estado: Exclude<EstadoPostulante, 'P'>,
-	): Promise<void> {
-		await db.execute('CALL cambiarEstadoPostulante(?, ?)', [id, estado]);
+	static async activarPostulante(id: string): Promise<string> {
+		const [[resultado]] = await db.execute('CALL activarPostulante(?)', [id]);
+
+		const mensaje = resultado?.mensaje;
+		return typeof mensaje === 'string' && mensaje.trim() ? mensaje : 'OK';
+	}
+
+	static async inactivarPostulante(id: string): Promise<string> {
+		const [[resultado]] = await db.execute('CALL inactivarPostulante(?)', [id]);
+
+		const mensaje = resultado?.mensaje;
+		return typeof mensaje === 'string' && mensaje.trim() ? mensaje : 'OK';
+	}
+
+	static async reactivarPostulante(id: string): Promise<string> {
+		const [[resultado]] = await db.execute('CALL reactivarPostulante(?)', [id]);
+
+		const mensaje = resultado?.mensaje;
+		return typeof mensaje === 'string' && mensaje.trim() ? mensaje : 'OK';
 	}
 }

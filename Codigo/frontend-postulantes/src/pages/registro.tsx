@@ -1,10 +1,10 @@
-import { useState, FormEvent, MouseEvent, ChangeEvent } from 'react';
+import { useState, type FormEvent, type MouseEvent, type ChangeEvent } from 'react';
 import 'dayjs/locale/es';
 
 // --- External Libraries ---
 import { useMutation } from '@tanstack/react-query';
 import { useNavigate, useParams } from 'react-router';
-import dayjs, { Dayjs } from 'dayjs';
+import dayjs, { type Dayjs } from 'dayjs';
 import updateLocale from 'dayjs/plugin/updateLocale';
 
 // --- MUI Components ---
@@ -28,16 +28,16 @@ import { esES } from '@mui/x-date-pickers/locales';
 
 // --- Internal Imports ---
 import { InputField, PasswordField } from '../components/Entradas';
-import { altaPostulante } from '../api';
+import { registrarPostulante } from '../firebase/auth'; // <- antes: altaPostulante
 import { useSnackbar } from 'notistack';
 
 // --- Types ---
-interface RegisterData {
+interface FormularioRegistroData {
 	nombres: string;
 	apellidos: string;
 	email: string;
 	contraseña: string;
-	fechaNacimiento: string; // formato: DD-MM-AAAA
+	fechaNacimiento: string; // formato: YYYY-MM-DD
 	genero: string; // M, F, X
 }
 
@@ -91,7 +91,7 @@ dayjs.updateLocale('es', {
 /**
  * Validates the form values and returns an error object.
  */
-const validateForm = (values: FormValues): FormErrors => {
+function validateForm(values: FormValues): FormErrors {
 	const newErrors: FormErrors = {};
 	const today = dayjs();
 
@@ -132,13 +132,12 @@ const validateForm = (values: FormValues): FormErrors => {
 	}
 
 	return newErrors;
-};
+}
 
 // --- Component ---
-
 export default function Registro() {
 	const navigate = useNavigate();
-	const { empresa } = useParams(); // 👈 leemos :empresa
+	const { empresa } = useParams();
 
 	const [values, setValues] = useState<FormValues>({
 		nombres: '',
@@ -151,14 +150,14 @@ export default function Registro() {
 	});
 
 	const [errors, setErrors] = useState<FormErrors>({});
-	const [showPassword, setShowPassword] = useState<boolean>(false);
+	const [showPassword, setShowPassword] = useState(false);
 
 	const { enqueueSnackbar } = useSnackbar();
 
 	const mutation = useMutation({
-		mutationFn: altaPostulante,
+		mutationFn: registrarPostulante,
 		onSuccess: () => {
-			enqueueSnackbar('Registro exitoso. Redirigiendo...', {
+			enqueueSnackbar('Registro exitoso. Revisa tu correo para verificar tu cuenta.', {
 				variant: 'success',
 			});
 
@@ -172,70 +171,75 @@ export default function Registro() {
 		},
 	});
 
-	const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+	function handleChange(e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
 		const { name, value } = e.target;
+
 		setValues((prev) => ({
 			...prev,
 			[name]: value,
 		}));
-		// Optionally, clear error on change
+
 		if (errors[name as keyof FormErrors]) {
 			setErrors((prev) => ({
 				...prev,
 				[name]: undefined,
 			}));
 		}
-	};
+	}
 
-	const handleDateChange = (newValue: Dayjs | null) => {
+	function handleDateChange(newValue: Dayjs | null) {
 		setValues((prev) => ({
 			...prev,
 			fechaNacimiento: newValue,
 		}));
+
 		if (errors.fechaNacimiento) {
 			setErrors((prev) => ({
 				...prev,
 				fechaNacimiento: undefined,
 			}));
 		}
-	};
+	}
 
-	const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+	function handleSubmit(event: FormEvent<HTMLFormElement>) {
 		event.preventDefault();
 
 		const newErrors = validateForm(values);
 		setErrors(newErrors);
 
 		if (Object.keys(newErrors).length > 0) {
-			return; // Validation failed
+			return;
 		}
 
-		// Validation passed, create user object
-		const newUser: RegisterData = {
+		const newUser: FormularioRegistroData = {
 			nombres: values.nombres.trim(),
 			apellidos: values.apellidos.trim(),
 			email: values.email.trim(),
 			contraseña: values.contraseña.trim(),
-			fechaNacimiento: values.fechaNacimiento!.format('DD-MM-YYYY'),
+			fechaNacimiento: values.fechaNacimiento!.format('YYYY-MM-DD'),
 			genero: values.genero,
 		};
 
 		mutation.mutate(newUser);
-	};
+	}
 
 	// --- Password Field Handlers ---
-	const handleClickShowPassword = () => setShowPassword((show) => !show);
-	const handleMouseDownPassword = (event: MouseEvent<HTMLButtonElement>) => {
-		event.preventDefault();
-	};
-	const handleMouseUpPassword = (event: MouseEvent<HTMLButtonElement>) => {
-		event.preventDefault();
-	};
+	function handleClickShowPassword() {
+		setShowPassword((show) => !show);
+	}
 
-	const handleIrALogin = () => {
+	function handleMouseDownPassword(event: MouseEvent<HTMLButtonElement>) {
+		event.preventDefault();
+	}
+
+	function handleMouseUpPassword(event: MouseEvent<HTMLButtonElement>) {
+		event.preventDefault();
+	}
+
+	function handleIrALogin() {
 		const base = empresa ? `/${empresa}` : '';
 		navigate(`${base}/login`);
-	};
+	}
 
 	return (
 		<Stack direction='column' justifyContent='space-between'>
@@ -247,10 +251,11 @@ export default function Registro() {
 				>
 					Regístrate
 				</Typography>
+
 				<Box
 					component='form'
 					onSubmit={handleSubmit}
-					noValidate // Disable browser validation
+					noValidate
 					sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}
 				>
 					<InputField
@@ -259,11 +264,12 @@ export default function Registro() {
 						helperText={errors.nombres ?? ''}
 						id='nombres'
 						label='Nombre(s)'
-						name='nombres' // Needs name for handleChange
+						name='nombres'
 						onChange={handleChange}
 						value={values.nombres}
 						required
 					/>
+
 					<InputField
 						autoComplete='apellido'
 						error={!!errors.apellidos}
@@ -275,6 +281,7 @@ export default function Registro() {
 						value={values.apellidos}
 						required
 					/>
+
 					<InputField
 						autoComplete='email'
 						error={!!errors.email}
@@ -286,6 +293,7 @@ export default function Registro() {
 						value={values.email}
 						required
 					/>
+
 					<PasswordField
 						error={!!errors.contraseña}
 						handleClickShowPassword={handleClickShowPassword}
@@ -300,6 +308,7 @@ export default function Registro() {
 						required
 						showPassword={showPassword}
 					/>
+
 					<PasswordField
 						error={!!errors.verifyPassword}
 						handleClickShowPassword={handleClickShowPassword}
@@ -314,6 +323,7 @@ export default function Registro() {
 						required
 						showPassword={showPassword}
 					/>
+
 					<FormControl fullWidth error={!!errors.genero}>
 						<TextField
 							id='genero'
@@ -365,6 +375,7 @@ export default function Registro() {
 					<Button fullWidth type='submit' variant='contained' disabled={mutation.isPending}>
 						{mutation.isPending ? 'Procesando...' : 'Continuar'}
 					</Button>
+
 					<Typography sx={{ textAlign: 'center' }}>
 						Ya estás registrado?{' '}
 						<Link

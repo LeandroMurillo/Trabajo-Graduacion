@@ -7,6 +7,7 @@
 
 - Apuntes de clase de Ingeniería de Software
 - Apuntes de clase del Taller de AOO con Herramienta CASE
+- Apuntes de curso de Ingeniería de Datos de Alto Rendimiento (IDAR) 2024
 - Docs. de Docker - #enlace("https://docs.docker.com/")[https://docs.docker.com] \ #enlace("https://wiki.archlinux.org/title/Docker")[https://wiki.archlinux.org/title/Docker] - 08/2025
 - Docs. de Draw.io - #enlace("https://www.drawio.com/doc/")[https://www.drawio.com/doc] - 01/2026
 - Docs. de Express - #enlace("https://expressjs.com/")[https://expressjs.com] - 06/2025

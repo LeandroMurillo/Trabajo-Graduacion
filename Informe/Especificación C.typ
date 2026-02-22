@@ -96,6 +96,9 @@ Un actor interactúa con el sistema, pudiendo ser estos un usuario u otro sistem
   - #enlace(<CU31>)[CU31 - Modificar Datos Perfil Postulante]
   - #enlace(<CU32>)[CU32 - Activar cuenta]
   - #enlace(<CU33>)[CU33 - Restablecer contraseña]
+  - #enlace(<CU41>)[CU41 - Cambiar Contraseña]
+  - #enlace(<CU42>)[CU42 - Inactivar Postulante]
+  - #enlace(<CU43>)[CU43 - Reactivar Postulante]
 
 #linebreak()
 - Gestión Postulaciones
@@ -115,255 +118,13 @@ Un actor interactúa con el sistema, pudiendo ser estos un usuario u otro sistem
 #linebreak()
 === Diagramas de casos de uso
 
-#figure(
-  image("EspecificacionC/GestionarEmpresas.jpg", width: 100%),
-  caption: [Diagrama de casos de uso para Gestionar Empresas],
-)
-
-#figure(
-  image("EspecificacionC/GestionarAdministradores.jpg", width: 100%),
-  caption: [Diagrama de casos de uso para Gestionar Administradores],
-)
-
-#figure(
-  image("EspecificacionC/Gestionar Cuotas.png", width: 100%),
-  caption: [Diagrama de casos de uso para Gestionar Cuotas],
-)
-
-#figure(
-  image("EspecificacionC/GestionarCategorias.jpg", width: 100%),
-  caption: [Diagrama de casos de uso para Gestionar Categorías],
-)
-
-#figure(
-  image("EspecificacionC/GestionarVacantes.jpg", width: 100%),
-  caption: [Diagrama de casos de uso para Gestionar Vacantes],
-)
-
-#figure(
-  image("EspecificacionC/GestionarPostulantes.jpg", width: 100%),
-  caption: [Diagrama de casos de uso para Gestionar Postulantes],
-)
-
-#figure(
-  image("EspecificacionC/GestionarPostulaciones.jpg", width: 100%),
-  caption: [Diagrama de casos de uso para Gestionar Postulaciones],
-)
-
-#figure(
-  image("EspecificacionC/GestionarCurriculums.jpg", width: 100%),
-  caption: [Diagrama de casos de uso para Gestionar Currículums],
-)
+Ver anexo: #enlace(<DiagCU>)[Diagramas de casos de uso].
 
 #pagebreak()
 === Descripción textual de los casos de uso y diagramas de actividad
 
-A continuación se encuentran los casos de uso más relevantes del sistema. Los restantes pueden ser consultados en el Anexo.
+A continuación se encuentra un caso de uso relevante del sistema. Los restantes pueden ser consultados en el anexo: #enlace(<DescCU>)[Descripción textual de los casos de uso].
 
-#figure(
-  caption: [Nueva Empresa],
-  table(
-    columns: 1fr,
-    align: left,
-    table.header([CU05 - Nueva Empresa]),
-
-    [Resumen:
-
-      Este caso de uso permite al superadministrador crear una nueva empresa en SGVac. Controla que el _slug_ de la empresa no esté duplicado.],
-
-    [Actores: Superadministrador (primario).],
-
-    [Personal involucrado y metas:
-
-      Superadministrador: quiere crear una nueva empresa de forma rápida y confiable.],
-
-    [Precondiciones:
-
-      El superadministrador ejecutó con éxito el #enlace(<CU01>)[CU01 - Iniciar Sesión Administrador].],
-
-    [Postcondiciones:
-
-      Se registra la empresa en estado activo.],
-
-    [Escenario principal:
-
-      //creo que no hace falta esta precondición en 1...
-      1. El superadministrador elige la opción de añadir desde el menú de empresas.
-      2. SGVac muestra al superadministrador un formulario para que ingrese el nombre de la empresa y el _slug_ de sitio web de la empresa.
-      3. El superadministrador introduce el nombre de la empresa y el _slug_ de sitio web de la empresa.
-      4. SGVac da de alta a la empresa en estado activo y regresa al #enlace(<CU04>)[CU04 - Listar Empresas].
-    ],
-
-    [Flujos alternativos:
-
-      \
-      - A1: el superadministrador no ingresa nombre de la empresa y/o _slug_ del sitio web.
-
-        La secuencia A1 comienza en el punto 3 del escenario principal.
-        4. SGVac comunica al superadministrador que el nombre de la empresa y el _slug_ de la url son obligatorios.
-        El escenario vuelve al punto 2.
-
-      \
-      \
-      - A2: el _slug_ del sitio web de la empresa ya existe.
-
-        La secuencia A2 comienza en el punto 3 del escenario principal.
-        4. SGVac comunica al superadministrador que el _slug_ del sitio web ya existe.
-        El escenario vuelve al punto 2.
-    ],
-  ),
-) <CU05>
-
-#figure(
-  image("Actividad/Nueva Empresa.drawio.png", width: 100%),
-  caption: [Diagrama de actividad: Nueva Empresa],
-)
-
-#pagebreak()
-#figure(
-  caption: [Registrar Administrador],
-  table(
-    columns: 1fr,
-    align: left,
-    table.header([CU12 - Registrar Administrador]),
-
-    [Resumen:
-
-      Este caso de uso permite al superadministrador registrar un nuevo administrador en SGVac y vincularlo a una empresa activa.
-    ],
-
-    [Actores: Superadministrador (primario).],
-
-    [Personal involucrado y metas:
-
-      Superadministrador: quiere registrar un administrador y vincularlo a una empresa de forma rápida y confiable.],
-
-    [Precondiciones:
-
-      El superadministrador ejecutó con éxito el #enlace(<CU01>)[CU01 - Iniciar Sesión Administrador].],
-
-    [Postcondiciones:
-
-      El administrador queda registrado y vinculado a la empresa seleccionada.
-    ],
-
-    [Escenario principal:
-
-      1. El superadministrador elige la opción de añadir desde el menú de administradores.
-      2. SGVac muestra un formulario para ingresar: correo electrónico, empresa, contraseña y confirmación de contraseña.
-      3. El superadministrador completa los campos correo electrónico, contraseña y confirmación de contraseña y selecciona la empresa correspondiente.
-      4. SGVac registra al administrador, lo vincula a la empresa seleccionada y vuelve al caso de uso #enlace(<CU10>)[CU10 - Listar Administradores].
-    ],
-
-    [Flujos Alternativos:
-
-      - A1: el superadministrador no ingresa correo, empresa, contraseña y/o confirmar contraseña.
-
-        La secuencia A1 comienza en el punto 3 del escenario principal.
-        4. SGVac comunica al superadministrador que el correo, empresa, y/o contraseña son obligatorios.
-        El escenario vuelve al punto 2.
-
-      - A2: el correo ya existe.
-
-        La secuencia A2 comienza en el punto 3 del escenario principal.
-        4. SGVac comunica al superadministrador que ya existe un administrador con ese correo.
-        El escenario vuelve al punto 2.
-
-      - A3: el superadministrador ingresa una nueva contraseña pero no su confirmación.
-
-        La secuencia A3 comienza en el punto 3 del escenario principal.
-        4. SGVac comunica al superadministrador que debe confirmar la contraseña.
-        El escenario vuelve al punto 2.
-
-      - A4: el administrador ingresa una contraseña con menos de 8 caracteres.
-
-        La secuencia A4 comienza en el punto 3 del escenario principal.
-        4. SGVac comunica al superadministrador que la contraseña debe tener al menos 8 caracteres.
-        El escenario vuelve al punto 2.
-
-      - A5: la contraseña y su confirmación no coinciden.
-
-        La secuencia A5 comienza en el punto 3 del escenario principal.
-        4. SGVac comunica al superadministrador que las contraseñas no coinciden.
-        El escenario vuelve al punto 2.
-    ],
-  ),
-) <CU12>
-
-#figure(
-  image("Actividad/Registrar Administrador.drawio.png", width: 100%),
-  caption: [Diagrama de actividad: Registrar Administrador],
-)
-
-#pagebreak()
-#figure(
-  caption: [Listar Vacantes Avanzado],
-  table(
-    columns: 1fr,
-    align: left,
-    table.header([CU22 - Listar Vacantes Avanzado]),
-
-    [Resumen:
-
-      Este caso de uso permite al administrador listar las vacantes de su empresa y operar sobre ellas. El listado puede ordenarse en forma ascendente o descendente por categoría, título, localidad, fecha de publicación, fecha de cierre y estado (por defecto, se ordena por fecha de publicación en forma descendente). El listado puede navegarse mediante paginación. Opcionalmente, se pueden filtrar las vacantes por categoría.],
-
-    [Actores: Administrador (primario).],
-
-    [Personal involucrado y metas:
-
-      Administradores: quieren consultar las vacantes de su empresa para operar sobre ellas de forma rápida y confiable.],
-
-    [Precondiciones:
-
-      El administrador ejecutó con éxito el #enlace(<CU01>)[CU01 - Iniciar Sesión Administrador].],
-
-    [Postcondiciones:
-
-      Se muestra una lista con las vacantes de la empresa, con opción a operar con ellas.],
-
-    [Escenario principal:
-
-      1. El Administrador elige la opción “Vacantes” del menú principal.
-      2. SGVac muestra al Administrador una lista paginada de vacantes correspondientes a su empresa, con opciones para operar sobre ellas.
-      3. El Administrador navega entre las páginas del listado.
-      4. SGVac actualiza el listado mostrando la página seleccionada.
-      5. El Administrador selecciona un criterio de ordenamiento y una dirección (ascendente/descendente).
-      6. SGVac actualiza el listado aplicando el ordenamiento seleccionado.
-    ],
-
-    [Flujos Alternativos:
-
-      \
-      - A1: El administrador consulta solamente las vacantes asociadas a una categoría de su empresa.
-
-        La secuencia A1 comienza en el punto 1 del escenario principal.
-        2. SGVac muestra una lista paginada de vacantes con el filtro de categoría aplicado.
-        El escenario vuelve al punto 3.
-
-      \
-      \
-      - A2: No existen vacantes para mostrar.
-
-        La secuencia A2 comienza en el punto 2 del escenario principal.
-        3. SGVac comunica al administrador que no hay resultados y muestra el listado vacío.
-        El escenario finaliza.
-
-      /* \
-      - A2: Error al obtener el listado.
-
-        La secuencia A2 comienza en los puntos 2, 4 o 6 del escenario principal.
-        3. SGVac comunica al Administrador que ocurrió un error al obtener las vacantes.
-        El escenario finaliza. */
-    ],
-  ),
-) <CU22>
-
-#figure(
-  image("Actividad/Listar Vacantes Avanzado.drawio.png", width: 100%),
-  caption: [Diagrama de actividad: Listar Vacantes Avanzado],
-)
-
-#pagebreak()
 #figure(
   caption: [Nueva Postulación],
   table(
@@ -399,22 +160,18 @@ A continuación se encuentran los casos de uso más relevantes del sistema. Los 
 
     [Flujos Alternativos:
 
-      \
       - A1: El postulante no tiene un currículum cargado.
 
         La secuencia A1 comienza en el punto 2 del escenario principal.
         3. SGVac informa que el postulante no posee un currículum cargado y le ofrece la opción de subir uno.
         El caso de uso termina.
 
-      \
       - A2: El postulante desea reemplazar el currículum cargado por otro.
 
         La secuencia A2 comienza en el punto 3 del escenario principal.
         4. Postulante selecciona la opción “Reemplazar currículum”.
         El caso de uso termina.
 
-      \
-      \
       - A3: El postulante no confirma la postulación.
 
         La secuencia A3 comienza en el punto 3 del escenario principal.
@@ -433,69 +190,4 @@ A continuación se encuentran los casos de uso más relevantes del sistema. Los 
 #figure(
   image("Actividad/Nueva Postulación.drawio.png", width: 98%),
   caption: [Diagrama de actividad: Nueva Postulación],
-)
-
-#pagebreak()
-#figure(
-  caption: [Cargar currículum],
-  table(
-    columns: 1fr,
-    align: left,
-    table.header([CU40 - Cargar currículum]),
-
-    [Resumen:
-
-      Este caso de uso permite al postulante autenticado cargar un currículum.],
-
-    [Actores: Postulante (primario).],
-
-    [Personal involucrado y metas:
-
-      Postulantes: quieren cargar su currículum vigente de forma rápida y confiable.],
-
-    [Precondiciones:
-
-      El postulante ejecutó con éxito el #enlace(<CU02>)[CU02 - Iniciar Sesión Postulante].],
-
-    [Postcondiciones:
-
-      Queda registrado el currículum vigente del postulante junto con sus metadatos (nombre del archivo y _hash_).],
-
-    [Escenario principal:
-
-      1. El postulante selecciona la opción “Añadir CV”.
-      2. SGVac solicita al postulante seleccionar un archivo de currículum en un formato permitido.
-      3. El postulante selecciona el archivo y confirma la operación.
-      4. SGVac registra el currículum como vigente y muestra un mensaje confirmando la actualización.
-    ],
-
-    // no hicimos la validación de que el archivo tiene que ser pdf si o si. Podemos poner todos los archivos en el explorador y poner una imagen por ejemplo.
-
-    [Flujos Alternativos:
-
-      - A1: El postulante ya posee un currículum cargado.
-
-        La secuencia A1 comienza en el punto 1 del escenario principal.
-        2. SGVac redirige al postulante al #enlace(<CU39>)[CU39 - Ver Currículum] y le ofrece al postulante la opción de "Reemplazar currículum".
-        3. El postulante elije la opción "Reemplazar currículum".
-        El escenario vuelve al punto 2.
-
-      - A2: El postulante no confirma la carga del currículum.
-
-        La secuencia A2 comienza en el punto 3 del escenario principal.
-        4. El postulante decide no confirmar la carga del currículum.
-        El caso de uso termina.
-
-      - A3: Error al subir o guardar el currículum.
-
-        La secuencia A3 comienza en el punto 3 del escenario principal.
-        4. SGVac informa al postulante por un mensaje que hubo un error durante la carga o el registro del archivo.
-        El caso de uso termina.
-    ],
-  ),
-) <CU40>
-
-#figure(
-  image("Actividad/Cargar currículum.drawio.png", width: 100%),
-  caption: [Diagrama de actividad: Cargar currículum],
 )

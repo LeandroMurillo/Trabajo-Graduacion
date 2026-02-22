@@ -1,4 +1,5 @@
 import { z, ZodError } from 'zod';
+import { firebaseAdminAuth } from '../firebase/firebaseConfig.js';
 import Curriculum from '../models/curriculums.js';
 import Postulacion from '../models/postulaciones.js';
 import CurriculumSchemas from '../schemas/curriculumSchema.js';
@@ -7,10 +8,6 @@ import { modificarDatosPerfilBodySchema } from '../schemas/postulanteSchema.js';
 
 import Postulante from '../models/postulantes.js';
 import { verificarCookieDeSession, revocarSesionPorCookie } from '../firebase/auth.js';
-
-function getUidFromDecoded(decoded) {
-	return decoded?.user_id || decoded?.sub || decoded?.uid || null;
-}
 
 export default class ProtectedController {
 	static async verifySessionCookie(req, res, next) {
@@ -23,25 +20,40 @@ export default class ProtectedController {
 
 			const decoded = await verificarCookieDeSession(sessionCookie);
 
-			const uid = getUidFromDecoded(decoded);
+			const uidRaw = decoded?.user_id || decoded?.sub || decoded?.uid || null;
+			const uid = uidRaw ? String(uidRaw) : null;
+
 			if (!uid) {
-				res.clearCookie('session', { httpOnly: true });
-				return res.status(401).json({ error: 'Sesión inválida.' });
+				res.clearCookie('session', {
+					httpOnly: true,
+					secure: process.env.NODE_ENV === 'production',
+				});
+				return res.status(401).json({ error: 'Sesión inválida o expirada.' });
 			}
 
-			const estado = await Postulante.dameEstadoPostulante(uid);
-			if (estado === 'I') {
-				res.clearCookie('session', { httpOnly: true });
+			req.user = { ...decoded, uid };
+			return next();
+		} catch (error) {
+			const code = String(error?.code ?? error?.message ?? '');
+
+			res.clearCookie('session', {
+				httpOnly: true,
+				secure: process.env.NODE_ENV === 'production',
+			});
+
+			if (code === 'POSTULANTE_INACTIVO') {
 				return res.status(403).json({ error: 'Cuenta inactiva.' });
 			}
 
-			// ✅ Unificamos: siempre req.user.uid
-			req.user = { ...decoded, uid };
+			if (code === 'POSTULANTE_PENDIENTE') {
+				return res.status(403).json({ error: 'Cuenta pendiente de activación.' });
+			}
 
-			return next();
-		} catch (error) {
-			console.error(error);
-			res.clearCookie('session', { httpOnly: true });
+			if (code.startsWith('auth/')) {
+				return res.status(401).json({ error: 'Sesión inválida o expirada.' });
+			}
+
+			console.error('Error verifySessionCookie:', error);
 			return res.status(403).json({ error: 'Acceso denegado.' });
 		}
 	}
@@ -56,29 +68,38 @@ export default class ProtectedController {
 
 			const decoded = await verificarCookieDeSession(sessionCookie);
 
-			const uid = getUidFromDecoded(decoded);
+			const uidRaw = decoded?.user_id || decoded?.sub || decoded?.uid || null;
+			const uid = uidRaw ? String(uidRaw) : null;
+
 			if (!uid) {
-				res.clearCookie('session', { httpOnly: true });
+				res.clearCookie('session', {
+					httpOnly: true,
+					secure: process.env.NODE_ENV === 'production',
+				});
 				return res.status(200).json({ user: null });
 			}
 
-			const estado = await Postulante.dameEstadoPostulante(uid);
-			if (estado === 'I') {
-				res.clearCookie('session', { httpOnly: true });
-				return res.status(200).json({ user: null });
-			}
+			const postulante = await Postulante.damePostulante(uid);
 
-			return res.json({
+			const nombreCompleto = postulante
+				? `${String(postulante.nombres ?? '').trim()} ${String(postulante.apellidos ?? '').trim()}`.trim()
+				: '';
+
+			return res.status(200).json({
 				user: {
-					email: decoded.email,
-					name: decoded.name || null,
-					image: decoded.picture || null,
-					idEmpresa: decoded.idEmpresa,
-					uid, // ✅ consistente
+					email: decoded.email ?? postulante?.email ?? null,
+					name: (nombreCompleto || decoded.name) ?? null,
+					image: decoded.picture ?? null,
+					uid,
 				},
 			});
 		} catch (error) {
-			console.error(error);
+			res.clearCookie('session', {
+				httpOnly: true,
+				secure: process.env.NODE_ENV === 'production',
+			});
+
+			console.error('Error restoreSession:', error);
 			return res.status(200).json({ user: null });
 		}
 	}
@@ -103,14 +124,28 @@ export default class ProtectedController {
 	static async modificaPostulante(req, res) {
 		try {
 			const body = modificarDatosPerfilBodySchema.parse(req.body);
-			const parsed = { id: req.user.uid, ...body };
-
-			console.log(parsed);
+			const uid = String(req.user.uid);
+			const parsed = { id: uid, ...body };
 
 			const mensaje = await Postulante.modificaPostulante(parsed);
 
 			if (mensaje !== 'OK') {
 				return res.status(400).json({ error: mensaje });
+			}
+
+			try {
+				const postulante = await Postulante.damePostulante(uid);
+
+				if (postulante) {
+					const displayName =
+						`${String(postulante.nombres ?? '').trim()} ${String(postulante.apellidos ?? '').trim()}`.trim();
+
+					if (displayName) {
+						await firebaseAdminAuth.updateUser(uid, { displayName });
+					}
+				}
+			} catch (firebaseError) {
+				console.warn('No se pudo sincronizar displayName en Firebase:', firebaseError);
 			}
 
 			return res.status(200).json({
@@ -199,7 +234,7 @@ export default class ProtectedController {
 			if (error instanceof z.ZodError) {
 				const firstIssue = error.issues[0];
 				return res.status(400).json({
-					error: firstIssue.message || 'Datos inválidos en la petición.',
+					error: firstIssue?.message || 'Datos inválidos en la petición.',
 				});
 			}
 
@@ -244,7 +279,7 @@ export default class ProtectedController {
 			}
 
 			const msg = error?.sqlMessage || error?.message || '';
-			if (msg.includes('NO_SE_PUDO_POSTULAR')) {
+			if (String(msg).includes('NO_SE_PUDO_POSTULAR')) {
 				return res.status(400).json({ error: 'NO_SE_PUDO_POSTULAR' });
 			}
 
@@ -281,7 +316,7 @@ export default class ProtectedController {
 
 			const msg = error?.sqlMessage || error?.message || '';
 
-			if (msg.includes('POSTULACION_NO_EXISTE')) {
+			if (String(msg).includes('POSTULACION_NO_EXISTE')) {
 				return res.status(404).json({ error: 'POSTULACION_NO_EXISTE' });
 			}
 
@@ -313,11 +348,18 @@ export default class ProtectedController {
 
 			res.clearCookie('session', {
 				httpOnly: true,
+				secure: process.env.NODE_ENV === 'production',
 			});
 
 			return res.json({ success: true });
 		} catch (error) {
 			console.error('Error en ProtectedController.logout:', error);
+
+			res.clearCookie('session', {
+				httpOnly: true,
+				secure: process.env.NODE_ENV === 'production',
+			});
+
 			return res.status(500).json({ error: 'Error al cerrar sesión' });
 		}
 	}

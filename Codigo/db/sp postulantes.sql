@@ -8,6 +8,7 @@
 -- ==========================
 
 SET @OLD_FOREIGN_KEY_CHECKS = @@FOREIGN_KEY_CHECKS;
+
 SET FOREIGN_KEY_CHECKS = 0;
 
 -- ==========================
@@ -20,8 +21,10 @@ DROP PROCEDURE IF EXISTS `dameMisPostulaciones`;
 DROP PROCEDURE IF EXISTS `altaPostulacion`;
 DROP PROCEDURE IF EXISTS `borraPostulacion`;
 DROP PROCEDURE IF EXISTS `damePostulante`;
+DROP PROCEDURE IF EXISTS `modificaPostulante`;
 
 DELIMITER //
+
 CREATE PROCEDURE dameCurriculum(
   IN pIdPostulante CHAR(28)
 )
@@ -41,10 +44,12 @@ BEGIN
   END IF;
 
   SELECT 'OK' AS mensaje, vNombre AS nombre, vPdf AS pdf;
-END//
+END //
+
 DELIMITER ;
 
 DELIMITER //
+
 CREATE PROCEDURE altaCurriculum(
   IN pIdPostulante CHAR(28),
   IN pCurriculum VARCHAR(50),
@@ -68,10 +73,12 @@ BEGIN
   END IF;
 
   SELECT 'OK' AS mensaje;
-END//
+END //
+
 DELIMITER ;
 
 DELIMITER //
+
 CREATE PROCEDURE dameCurriculumPorPostulacion(
   IN pIdEmpresa SMALLINT,
   IN pIdPostulacion INT
@@ -97,10 +104,12 @@ proc: BEGIN
   END IF;
 
   SELECT 'OK' AS mensaje, vNombre AS nombre, vPdf AS pdf;
-END//
+END //
+
 DELIMITER ;
 
 DELIMITER //
+
 CREATE PROCEDURE altaPostulacion(
   IN pIdEmpresa SMALLINT,
   IN pIdVacante INT,
@@ -158,9 +167,11 @@ proc: BEGIN
   WHERE p.idPostulacion = vIdPostulacion;
 
 END //
+
 DELIMITER ;
 
 DELIMITER //
+
 CREATE PROCEDURE dameMisPostulaciones(
   IN pIdEmpresa INT,
   IN pIdPostulante CHAR(28)
@@ -184,9 +195,11 @@ BEGIN
     AND p.idPostulante = pIdPostulante
   ORDER BY p.fechaPostulacion DESC;
 END //
+
 DELIMITER ;
 
 DELIMITER //
+
 CREATE PROCEDURE borraPostulacion(
   IN pIdEmpresa SMALLINT,
   IN pIdPostulacion INT,
@@ -207,25 +220,76 @@ proc: BEGIN
 
   COMMIT;
 END //
+
 DELIMITER ;
 
 DELIMITER //
 CREATE PROCEDURE damePostulante(
-	IN pIdPostulante CHAR(28)
+  IN pIdPostulante CHAR(28)
 )
 BEGIN
-	SELECT
+  SELECT
     idPostulante as id,
-		nombres,
-		apellidos,
-		email,
-		cuil,
-		genero,
-		fechaNacimiento,
-		localidad,
-		telefono,
-		habilidades
-	FROM Postulantes
-	WHERE idPostulante = pIdPostulante;
+    nombres,
+    apellidos,
+    email,
+    cuil,
+    genero,
+    fechaNacimiento,
+    localidad,
+    telefono,
+    COALESCE(habilidades, JSON_ARRAY()) AS habilidades
+  FROM Postulantes
+  WHERE idPostulante = pIdPostulante;
+END //
+DELIMITER ;
+
+DELIMITER //
+CREATE PROCEDURE `modificaPostulante`(
+  IN pIdPostulante CHAR(28),
+  IN pNombres VARCHAR(100),
+  IN pApellidos VARCHAR(100),
+  IN pCuil CHAR(11),
+  IN pGenero ENUM('M','F','X'),
+  IN pLocalidad VARCHAR(100),
+  IN pTelefono VARCHAR(15),
+  IN pHabilidades JSON
+)
+sp: BEGIN
+  IF NOT EXISTS (
+    SELECT 1
+    FROM Postulantes
+    WHERE idPostulante = pIdPostulante
+      AND estado = 'A'
+  ) THEN
+    SELECT 'El postulante no existe o no está activo.' AS mensaje;
+    LEAVE sp;
+  END IF;
+
+  IF pHabilidades IS NOT NULL THEN
+    IF JSON_VALID(pHabilidades) = 0 THEN
+      SELECT 'HABILIDADES_INVALIDAS' AS mensaje;
+      LEAVE sp;
+    END IF;
+
+    IF JSON_TYPE(pHabilidades) <> 'ARRAY' THEN
+      SELECT 'HABILIDADES_DEBE_SER_ARRAY' AS mensaje;
+      LEAVE sp;
+    END IF;
+  END IF;
+
+  UPDATE Postulantes
+  SET
+    nombres     = COALESCE(pNombres, nombres),
+    apellidos   = COALESCE(pApellidos, apellidos),
+    cuil        = COALESCE(pCuil, cuil),
+    genero      = COALESCE(pGenero, genero),
+    localidad   = COALESCE(pLocalidad, localidad),
+    telefono    = COALESCE(pTelefono, telefono),
+    habilidades = COALESCE(pHabilidades, habilidades)
+  WHERE idPostulante = pIdPostulante
+    AND estado = 'A';
+
+  SELECT 'OK' AS mensaje;
 END //
 DELIMITER ;

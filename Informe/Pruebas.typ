@@ -1,4 +1,5 @@
-== Pruebas
+#pagebreak()
+= Pruebas
 
 // === Introducción
 
@@ -11,9 +12,9 @@ Cada fase de desarrollo del Sistema de gestión de vacantes (SGVac) incluye una 
   Finalmente, se aplican pruebas de integración, que verifican la interacción y cohesión entre los distintos subsistemas (Frontend Administradores, Frontend Postulantes, Backend y Base de Datos).
 - Pruebas orientadas al cliente: En este caso, se llevan a cabo pruebas de aceptación, donde se evalúa la funcionalidad global del sistema, asegurando que la estructura modular y las interacciones entre sus componentes cumplan con las especificaciones y requerimientos de los usuarios (Administradores y Postulantes).
 
-=== Test de unidades
+== Test de unidades
 
-==== Pruebas de caja blanca
+=== Pruebas de caja blanca
 
 Es un método de prueba que permite detectar errores internos en la lógica del código de cada módulo, examinando el funcionamiento interno del software.
 
@@ -24,9 +25,9 @@ En el contexto de este proyecto, el uso de TypeScript actuó como una primera ba
 - _Backend_: Se verificó la lógica de los controladores (ej. `admin.js`, `auth.js`) asegurando que las respuestas _JSON_ tuvieran la estructura correcta.
 - _Frontend_: Se probaron los componentes visuales (como `TarjetaVacante.tsx` o los formularios de `AdminCrud.tsx`) para asegurar que rendericen la información correctamente según el estado.
 
-=== Test de módulos
+== Test de módulos
 
-==== Pruebas de caja negra
+=== Pruebas de caja negra
 
 En las pruebas de caja negra, se evalúa cada módulo como una unidad funcional independiente sin considerar su implementación interna. Para el SGVac, estas pruebas verifican que las entradas de datos (como la carga de una nueva vacante o el registro de un postulante) cumplan con todos los requisitos funcionales especificados y produzcan las salidas esperadas.
 
@@ -39,13 +40,13 @@ La atención se centra en la entrada y salida de información, generando un conj
 
 Para realizar estas pruebas, utilizamos datos representativos (empresas de prueba, vacantes con distintas fechas de cierre, currículums en formato PDF) y verificamos las salidas en cada caso. Los resultados demostraron que cada módulo cumple satisfactoriamente con los requisitos del sistema.
 
-==== Prueba de estrés
+=== Prueba de estrés
 
 En las pruebas de estrés, se analiza el comportamiento del sistema bajo condiciones de carga elevada. Este test es crítico para el portal de postulantes, que podría recibir un alto volumen de tráfico simultáneo.
 
 En esta prueba, el sistema se sometió a una carga superior a la prevista, simulando múltiples conexiones simultáneas hacia la _API_ en Node.js. Gracias a la arquitectura no bloqueante de Node.js y la eficiencia de MariaDB, el sistema pudo manejar la concurrencia sin degradar significativamente el tiempo de respuesta. Se evaluó especialmente la carga y descarga de archivos (currículums), confirmando que el servidor gestiona adecuadamente el almacenamiento sin bloquear otras peticiones.
 
-=== Test de integración
+== Test de integración
 
 Durante las pruebas de integración, se examina cómo interactúan los distintos módulos entre sí. Dado que el sistema se compone de tres piezas principales (Frontend Administradores, Frontend Postulantes y Backend), los errores pueden surgir en la comunicación entre ellas.
 
@@ -62,9 +63,9 @@ Algunos problemas detectados y resueltos incluyeron:
 
 Se aplicó un enfoque de integración incremental, asegurando primero que el _Backend_ y la Base de Datos (MariaDB) se comunicaran correctamente, para luego integrar cada _Frontend_ por separado.
 
-=== Test de aceptación
+== Test de aceptación
 
 // ==== Pruebas alfa y beta
 
-- La prueba alfa: Fue conducida internamente en el entorno de desarrollo. Se utilizó el software simulando los roles de Superadministrador, Administrador de Empresa y Postulante. Se verificó el flujo completo de los Casos de Uso (ej. Nueva Vacante, Nueva Postulación) en un entorno controlado, registrando y corrigiendo errores de lógica y usabilidad antes de la entrega.
+- La prueba alfa: Fue conducida internamente en el entorno de desarrollo. Se utilizó el software simulando los roles de Superadministrador, Administrador de Empresa y Postulante. Se verificó el flujo completo de los casos de uso (ej. Nueva Vacante, Nueva Postulación) en un entorno controlado, registrando y corrigiendo errores de lógica y usabilidad antes de la entrega.
 - La prueba beta: Se plantea para ser llevada a cabo en un entorno de preproducción. En esta etapa, usuarios externos (como docentes o compañeros actuando como gerentes de RRHH) utilizan el sistema sin la intervención directa de los desarrolladores. El objetivo es detectar problemas no previstos, validar que la interfaz sea intuitiva (especialmente el diseño _responsive_ para postulantes) y asegurar que el sistema satisface todos los requisitos funcionales y de rendimiento establecidos en la especificación.

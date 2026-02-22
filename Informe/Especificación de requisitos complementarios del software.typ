@@ -16,7 +16,7 @@ Cabe destacar la necesidad de una participación activa de los usuarios del futu
 
 == Catálogo de requisitos del sistema
 
-El objetivo de la especificación es definir en forma clara, precisa, completa y verificable todas las funcionalidades y restricciones del sistema que se desea construir. Esta documentación está sujeta a revisiones por el grupo de administradores que se recogerán por medio de sucesivas versiones del documento, hasta alcanzar su aprobación por parte del comité ejecutivo o Gerentes de la empresa que solicita la página de internet. Una vez aprobado, servirá de base al equipo para la construcción del nuevo sistema.
+El objetivo de la especificación es definir en forma clara, precisa, completa y verificable todas las funcionalidades y restricciones del sistema que se desea construir. Esta documentación está sujeta a revisiones por el grupo de administradores que se recogerán por medio de sucesivas versiones del documento, hasta alcanzar su aprobación por parte del comité ejecutivo o gerentes de la empresa que solicita la página de internet. Una vez aprobado, servirá de base al equipo para la construcción del nuevo sistema.
 Esta especificación se ha realizado de acuerdo al estándar "_IEEE Recommended Practice for Software Requirements Specifications_ (IEEE/ANSI 830-1993)".
 
 == Objetivos y alcances del sistema
@@ -33,23 +33,30 @@ Además debe permitir a las personas a registrarse como postulante, postularse a
   - _Web responsive_: hacer que un sitio web sea accesible y adaptable en todos los dispositivos: _tablets_, _smartphones_, etc.
 
 - Abreviaturas:
+  - API: _Application Programming Interface_
+  - CORS: _Cross-Origin Resource Sharing_
   - CRUD: _Create, Read, Update, Delete_
+  - CSS: _Cascading Style Sheets_
   - CU: Caso de Uso
+  - HTML: _HyperText Markup Language_
   - HTTP: _HyperText Transfer Protocol_
   - IEEE: _Institute of Electrical & Electronics Engineers_
+  - JS: JavaScript
   - JWT: _JSON Web Token_
+  - MVC: Modelo Vista Controlador
   - PDF: _Portable Document Format_
   - REST: _Representational State Transfer_
   - SQL: _Structured Query Language_
   - UML: _Unified Modeling Language_
 
+#pagebreak()
 == Descripción general
 
 Esta sección ofrece una descripción general del sistema con el propósito de identificar las funciones que debe soportar, los datos asociados, las restricciones impuestas y cualquier otro factor que pueda influir en su desarrollo.
 
 La plataforma de empleos multiempresa será administrada globalmente por un equipo de superadministradores, quienes asignarán recursos a cada empresa cliente y delegarán autoridad a sus respectivos grupos de administradores para gestionar de forma independiente los sitios web de empleos de cada empresa.
 
-Los superadministradores son responsables de gestionar el acceso de las empresas a la plataforma, asignando, modificando o retirando recursos según sea necesario, además de otorgar la cuenta de administrador correspondiente. Cada empresa se registra con un nombre único, junto con otros datos esenciales como la ruta asignada, el administrador, contraseña, correo y estado de actividad (activa o inactiva).
+Los superadministradores son responsables de gestionar el acceso de las empresas a la plataforma, asignando, modificando o retirando recursos según sea necesario. Cada empresa se registra con un nombre único, junto con la ruta asignada, y el estado de actividad (activa o inactiva).
 
 Los administradores son los responsables de crear, modificar y eliminar tanto categorías como vacantes, además de revisar las postulaciones. Cada administrador de empresa define su propia estructura de clasificación para las vacantes disponibles, estableciendo categorías únicas dentro de su empresa. Cada categoría posee un nombre único y un orden específico en el que aparece en la interfaz de usuario. La interfaz está personalizada para cada empresa en la plataforma.
 
@@ -65,10 +72,11 @@ Los postulantes podrán realizar la búsqueda de las vacantes publicadas en el s
 
 Los administradores, además de contar con los mismos filtros que los postulantes, podrán filtrar las vacantes por estado (borrador, publicado, cerrado), nombre de usuario del postulante, cantidad de postulantes, y fecha de modificación. */
 
+#pagebreak()
 Grupo de Postulantes:
 
 Los postulantes serán personas que tengan un correo electrónico, la posibilidad de ingresar al sitio y que estén en condiciones legales de acceder a una vacante; que cumpla la edad legal mínima y que sea una persona capaz bajo la ley.
-Para registrarse en el sitio web de empleos de una empresa, primero, los postulantes deberán completar los siguientes datos: correo electrónico, contraseña, apellidos, nombres, fecha de nacimiento y género. Es importante que el usuario confirme estos datos antes de avanzar al siguiente paso de registro. La dirección de correo electrónico es obligatoria y única por empresa. La contraseña deberá tener una longitud mínima de 6 caracteres. Finalmente, se le enviará un correo electrónico a la dirección provista para activar la cuenta de usuario.
+Para registrarse en el sitio web de empleos de una empresa, primero, los postulantes deberán completar los siguientes datos: correo electrónico, contraseña, apellidos, nombres, fecha de nacimiento y género. Es importante que el usuario confirme estos datos antes de avanzar al siguiente paso de registro. La dirección de correo electrónico es obligatoria y única. La contraseña deberá tener una longitud mínima de 6 caracteres. Finalmente, se le enviará un correo electrónico a la dirección provista para activar la cuenta de usuario.
 
 Una vez que un postulante se encuentre activo y habilitado para iniciar sesión, podrá cargar su currículum, editar sus datos personales, buscar y aplicar a vacantes según la categoría, y ver sus vacantes aplicadas.
 
@@ -95,7 +103,7 @@ Un postulante puede darse de baja por comportamiento inapropiado, contrario a la
 - Interfaces de usuario: La interfaz gráfica debe cumplir estrictamente con el diseño _web responsive_, adaptándose automáticamente a la resolución del dispositivo. Esto es crítico para los postulantes, quienes accederán mayoritariamente desde dispositivos móviles, y para los administradores que podrían requerir gestionar urgencias desde tabletas o teléfonos.
 - Interfaces _hardware_:
   - Dispositivos móviles: Pantalla táctil con resolución mínima de 360x640 píxeles.
-  - Escritorio/Laptop: Pantalla con resolución mínima de 1366x768 píxeles (recomendado para la visualización de tablas de administración), teclado y dispositivo señalizador (mouse/trackpad).
+  - Escritorio/_Laptop_: Pantalla con resolución mínima de 1366x768 píxeles (recomendado para la visualización de tablas de administración), teclado y dispositivo señalizador (_mouse_/_trackpad_).
 
 - Interfaces software: El sistema requiere un navegador web compatible con los estándares de HTML5, CSS3 y JavaScript (ES6+). Para la visualización de los currículums (formato PDF), se dependerá de los visores integrados en el navegador del cliente.
 

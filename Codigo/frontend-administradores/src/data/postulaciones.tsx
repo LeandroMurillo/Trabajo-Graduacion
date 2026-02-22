@@ -60,6 +60,6 @@ export const postulacionesDataSource: DataSource<Postulacion> = {
 			valueGetter: (v) => toDate(v),
 			width: 180,
 		},
-		{ field: 'localidadPostulante', headerName: 'Localidad', width: 150 },
+		{ field: 'localidadPostulante', headerName: 'Localidad Postulante', width: 150 },
 	],
 };

@@ -80,7 +80,7 @@ services:
           action: rebuild
         # This 'sync' action replaces the old volume mount
         - path: ./frontend-postulantes
-          target: /app  # <-- Make sure this target matches your Dockerfile WORKDIR
+          target: /app # <-- Make sure this target matches your Dockerfile WORKDIR
           action: sync
 
   # ----------------------------------------

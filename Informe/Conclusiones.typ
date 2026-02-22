@@ -12,3 +12,10 @@ Durante el desarrollo, nos enfrentamos a varios desafíos técnicos interesantes
 Diseñamos interfaces diferenciadas porque entendimos que nuestros usuarios tienen necesidades distintas: buscamos eficiencia para los administradores usando Material UI, y una experiencia ágil y moderna para los postulantes. Mediante las pruebas de estrés y usabilidad que realizamos, pudimos verificar que el sistema es robusto y capaz de soportar la concurrencia propia de un entorno laboral activo.
 
 Para concluir, consideramos que el SGVac no solo resuelve la problemática operativa de publicar vacantes de trabajo, sino, que también establece una infraestructura sólida y escalable. Estamos convencidos de que, con esta base tecnológica, el sistema está listo para evolucionar, y dejamos el camino preparado para futuras mejoras, como la incorporación de inteligencia artificial para la clasificación de candidatos.
+
+#pagebreak()
+Más allá de los desafíos técnicos superados, este proyecto ha sido el reflejo de un excelente trabajo en equipo. La sinergia que logramos fue el motor que nos permitió transformar una problemática operativa en una infraestructura sólida y escalable. No solo compartimos horas de código, sino también la voluntad de desafiarnos y profundizar en nuevas tecnologías.
+
+Nada de esto habría alcanzado el mismo nivel de excelencia sin el apoyo constante de nuestro tutor, el ingeniero Maximiliano Odstrcil. Su predisposición y guía fueron fundamentales para navegar los desafíos más complejos del desarrollo. Su confianza en nuestra visión nos permitió aplicar con éxito los conocimientos adquiridos durante nuestra carrera.
+
+Finalmente, llegar a esta instancia representa mucho más que la entrega de un sistema funcional. Es el cierre de una etapa de inmenso aprendizaje y el comienzo de nuestra vida profesional. Terminar nuestra carrera con el SGVac nos llena de orgullo y satisfacción, marcando el fin de un ciclo académico y el cumplimiento de un sueño compartido.

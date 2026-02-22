@@ -43,8 +43,8 @@ jobs:
           printf "%s" "$PGP_PRIVATE_KEY" | gpg --batch --import
 
           # --- 1. Compile with Typst ---
-          typst compile --pdf-standard=a-3u --font-path=Informe Informe/anexo.typ
-          typst compile --pdf-standard=a-3u --font-path=Informe Informe/informe.typ
+          typst compile --root . --pdf-standard=a-3u --font-path=Informe/Fonts Informe/anexo.typ
+          typst compile --root . --pdf-standard=a-3u --font-path=Informe/Fonts Informe/informe.typ
 
           # --- 2. Protect with qpdf ---
           qpdf --replace-input --encrypt "" "$PGP_PASSPHRASE" 256 --modify=none -- Informe/anexo.pdf

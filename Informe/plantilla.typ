@@ -99,13 +99,11 @@
         grid(
           columns: (1fr, 1fr),
           gutter: 1em,
-          author-boxes.at(0),
-          author-boxes.at(1)
+          author-boxes.at(0), author-boxes.at(1),
         )
         v(1em) // Espacio vertical entre filas
         // Segunda fila: 1 autor centrado
         align(center, author-boxes.at(2))
-
       } else {
         // Caso normal (automático para 1, 2, 4+ autores)
         grid(
@@ -114,7 +112,7 @@
           ..author-boxes
         )
       }
-    }
+    },
   )
   // line(length: 0%, stroke: 2pt) // espacio vertical
 

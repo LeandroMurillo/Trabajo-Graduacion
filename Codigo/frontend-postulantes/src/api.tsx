@@ -14,7 +14,6 @@ import type {
 	Postulacion,
 	Postulante,
 	RegisterResponse,
-	RestablecerClaveResponse,
 	Vacante,
 } from './types';
 
@@ -30,13 +29,13 @@ function getEmpresaSlug(): string {
 	return slug || 'acme';
 }
 
-function apiUrl(path: string): string {
+export function apiUrl(path: string): string {
 	if (!path.startsWith('/')) path = `/${path}`;
 	const slug = getEmpresaSlug();
 	return `${API_ORIGIN}/${slug}${path}`;
 }
 
-async function parseErrorMessage(res: Response, fallback: string): Promise<string> {
+export async function parseErrorMessage(res: Response, fallback: string): Promise<string> {
 	let msg = fallback;
 	try {
 		const body = await res.json();
@@ -171,17 +170,31 @@ export async function damePostulante(): Promise<Postulante> {
 	return res.json();
 }
 
-export async function loginPostulante(email: string, password: string): Promise<void> {
+export async function loginPostulante(idToken: string): Promise<void> {
 	const res = await fetch(apiUrl('/api/login'), {
 		method: 'POST',
 		headers: { 'Content-Type': 'application/json' },
 		credentials: 'include',
-		body: JSON.stringify({ email, password }),
+		body: JSON.stringify({ idToken }),
 	});
 
 	if (!res.ok) {
 		throw new Error(await parseErrorMessage(res, 'Error al iniciar sesión'));
 	}
+}
+
+export async function activarPostulante(oobCode: string): Promise<{ message: string }> {
+	const res = await fetch(apiUrl('/api/auth/activar-cuenta'), {
+		method: 'POST',
+		headers: { 'Content-Type': 'application/json' },
+		body: JSON.stringify({ oobCode }),
+	});
+
+	if (!res.ok) {
+		throw new Error(await parseErrorMessage(res, 'No se pudo activar la cuenta.'));
+	}
+
+	return res.json();
 }
 
 export async function logoutPostulante(): Promise<void> {
@@ -196,11 +209,43 @@ export async function logoutPostulante(): Promise<void> {
 }
 
 export async function fetchSession(): Promise<Session | null> {
-	const res = await fetch(apiUrl('/api/session'), { credentials: 'include' });
+	const res = await fetch(apiUrl('/api/session'), {
+		credentials: 'include',
+	});
+
 	if (!res.ok) return null;
 
-	const data = await res.json();
-	return data?.user ? { user: data.user } : null;
+	const data: unknown = await res.json();
+
+	if (!data || typeof data !== 'object' || !('user' in data)) {
+		return null;
+	}
+
+	const user = (data as { user?: unknown }).user;
+
+	if (!user || typeof user !== 'object') {
+		return null;
+	}
+
+	const u = user as {
+		uid?: unknown;
+		name?: unknown;
+		email?: unknown;
+		image?: unknown;
+	};
+
+	if (typeof u.uid !== 'string' || !u.uid) {
+		return null;
+	}
+
+	return {
+		user: {
+			uid: u.uid,
+			name: typeof u.name === 'string' ? u.name : null,
+			email: typeof u.email === 'string' ? u.email : null,
+			image: typeof u.image === 'string' ? u.image : null,
+		},
+	};
 }
 
 export async function dameCurriculum(): Promise<Curriculum[]> {
@@ -275,18 +320,4 @@ export async function darDeBajaPostulacion(id: number): Promise<void> {
 		const body = await res.json().catch(() => ({}));
 		throw new Error(body?.error || 'NO_SE_PUDO_DAR_DE_BAJA');
 	}
-}
-
-export async function enviarRestablecerClave(email: string): Promise<RestablecerClaveResponse> {
-	const res = await fetch(apiUrl('/api/restablecer-clave'), {
-		method: 'POST',
-		headers: { 'Content-Type': 'application/json' },
-		body: JSON.stringify({ email }),
-	});
-
-	if (!res.ok) {
-		throw new Error(await parseErrorMessage(res, 'Error al enviar el correo'));
-	}
-
-	return res.json();
 }

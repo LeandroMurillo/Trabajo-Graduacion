@@ -1,5 +1,6 @@
-// data/postulantes.ts
 import type { DataModel, DataSource } from '@toolpad/core/Crud';
+import Box from '@mui/material/Box';
+import Chip from '@mui/material/Chip';
 
 export interface Postulante extends DataModel {
 	id: string;
@@ -64,26 +65,41 @@ export const PostulantesDataSource: DataSource<Postulante> = {
 		{
 			field: 'habilidades',
 			headerName: 'Habilidades',
-			valueFormatter: (value: unknown) => {
-				if (Array.isArray(value)) return value.map(String).join(', ');
-				if (typeof value === 'string') {
-					try {
-						const parsed: unknown = JSON.parse(value);
-						if (Array.isArray(parsed)) return parsed.map(String).join(', ');
-					} catch {
-						// ignore
-					}
+			sortable: false,
+			filterable: false,
+			width: 320,
+			renderCell: (params) => {
+				const arr = Array.isArray(params.value) ? params.value.map(String) : [];
+				if (arr.length === 0) return '';
 
-					return value
-						.split(',')
-						.map((s) => s.trim())
-						.filter(Boolean)
-						.join(', ');
-				}
+				const chipColors = ['secondary', 'success', 'info', 'warning', 'error'] as const;
 
-				return value == null ? '' : String(value);
+				return (
+					<Box
+						sx={{
+							height: '100%',
+							width: '100%',
+							display: 'flex',
+							alignItems: 'center',
+							justifyContent: 'flex-start',
+							flexWrap: 'wrap',
+							gap: 0.5,
+							alignContent: 'center',
+							py: 0.5,
+						}}
+						onClick={(e) => e.stopPropagation()}
+					>
+						{arr.map((h, i) => (
+							<Chip
+								key={`${params.id}-hab-${i}-${h}`}
+								label={h}
+								size='small'
+								color={chipColors[i % chipColors.length]}
+							/>
+						))}
+					</Box>
+				);
 			},
-			width: 250,
 		},
 		{
 			field: 'estado',

@@ -4,10 +4,13 @@ import { DashboardLayout, ThemeSwitcher } from '@toolpad/core/DashboardLayout';
 import { PageContainer } from '@toolpad/core/PageContainer';
 
 import Stack from '@mui/material/Stack';
+import Box from '@mui/material/Box';
 import { styled } from '@mui/material/styles';
 
-import { SidebarFooterProps } from '@toolpad/core/DashboardLayout';
-import { Account, AccountPreview, AccountPreviewProps } from '@toolpad/core/Account';
+import type { SidebarFooterProps } from '@toolpad/core/DashboardLayout';
+import { Account, AccountPreview, type AccountPreviewProps } from '@toolpad/core/Account';
+
+import { useSession } from './SessionContext';
 
 // Definición de tipo para evitar 'any' en matches
 interface RouteHandle {
@@ -39,6 +42,7 @@ const Fondo = styled(Stack)(({ theme }) => ({
 
 function AccountSidebarPreview(props: AccountPreviewProps & { mini: boolean }) {
 	const { handleClick, open, mini } = props;
+
 	return (
 		<AccountPreview
 			variant={mini ? 'condensed' : 'expanded'}
@@ -49,28 +53,35 @@ function AccountSidebarPreview(props: AccountPreviewProps & { mini: boolean }) {
 	);
 }
 
-const createPreviewComponent = (mini: boolean) => {
+function createPreviewComponent(mini: boolean) {
 	function PreviewComponent(props: AccountPreviewProps) {
 		return <AccountSidebarPreview {...props} mini={mini} />;
 	}
+
 	return PreviewComponent;
-};
+}
 
 function CustomToolbarActions({ mini }: SidebarFooterProps) {
 	const PreviewComponent = React.useMemo(() => createPreviewComponent(mini), [mini]);
+	const { loading } = useSession();
 
 	return (
-		<Stack direction='row' alignItems='center'>
-			<Account
-				localeText={{
-					accountSignInLabel: 'Iniciar sesión',
-					accountSignOutLabel: 'Cerrar sesión',
-				}}
-				slots={{ preview: PreviewComponent }}
-				slotProps={{
-					signInButton: { sx: { display: mini ? 'none' : 'block' } },
-				}}
-			/>
+		<Stack direction='row' alignItems='center' spacing={1}>
+			{loading ? (
+				// Reservamos espacio para evitar salto visual mientras se restaura sesión
+				<Box sx={{ width: mini ? 0 : 220, height: 32 }} />
+			) : (
+				<Account
+					localeText={{
+						accountSignInLabel: 'Iniciar sesión',
+						accountSignOutLabel: 'Cerrar sesión',
+					}}
+					slots={{ preview: PreviewComponent }}
+					slotProps={{
+						signInButton: { sx: { display: mini ? 'none' : 'block' } },
+					}}
+				/>
+			)}
 			<ThemeSwitcher />
 		</Stack>
 	);
@@ -79,6 +90,7 @@ function CustomToolbarActions({ mini }: SidebarFooterProps) {
 export default function Layout() {
 	const matches = useMatches();
 	const { empresa } = useParams();
+	const { loading } = useSession();
 
 	const homeUrl = empresa ? `/${empresa}` : '/';
 
@@ -92,12 +104,17 @@ export default function Layout() {
 
 		let pageTitle = 'Plataforma';
 		if (h?.title && matchWithTitle) {
-			// Cast a RouteMatch para cumplir con el tipo
-			pageTitle = typeof h.title === 'function' ? h.title(matchWithTitle as unknown as RouteMatch) : h.title;
+			pageTitle =
+				typeof h.title === 'function' ? h.title(matchWithTitle as unknown as RouteMatch) : h.title;
 		}
 
 		document.title = pageTitle;
 	}, [matches]);
+
+	if (loading) {
+		// Evita el flash de "Iniciar sesión" y de contenido protegido
+		return <Fondo sx={{ minHeight: '100vh' }} />;
+	}
 
 	return (
 		<Fondo>

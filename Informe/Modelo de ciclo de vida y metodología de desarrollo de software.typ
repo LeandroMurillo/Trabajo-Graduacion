@@ -11,14 +11,15 @@ La elección del modelo depende mucho del tipo de problema y del entorno. En nue
 
 Para el desarrollo del Sistema de gestión de vacantes de empleo, hemos elegido el modelo de prototipado evolutivo.
 
-Esta decisión se basa en la necesidad de que los usuarios (tanto los administradores de las empresas como los postulantes) puedan ver y probar las funcionalidades del sistema desde temprano. Dado que la plataforma debe ser _responsive_ y ofrecer una experiencia personalizada para cada empresa cliente, no podemos esperar hasta el final para verificar si el diseño es el correcto.
+Esta decisión se basa en la necesidad de que los usuarios (tanto los administradores de las empresas, como los postulantes) puedan ver y probar las funcionalidades del sistema desde temprano. Dado que la plataforma debe ser _responsive_ y ofrecer una experiencia personalizada para cada empresa cliente, no podemos esperar hasta el final para verificar si el diseño es el correcto.
 
-Un prototipo es una versión preliminar del software que nos permite simular las funciones principales. Con el prototipado evolutivo, desarrollamos una versión inicial, la probamos, recibimos _feedback_ y la mejoramos en la siguiente iteración. Esto es ideal para nuestro proyecto porque:
+Un prototipo es una versión preliminar del software que nos permite simular las funciones principales. Con el prototipado evolutivo, desarrollamos una versión inicial, la probamos, recibimos _feedback_ y la mejoramos en la siguiente iteración. Esto es ideal para nuestro proyecto, porque:
 
 - Nos ayuda a aclarar requisitos que quizás no están del todo definidos al principio.
 - Permite verificar rápidamente si la interfaz se adapta bien a móviles y _tablets_.
 - Reduce el riesgo de construir algo que no le sirva al usuario final.
 
+#pagebreak()
 El proceso que seguiremos adapta el modelo clásico a ciclos más cortos e iterativos:
 
 1. Análisis inicial: Definimos los requisitos básicos (gestión de vacantes, categorías, perfiles).

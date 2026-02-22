@@ -5,35 +5,56 @@ import { SignInPage, type AuthProvider } from '@toolpad/core/SignInPage';
 import { useSession } from '../SessionContext';
 import { loginPostulante } from '../api';
 
+import {
+	setPersistence,
+	browserSessionPersistence,
+	signInWithEmailAndPassword,
+	signOut,
+} from 'firebase/auth';
+import { firebaseAuth } from '../firebase/firebaseConfig';
+
 export default function PaginaLogin() {
 	const navigate = useNavigate();
 	const { empresa } = useParams();
-	const { setSession } = useSession();
+	const { refreshSession } = useSession();
 
 	async function handleSignIn(provider: AuthProvider, formData: FormData, callbackUrl?: string) {
 		try {
-			const email = (formData.get('email') as string) || '';
-			const password = (formData.get('password') as string) || '';
+			const email = String(formData.get('email') || '').trim();
+			const password = String(formData.get('password') || '');
 
 			if (!email || !password) {
 				return { error: 'Email y contraseña son obligatorios' };
 			}
 
-			await loginPostulante(email, password);
+			await setPersistence(firebaseAuth, browserSessionPersistence);
 
-			setSession({
-				user: {
-					email,
-				},
-			});
+			const userCredential = await signInWithEmailAndPassword(firebaseAuth, email, password);
+
+			const idToken = await userCredential.user.getIdToken(true);
+
+			try {
+				await loginPostulante(idToken);
+			} catch (backendError) {
+				try {
+					await signOut(firebaseAuth);
+				} catch (signOutError) {
+					console.warn(
+						'[login] No se pudo cerrar sesión local luego de error backend:',
+						signOutError,
+					);
+				}
+				throw backendError;
+			}
+
+			await refreshSession();
 
 			const base = empresa ? `/${empresa}` : '';
-
 			const target = callbackUrl ? `${base}${callbackUrl}` : base || '/';
 
 			navigate(target, { replace: true });
 			return {};
-		} catch (error) {
+		} catch (error: unknown) {
 			return {
 				error: error instanceof Error ? error.message : 'Error inesperado al iniciar sesión',
 			};
@@ -89,7 +110,6 @@ export default function PaginaLogin() {
 
 	function CustomForgotPasswordLink() {
 		const to = empresa ? `/${empresa}/forgot-password` : '/forgot-password';
-
 		return <RouterLink to={to}>Olvidé mi contraseña</RouterLink>;
 	}
 

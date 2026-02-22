@@ -569,7 +569,19 @@ export default class AdminController {
 
 			const { estado } = cambiarEstadoPostulanteBodySchema.parse(req.body);
 
-			await Postulante.cambiarEstadoPostulante(idPostulante, estado);
+			let mensaje = 'OK';
+
+			if (estado === 'I') {
+				mensaje = await Postulante.inactivarPostulante(idPostulante);
+			} else if (estado === 'A') {
+				mensaje = await Postulante.reactivarPostulante(idPostulante);
+			} else {
+				return res.status(400).json({ error: 'Estado inválido.' });
+			}
+
+			if (mensaje !== 'OK') {
+				return res.status(409).json({ error: 'No se pudo cambiar el estado.' });
+			}
 
 			return res.sendStatus(204);
 		} catch (error) {
@@ -584,6 +596,17 @@ export default class AdminController {
 				switch (error.message) {
 					case 'POSTULANTE_NO_EXISTE':
 						return res.status(404).json({ error: 'No se encontró el postulante.' });
+
+					case 'POSTULANTE_INACTIVO':
+						return res.status(409).json({ error: 'El postulante ya está inactivo.' });
+
+					case 'POSTULANTE_ACTIVO':
+						return res.status(409).json({ error: 'El postulante ya está activo.' });
+
+					case 'POSTULANTE_PENDIENTE':
+						return res.status(409).json({
+							error: 'No se puede cambiar el estado de un postulante pendiente.',
+						});
 
 					default:
 						return res.status(409).json({ error: 'No se pudo cambiar el estado.' });

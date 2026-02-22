@@ -1,0 +1,50 @@
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36" version="29.3.8">
+  <diagram name="Página-1" id="9PSPX-aOGX__WNJ34gG8">
+    <mxGraphModel dx="786" dy="423" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="IVUfIxKTZZv3_LD7kG5y-6" parent="1" style="rounded=0;whiteSpace=wrap;strokeColor=#0F8B8D;fontColor=#143642;fillColor=none;verticalAlign=top;fontFamily=Arimo Nerd Font;labelBackgroundColor=none;html=1;" value="Administrador" vertex="1">
+          <mxGeometry height="280" width="210" x="20" y="40" as="geometry" />
+        </mxCell>
+        <mxCell id="DNTc8l9gZBxjtoVxKWfF-1" parent="1" style="rounded=0;whiteSpace=wrap;strokeColor=#0F8B8D;fontColor=#143642;fillColor=none;verticalAlign=top;fontFamily=Arimo Nerd Font;labelBackgroundColor=none;html=1;" value="SGVac" vertex="1">
+          <mxGeometry height="280" width="410" x="230" y="40" as="geometry" />
+        </mxCell>
+        <mxCell id="vX0-nyg-rzqHEZjBwQVW-1" edge="1" parent="1" source="IVUfIxKTZZv3_LD7kG5y-1" style="edgeStyle=elbowEdgeStyle;shape=connector;curved=0;rounded=1;orthogonalLoop=1;jettySize=auto;elbow=vertical;html=1;strokeColor=#A8201A;align=center;verticalAlign=middle;fontFamily=Arimo Nerd Font;fontSize=12;fontColor=default;labelBackgroundColor=default;resizable=0;startSize=8;endArrow=classic;endSize=8;shadow=1;" target="IVUfIxKTZZv3_LD7kG5y-2" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Z9y05rFwCxt9J1MBwWmU-1" connectable="0" parent="vX0-nyg-rzqHEZjBwQVW-1" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=12;fontFamily=Arimo Nerd Font;fontColor=default;labelBackgroundColor=default;" value="" vertex="1">
+          <mxGeometry relative="1" x="-0.1101" y="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="IVUfIxKTZZv3_LD7kG5y-1" parent="1" style="ellipse;whiteSpace=wrap;aspect=fixed;rounded=1;labelBackgroundColor=none;fillColor=#FAE5C7;strokeColor=#0F8B8D;fontColor=#143642;fontFamily=Arimo Nerd Font;html=1;shadow=1;" value="" vertex="1">
+          <mxGeometry height="40" width="40" x="105" y="110" as="geometry" />
+        </mxCell>
+        <mxCell id="HDorxYZKjoE8NQZowqLH-2" edge="1" parent="1" source="IVUfIxKTZZv3_LD7kG5y-2" style="edgeStyle=elbowEdgeStyle;shape=connector;curved=0;rounded=1;orthogonalLoop=1;jettySize=auto;elbow=vertical;html=1;shadow=1;strokeColor=#A8201A;align=center;verticalAlign=middle;fontFamily=Arimo Nerd Font;fontSize=12;fontColor=default;labelBackgroundColor=default;resizable=0;startSize=8;endArrow=classic;endSize=8;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="HDorxYZKjoE8NQZowqLH-7" value="">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="270" y="220" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="IVUfIxKTZZv3_LD7kG5y-2" parent="1" style="rounded=1;whiteSpace=wrap;labelBackgroundColor=none;fillColor=#FAE5C7;strokeColor=#0F8B8D;fontColor=#143642;fontFamily=Arimo Nerd Font;html=1;shadow=1;" value="Elige la opción de activar un postulante" vertex="1">
+          <mxGeometry height="60" width="150" x="50" y="190" as="geometry" />
+        </mxCell>
+        <mxCell id="IVUfIxKTZZv3_LD7kG5y-5" connectable="0" parent="1" style="group;fontFamily=Arimo Nerd Font;labelBackgroundColor=none;fontColor=#143642;html=1;shadow=1;" value="" vertex="1">
+          <mxGeometry height="40" width="40" x="560" y="200" as="geometry" />
+        </mxCell>
+        <mxCell id="IVUfIxKTZZv3_LD7kG5y-3" parent="IVUfIxKTZZv3_LD7kG5y-5" style="ellipse;whiteSpace=wrap;aspect=fixed;rounded=1;labelBackgroundColor=none;fillColor=#FAE5C7;strokeColor=#0F8B8D;fontColor=#143642;fontFamily=Arimo Nerd Font;html=1;shadow=1;" value="" vertex="1">
+          <mxGeometry height="40" width="40" as="geometry" />
+        </mxCell>
+        <mxCell id="IVUfIxKTZZv3_LD7kG5y-4" parent="IVUfIxKTZZv3_LD7kG5y-5" style="ellipse;whiteSpace=wrap;aspect=fixed;rounded=1;labelBackgroundColor=none;fillColor=light-dark(#36240A,#FAE5C7);strokeColor=#0F8B8D;fontColor=#143642;fontFamily=Arimo Nerd Font;html=1;shadow=1;" value="" vertex="1">
+          <mxGeometry height="20" width="20" x="10" y="10" as="geometry" />
+        </mxCell>
+        <mxCell id="HDorxYZKjoE8NQZowqLH-15" edge="1" parent="1" source="HDorxYZKjoE8NQZowqLH-7" style="edgeStyle=elbowEdgeStyle;shape=connector;curved=0;rounded=1;orthogonalLoop=1;jettySize=auto;elbow=vertical;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;shadow=1;strokeColor=#A8201A;align=center;verticalAlign=middle;fontFamily=Arimo Nerd Font;fontSize=12;fontColor=default;labelBackgroundColor=default;resizable=0;startSize=8;endArrow=classic;endSize=8;" target="IVUfIxKTZZv3_LD7kG5y-3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="HDorxYZKjoE8NQZowqLH-7" parent="1" style="rounded=1;whiteSpace=wrap;labelBackgroundColor=none;fillColor=#FAE5C7;strokeColor=#0F8B8D;fontColor=#143642;fontFamily=Arimo Nerd Font;html=1;shadow=1;" value="Activa el postulante" vertex="1">
+          <mxGeometry height="60" width="150" x="310" y="190" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

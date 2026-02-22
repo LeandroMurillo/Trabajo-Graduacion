@@ -135,17 +135,19 @@ export default function DialogVerCurriculum({
 					<Typography variant='body2' color='text.secondary'>
 						No se encontró un archivo para visualizar. Vuelve a subir tu currículum.
 					</Typography>
-				) : (<iframe
-					title='Visor de Currículum'
-					src={pdfUrl}
-					loading='lazy'
-					onLoad={() => setLoading(false)}
-					onError={() => {
-						setLoading(false);
-						setError('No se pudo cargar el PDF.');
-					}}
-					style={{ width: '100%', height: 640, border: 'none' }}
-				/>)}
+				) : (
+					<iframe
+						title='Visor de Currículum'
+						src={pdfUrl}
+						loading='lazy'
+						onLoad={() => setLoading(false)}
+						onError={() => {
+							setLoading(false);
+							setError('No se pudo cargar el PDF.');
+						}}
+						style={{ width: '100%', height: 640, border: 'none' }}
+					/>
+				)}
 
 				{error && (
 					<Box sx={{ pt: 1 }}>
@@ -177,7 +179,7 @@ export default function DialogVerCurriculum({
 			</DialogContent>
 
 			<DialogActions sx={{ px: 2, py: 1.5 }}>
-				<Button onClick={onReplace} variant='outlined' disabled={submitting} color="error">
+				<Button onClick={onReplace} variant='outlined' disabled={submitting} color='error'>
 					Reemplazar currículum
 				</Button>
 

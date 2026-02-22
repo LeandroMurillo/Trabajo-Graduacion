@@ -17,8 +17,6 @@ publicRoutes.get('/vacantes', PublicController.dameVacantes);
 
 publicRoutes.get('/vacantes/:id', PublicController.dameVacantePostulante);
 
-publicRoutes.get('/auth/action', PublicController.activarUsuario);
-
 publicRoutes.post('/registro', PublicController.altaPostulante);
 
 publicRoutes.post('/login', PublicController.login);

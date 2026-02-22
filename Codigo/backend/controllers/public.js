@@ -5,13 +5,9 @@ import Empresa from '../models/empresas.js';
 import Postulante from '../models/postulantes.js';
 import Categoria from '../models/categorias.js';
 import Vacante from '../models/vacantes.js';
-import { registrarPostulanteSchema, loginSchema } from '../schemas/postulanteSchema.js';
+import { registrarPostulanteSchema, IdTokenSchema } from '../schemas/postulanteSchema.js';
 
-import {
-	crearUsuarioConCorreoYContraseña,
-	loginConCredenciales,
-	verificarCorreoUsuario,
-} from '../firebase/auth.js';
+import { loginConToken } from '../firebase/auth.js';
 
 import { firebaseAdminAuth } from '../firebase/firebaseConfig.js';
 
@@ -173,38 +169,35 @@ export default class PublicController {
 		let uidCreado = null;
 
 		try {
-			const { nombres, apellidos, email, contraseña, genero, fechaNacimiento } =
+			const { nombres, apellidos, genero, fechaNacimiento, idToken } =
 				registrarPostulanteSchema.parse(req.body);
 
-			const emailNorm = email.trim().toLowerCase();
-			const displayName = `${nombres} ${apellidos}`.trim();
+			const decoded = await firebaseAdminAuth.verifyIdToken(String(idToken), true);
 
-			const { success, idPostulante, error, code } = await crearUsuarioConCorreoYContraseña(
-				emailNorm,
-				contraseña,
-				{ displayName },
-			);
+			const uid = String(decoded.uid || decoded.sub || '').trim();
+			const email = typeof decoded.email === 'string' ? decoded.email.trim().toLowerCase() : '';
+			const emailVerificado = decoded.email_verified === true;
 
-			if (!success) {
-				return res.status(400).json({
-					error: error || 'No se pudo registrar el usuario.',
-					code,
-				});
+			if (!uid) {
+				return res.status(400).json({ error: 'Token inválido: UID no disponible.' });
 			}
 
-			uidCreado = idPostulante;
+			if (!email) {
+				return res.status(400).json({ error: 'Token inválido: email no disponible.' });
+			}
+
+			uidCreado = uid;
 
 			const mensaje = await Postulante.altaPostulante({
-				idPostulante,
+				id: uid,
 				nombres,
 				apellidos,
-				email: emailNorm,
+				email,
 				genero,
 				fechaNacimiento,
 			});
 
 			if (mensaje !== 'OK') {
-				// compensación: si Firebase se creó pero DB rechazó (por regla de negocio)
 				try {
 					await firebaseAdminAuth.deleteUser(uidCreado);
 				} catch (e) {
@@ -214,9 +207,11 @@ export default class PublicController {
 				return res.status(400).json({ error: mensaje });
 			}
 
-			return res.status(201).json({ message: 'Usuario registrado exitosamente.' });
+			return res.status(201).json({
+				message: 'Usuario registrado exitosamente. Revise su correo para verificar la cuenta.',
+				emailVerificado,
+			});
 		} catch (error) {
-			// Compensación: si Firebase se creó pero DB falló, borrar Firebase
 			if (uidCreado) {
 				try {
 					await firebaseAdminAuth.deleteUser(uidCreado);
@@ -225,10 +220,17 @@ export default class PublicController {
 				}
 			}
 
-			if (error?.errors) {
+			if (error instanceof ZodError) {
 				return res.status(400).json({
 					error: 'Datos inválidos en la petición.',
-					issues: error.errors,
+					issues: error.issues,
+				});
+			}
+
+			if (typeof error?.code === 'string' && error.code.startsWith('auth/')) {
+				return res.status(401).json({
+					error: 'Token de autenticación inválido o expirado.',
+					code: error.code,
 				});
 			}
 
@@ -239,9 +241,9 @@ export default class PublicController {
 
 	static async login(req, res) {
 		try {
-			const { email, password } = loginSchema.parse(req.body);
+			const idToken = IdTokenSchema.parse(req.body.idToken);
 
-			const { sessionCookie, options } = await loginConCredenciales(req.idEmpresa, email, password);
+			const { sessionCookie, options } = await loginConToken(idToken);
 
 			res.cookie('session', sessionCookie, options);
 			return res.status(200).json({ status: 'success' });
@@ -263,24 +265,24 @@ export default class PublicController {
 				return res.status(404).json({ error: 'No se encontró el usuario.' });
 			}
 
+			if (code === 'EMAIL_NO_VERIFICADO') {
+				return res.status(403).json({
+					error: 'Debe verificar su correo electrónico antes de iniciar sesión.',
+				});
+			}
+
+			if (code === 'NO_SE_PUDO_ACTIVAR_POSTULANTE') {
+				return res.status(409).json({
+					error: 'No se pudo activar la cuenta. Intente nuevamente.',
+				});
+			}
+
 			if (String(error?.code ?? '').startsWith('auth/')) {
-				return res.status(401).json({ error: 'Credenciales inválidas.' });
+				return res.status(401).json({ error: 'Token inválido o expirado.' });
 			}
 
 			console.error('Error during login:', error);
 			return res.status(500).json({ error: 'Error interno del servidor' });
-		}
-	}
-
-	static async activarUsuario(req, res) {
-		const { oobCode } = req.query;
-
-		const { correoVerificado, error } = await verificarCorreoUsuario(oobCode);
-
-		if (correoVerificado) {
-			return res.status(200).json({ message: 'Correo verificado exitosamente.' });
-		} else {
-			return res.status(400).json({ error: error });
 		}
 	}
 }

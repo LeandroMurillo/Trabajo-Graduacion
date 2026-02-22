@@ -56,7 +56,6 @@ app.use('/superadmin', verifyJWT, requireSuperadmin, superadminRoutes);
 // ===== auth global (sin slug) =====
 app.use('/auth', authRoutes);
 
-
 // ===== TENANT API: /:empresa/api/...
 const tenantApi = express.Router({ mergeParams: true });
 tenantApi.use(identificarEmpresaUsuarios);

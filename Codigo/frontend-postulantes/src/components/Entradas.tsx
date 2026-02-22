@@ -1,3 +1,5 @@
+import * as React from 'react';
+
 import FormControl from '@mui/material/FormControl';
 import FormHelperText from '@mui/material/FormHelperText';
 import IconButton from '@mui/material/IconButton';
@@ -9,23 +11,25 @@ import TextField from '@mui/material/TextField';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 
+type InputFieldProps = {
+	id: string;
+	label: string;
+	type?: string;
+	autoComplete?: string;
+	error?: boolean;
+	helperText?: string;
+	[key: string]: unknown;
+};
+
 export const InputField = ({
 	id,
 	label,
 	type = 'text',
 	autoComplete,
-	error,
-	helperText,
+	error = false,
+	helperText = '',
 	...props
-}: {
-	id: string;
-	label: string;
-	type?: string;
-	autoComplete?: string;
-	error: boolean;
-	helperText: string;
-	[key: string]: unknown;
-}) => (
+}: InputFieldProps) => (
 	<FormControl>
 		<TextField
 			id={id}
@@ -40,31 +44,34 @@ export const InputField = ({
 	</FormControl>
 );
 
-export const PasswordField = ({
-	id,
-	label,
-	error,
-	helperText,
-	showPassword,
-	handleClickShowPassword,
-	handleMouseDownPassword,
-	handleMouseUpPassword,
-	...props
-}: {
+type PasswordFieldProps = {
 	id: string;
 	label: string;
-	error: boolean;
-	helperText: string;
+	error?: boolean;
+	helperText?: string;
 	showPassword: boolean;
 	handleClickShowPassword: () => void;
 	handleMouseDownPassword: (event: React.MouseEvent<HTMLButtonElement>) => void;
 	handleMouseUpPassword: (event: React.MouseEvent<HTMLButtonElement>) => void;
 	[key: string]: unknown;
-}) => (
+};
+
+export const PasswordField = ({
+	id,
+	label,
+	error = false,
+	helperText = '',
+	showPassword,
+	handleClickShowPassword,
+	handleMouseDownPassword,
+	handleMouseUpPassword,
+	...props
+}: PasswordFieldProps) => (
 	<FormControl>
 		<InputLabel htmlFor={id} error={error}>
 			{label} *
 		</InputLabel>
+
 		<OutlinedInput
 			id={id}
 			error={error}
@@ -87,6 +94,7 @@ export const PasswordField = ({
 			type={showPassword ? 'text' : 'password'}
 			{...props}
 		/>
-		{helperText && <FormHelperText error>{helperText}</FormHelperText>}
+
+		{helperText ? <FormHelperText error={error}>{helperText}</FormHelperText> : null}
 	</FormControl>
 );

@@ -1,4 +1,3 @@
-// PostulanteCrud.tsx (o PostulanteList.tsx)
 import * as React from 'react';
 import { List } from '@toolpad/core/Crud';
 import { useNavigate, useParams } from 'react-router';
@@ -11,14 +10,10 @@ import { getApiBase } from '../App';
 
 import type { GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
 
-import Button from '@mui/material/Button';
-import Dialog from '@mui/material/Dialog';
-import DialogTitle from '@mui/material/DialogTitle';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
-import DialogActions from '@mui/material/DialogActions';
 import Alert from '@mui/material/Alert';
+import Switch from '@mui/material/Switch';
 import CircularProgress from '@mui/material/CircularProgress';
+import Box from '@mui/material/Box';
 
 function toSlug(value: string) {
 	return value
@@ -47,8 +42,7 @@ function PageWrapper(props: PageContainerProps) {
 }
 
 function getPostulantesApiBase() {
-	const apiBase = getApiBase();
-	return `${apiBase}/admin/postulantes`;
+	return `${getApiBase()}/admin/postulantes`;
 }
 
 function normalizeHabilidades(value: unknown): string[] {
@@ -69,13 +63,8 @@ function normalizeHabilidades(value: unknown): string[] {
 type PostulanteApi = Omit<Postulante, 'habilidades'> & { habilidades?: unknown };
 
 function normalizePostulante(p: PostulanteApi): Postulante {
-	return {
-		...p,
-		habilidades: normalizeHabilidades(p.habilidades),
-	} as Postulante;
+	return { ...p, habilidades: normalizeHabilidades(p.habilidades) } as Postulante;
 }
-
-type ConfirmState = { open: false } | { open: true; row: Postulante; action: 'baja' | 'reactivar' };
 
 function getErrorMessage(err: unknown): string {
 	if (err instanceof Error) return err.message;
@@ -93,96 +82,122 @@ export default function PostulanteList() {
 	const navigate = useNavigate();
 	const { empresa } = useParams();
 
-	const [confirm, setConfirm] = React.useState<ConfirmState>({ open: false });
-	const [loading, setLoading] = React.useState(false);
+	const [loadingId, setLoadingId] = React.useState<string | null>(null);
 	const [errorMsg, setErrorMsg] = React.useState('');
+	const [estadoOverride, setEstadoOverride] = React.useState<Record<string, 'A' | 'I'>>({});
 
-	// ✅ esto reemplaza apiRef.refreshRows/forceUpdate
-	const [reloadKey, setReloadKey] = React.useState(0);
+	const loadingIdRef = React.useRef<string | null>(null);
+	React.useEffect(() => {
+		loadingIdRef.current = loadingId;
+	}, [loadingId]);
 
-	async function ejecutarAccion() {
-		if (!confirm.open) return;
-
-		setLoading(true);
+	async function actualizarEstado(id: string, estado: 'A' | 'I') {
+		setLoadingId(id);
 		setErrorMsg('');
 
-		const { row, action } = confirm;
-		const API_BASE = getPostulantesApiBase();
-
-		const estado = action === 'baja' ? 'I' : 'A';
-
 		try {
-			await fetchJson(`${API_BASE}/${encodeURIComponent(row.id)}/estado`, {
+			await fetchJson(`${getPostulantesApiBase()}/${encodeURIComponent(id)}/estado`, {
 				method: 'PATCH',
 				body: JSON.stringify({ estado }),
 			});
-
-			setConfirm({ open: false });
-
-			// fuerza a que List vuelva a pedir getMany()
-			setReloadKey((k) => k + 1);
 		} catch (err: unknown) {
 			setErrorMsg(getErrorMessage(err));
+			throw err;
 		} finally {
-			setLoading(false);
+			setLoadingId(null);
 		}
 	}
 
 	const fields = React.useMemo<GridColDef[]>(() => {
 		const base = PostulantesDataSource.fields as GridColDef[];
 
-		const acciones: GridColDef = {
-			field: 'acciones',
-			headerName: 'Acciones',
+		const activo: GridColDef = {
+			field: 'activo',
+			headerName: 'Activo',
 			sortable: false,
 			filterable: false,
 			disableColumnMenu: true,
-			width: 160,
+			width: 120,
 			align: 'center',
 			headerAlign: 'center',
 			renderCell: (params: GridRenderCellParams<Postulante>) => {
 				const row = params.row;
-				const isInactivo = row.estado === 'I';
-				const label = isInactivo ? 'Reactivar' : 'Dar de baja';
+
+				const effectiveEstado = (estadoOverride[row.id] ?? row.estado) as 'A' | 'I';
+				const isActivo = effectiveEstado === 'A';
+
+				const currentLoadingId = loadingIdRef.current;
+				const isLoading = currentLoadingId === row.id;
 
 				return (
-					<Button
-						variant='outlined'
-						size='small'
-						onClick={(e) => {
-							e.stopPropagation();
-							setErrorMsg('');
-							setConfirm({
-								open: true,
-								row,
-								action: isInactivo ? 'reactivar' : 'baja',
-							});
+					<Box
+						sx={{
+							display: 'flex',
+							alignItems: 'center',
+							justifyContent: 'center',
+							width: '100%',
+							height: '100%',
+							gap: 1,
 						}}
+						onClick={(e) => e.stopPropagation()}
 					>
-						{label}
-					</Button>
+						<Switch
+							checked={isActivo}
+							disabled={Boolean(currentLoadingId) && !isLoading}
+							onChange={async (_e, checked) => {
+								const nuevoEstado: 'A' | 'I' = checked ? 'A' : 'I';
+								const anteriorEstado = (estadoOverride[row.id] ?? row.estado) as 'A' | 'I';
+
+								setEstadoOverride((prev) => ({ ...prev, [row.id]: nuevoEstado }));
+								params.api.updateRows([{ id: row.id, estado: nuevoEstado }]);
+
+								try {
+									await actualizarEstado(row.id, nuevoEstado);
+								} catch {
+									setEstadoOverride((prev) => {
+										const next = { ...prev };
+										if (anteriorEstado === row.estado) delete next[row.id];
+										else next[row.id] = anteriorEstado;
+										return next;
+									});
+									params.api.updateRows([{ id: row.id, estado: anteriorEstado }]);
+								}
+							}}
+							slotProps={{ input: { 'aria-label': 'Cambiar estado del postulante' } }}
+							sx={{ m: 0 }}
+						/>
+
+						{isLoading ? <CircularProgress size={18} /> : null}
+					</Box>
 				);
 			},
 		};
 
-		return [...base, acciones];
+		return [...base, activo];
 	}, []);
+
+	const getMany = React.useCallback(async () => {
+		const data = (await fetchJson(`${getPostulantesApiBase()}`)) as PostulanteApi[];
+		setEstadoOverride({});
+		const items = data.map(normalizePostulante);
+		return { items, itemCount: items.length };
+	}, []);
+
+	const dataSource = React.useMemo(
+		() => ({ ...PostulantesDataSource, fields, getMany }),
+		[fields, getMany],
+	);
 
 	return (
 		<>
+			{errorMsg ? (
+				<Alert severity='error' sx={{ mb: 2 }}>
+					{errorMsg}
+				</Alert>
+			) : null}
+
 			<List<Postulante>
-				// ✅ al cambiar reloadKey, React remonta el componente List y re-ejecuta getMany
-				key={reloadKey}
-				dataSource={{
-					...PostulantesDataSource,
-					fields,
-					async getMany() {
-						const API_BASE = getPostulantesApiBase();
-						const data = (await fetchJson(`${API_BASE}`)) as PostulanteApi[];
-						const items = data.map(normalizePostulante);
-						return { items, itemCount: items.length };
-					},
-				}}
+				dataSource={dataSource}
 				initialPageSize={25}
 				slots={{ pageContainer: PageWrapper }}
 				slotProps={{
@@ -196,68 +211,11 @@ export default function PostulanteList() {
 							const displayName =
 								row.apellidos && row.nombres ? `${row.apellidos}, ${row.nombres}` : String(row.id);
 
-							const postulanteSlug = toSlug(displayName);
-							navigate(`/${empresa}/postulantes/${row.id}/${postulanteSlug}/postulaciones`);
+							navigate(`/${empresa}/postulantes/${row.id}/${toSlug(displayName)}/postulaciones`);
 						},
 					},
 				}}
 			/>
-
-			<Dialog
-				open={confirm.open}
-				onClose={() => {
-					if (loading) return;
-					setConfirm({ open: false });
-					setErrorMsg('');
-				}}
-				aria-labelledby='confirm-postulante-title'
-			>
-				<DialogTitle id='confirm-postulante-title'>
-					{confirm.open
-						? confirm.action === 'baja'
-							? 'Confirmar baja'
-							: 'Confirmar reactivación'
-						: ''}
-				</DialogTitle>
-
-				<DialogContent>
-					{confirm.open ? (
-						<DialogContentText>
-							{confirm.action === 'baja'
-								? `Vas a dar de baja a ${confirm.row.apellidos}, ${confirm.row.nombres}.`
-								: `Vas a reactivar a ${confirm.row.apellidos}, ${confirm.row.nombres}.`}
-						</DialogContentText>
-					) : null}
-
-					{errorMsg ? (
-						<Alert severity='error' sx={{ mt: 2 }}>
-							{errorMsg}
-						</Alert>
-					) : null}
-				</DialogContent>
-
-				<DialogActions>
-					<Button
-						onClick={() => {
-							setConfirm({ open: false });
-							setErrorMsg('');
-						}}
-						disabled={loading}
-					>
-						Cancelar
-					</Button>
-
-					<Button onClick={ejecutarAccion} variant='contained' disabled={loading || !confirm.open}>
-						{loading ? (
-							<CircularProgress size={20} />
-						) : confirm.open && confirm.action === 'baja' ? (
-							'Dar de baja'
-						) : (
-							'Reactivar'
-						)}
-					</Button>
-				</DialogActions>
-			</Dialog>
 		</>
 	);
 }

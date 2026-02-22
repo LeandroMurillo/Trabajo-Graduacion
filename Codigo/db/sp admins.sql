@@ -31,37 +31,41 @@ DROP PROCEDURE IF EXISTS `borraVacante`;
 DROP PROCEDURE IF EXISTS `damePostulaciones`;
 DROP PROCEDURE IF EXISTS `borraPostulaciones`;
 DROP PROCEDURE IF EXISTS `damePostulantes`;
-DROP PROCEDURE IF EXISTS `cambiarEstadoPostulante`;
+DROP PROCEDURE IF EXISTS `inactivarPostulante`;
+DROP PROCEDURE IF EXISTS `reactivarPostulante`;
 
 -- ==========================
 -- Creación de Procedimientos Almacenados (Admin)
 -- ==========================
 
 DELIMITER //
+
 CREATE PROCEDURE `loginAdmin`(
-	IN pEmail VARCHAR(256)
+  IN pEmail VARCHAR(256)
 )
 BEGIN
-	SELECT
-		a.idAdministrador,
-		a.idEmpresa,
-		a.email,
-		a.clave,
-		a.rol,
-		e.empresa,
-		e.url AS empresaSlug,
-		e.estado,
-		e.esSistema
-	FROM Administradores AS a
-	INNER JOIN Empresas AS e ON e.idEmpresa = a.idEmpresa
-	WHERE
-		a.email = pEmail
-		AND e.estado = 'A'
-	LIMIT 1;
-END//
-DELIMITER;
+  SELECT
+    a.idAdministrador,
+    a.idEmpresa,
+    a.email,
+    a.clave,
+    a.rol,
+    e.empresa,
+    e.url AS empresaSlug,
+    e.estado,
+    e.esSistema
+  FROM Administradores AS a
+  INNER JOIN Empresas AS e ON e.idEmpresa = a.idEmpresa
+  WHERE
+    a.email = pEmail
+    AND e.estado = 'A'
+  LIMIT 1;
+END //
+
+DELIMITER ;
 
 DELIMITER //
+
 CREATE PROCEDURE modificaEstiloEmpresa(
   IN pIdEmpresa SMALLINT,
   IN pEstilo JSON
@@ -85,35 +89,38 @@ BEGIN
   WHERE idEmpresa = pIdEmpresa
   LIMIT 1;
 END //
+
 DELIMITER ;
 
-
 DELIMITER //
+
 CREATE PROCEDURE `dameCategorias`(
-	IN pIdEmpresa SMALLINT,
-	IN pEstado CHAR(1)
+  IN pIdEmpresa SMALLINT,
+  IN pEstado CHAR(1)
 )
 BEGIN
-	SELECT
-		idCategoria AS id,
-		categoria,
-		estado,
-		orden
-	FROM Categorias
-	WHERE
-		idEmpresa = pIdEmpresa
-		AND (pEstado IS NULL OR estado = pEstado)
-	ORDER BY
-		CASE
-			WHEN estado = 'I' THEN 1
-			ELSE 0
-		END ASC,
-		orden ASC,
-		idCategoria ASC;
+  SELECT
+    idCategoria AS id,
+    categoria,
+    estado,
+    orden
+  FROM Categorias
+  WHERE
+    idEmpresa = pIdEmpresa
+    AND (pEstado IS NULL OR estado = pEstado)
+  ORDER BY
+    CASE
+      WHEN estado = 'I' THEN 1
+      ELSE 0
+    END ASC,
+    orden ASC,
+    idCategoria ASC;
 END //
-DELIMITER;
+
+DELIMITER ;
 
 DELIMITER //
+
 CREATE PROCEDURE `dameCategoria`(
   IN pIdEmpresa   SMALLINT,
   IN pIdCategoria INT
@@ -140,9 +147,11 @@ BEGIN
   LIMIT 1;
 
 END //
+
 DELIMITER ;
 
 DELIMITER //
+
 CREATE PROCEDURE cambiarEstadoCategoria(
   IN pIdEmpresa SMALLINT,
   IN pIdCategoria INT,
@@ -190,10 +199,12 @@ proc: BEGIN
     AND idEmpresa = pIdEmpresa;
 
   SELECT 'Estado de categoría actualizado.' AS mensaje;
-END//
+END //
+
 DELIMITER ;
 
 DELIMITER //
+
 CREATE PROCEDURE altaCategoria(
   IN pIdEmpresa SMALLINT,
   IN pCategoria VARCHAR(50)
@@ -223,10 +234,12 @@ BEGIN
     orden
   FROM Categorias
   WHERE idCategoria = vIdCategoria;
-END//
+END //
+
 DELIMITER ;
 
 DELIMITER //
+
 CREATE PROCEDURE modificaCategoria(
   IN pIdEmpresa SMALLINT,
   IN pIdCategoria INT,
@@ -287,10 +300,12 @@ BEGIN
   WHERE idEmpresa = pIdEmpresa
     AND idCategoria = pIdCategoria
   LIMIT 1;
-END//
+END //
+
 DELIMITER ;
 
 DELIMITER //
+
 CREATE PROCEDURE borraCategoria(
   IN pIdEmpresa SMALLINT,
   IN pIdCategoria INT
@@ -337,10 +352,12 @@ BEGIN
     AND idCategoria = pIdCategoria;
 
   -- void (sin SELECT)
-END//
+END //
+
 DELIMITER ;
 
 DELIMITER //
+
 CREATE PROCEDURE dameVacantesAvanzado(
   IN pIdEmpresa  SMALLINT,
   IN pPage       INT,
@@ -583,11 +600,13 @@ BEGIN
     AND (vEstado IS NULL OR v.estado = vEstado)
     AND (vNivel IS NULL OR v.nivelExperiencia = vNivel);
 
-END//
+END //
+
 DELIMITER ;
 
 -- cambiar
 DELIMITER //
+
 CREATE PROCEDURE dameVacante(
   IN pIdEmpresa SMALLINT,
   IN pCategoria VARCHAR(50),
@@ -630,9 +649,11 @@ BEGIN
     AND (pEstadoVacante IS NULL OR v.estado = pEstadoVacante)
   LIMIT 1;
 END //
-DELIMITER;
+
+DELIMITER ;
 
 DELIMITER //
+
 CREATE PROCEDURE dameVacanteAdmin(
   IN pIdEmpresa SMALLINT,
   IN pIdVacante INT
@@ -660,9 +681,11 @@ BEGIN
     AND v.idVacante = pIdVacante
   LIMIT 1;
 END //
+
 DELIMITER ;
 
 DELIMITER //
+
 CREATE PROCEDURE altaVacante(
   IN pIdEmpresa   SMALLINT,
   IN pCategoria   VARCHAR(50),
@@ -732,9 +755,11 @@ BEGIN
     AND v.idVacante = vIdVacante
   LIMIT 1;
 END //
+
 DELIMITER ;
 
 DELIMITER //
+
 CREATE PROCEDURE modificaVacante(
   IN pIdEmpresa         SMALLINT,
   IN pIdVacante         INT,
@@ -863,9 +888,11 @@ proc: BEGIN
   LIMIT 1;
 
 END //
+
 DELIMITER ;
 
 DELIMITER //
+
 CREATE PROCEDURE borraVacante(
   IN pIdEmpresa SMALLINT,
   IN pIdVacante INT
@@ -908,9 +935,11 @@ BEGIN
     AND idVacante = pIdVacante;
 
 END //
+
 DELIMITER ;
 
 DELIMITER //
+
 CREATE PROCEDURE damePostulaciones(
   IN pIdEmpresa    SMALLINT,
   IN pIdVacante    INT,
@@ -968,6 +997,7 @@ proc: BEGIN
     po.fechaPostulacion DESC,
     po.idPostulacion DESC;
 END //
+
 DELIMITER ;
 
 DELIMITER //
@@ -986,6 +1016,7 @@ BEGIN
     p.localidad,
     p.telefono,
     p.observaciones,
+    COALESCE(p.habilidades, JSON_ARRAY()) AS habilidades,
     p.estado
   FROM Postulantes p
   WHERE EXISTS (
@@ -1001,25 +1032,80 @@ END //
 DELIMITER ;
 
 DELIMITER //
-CREATE PROCEDURE cambiarEstadoPostulante(
-	IN pIdPostulante CHAR(28),
-	IN pEstado ENUM('A','I')
+CREATE PROCEDURE inactivarPostulante(
+  IN pIdPostulante CHAR(28)
 )
 BEGIN
-	DECLARE vCount INT DEFAULT 0;
+  DECLARE vEstado CHAR(1);
 
-	SELECT COUNT(*) INTO vCount
-	FROM Postulantes
-	WHERE idPostulante = pIdPostulante
-	LIMIT 1;
+  SELECT estado
+    INTO vEstado
+  FROM Postulantes
+  WHERE idPostulante = pIdPostulante
+  LIMIT 1;
 
-	IF vCount = 0 THEN
-		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'POSTULANTE_NO_EXISTE';
-	END IF;
+  IF vEstado IS NULL THEN
+    SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'POSTULANTE_NO_EXISTE';
+  END IF;
 
-	UPDATE Postulantes
-	SET estado = pEstado
-	WHERE idPostulante = pIdPostulante;
+  -- Si ya está inactivo, OK
+  IF vEstado = 'I' THEN
+    SELECT 'OK' AS mensaje;
+
+  -- Solo permitimos inactivar desde Activo
+  ELSEIF vEstado = 'A' THEN
+    UPDATE Postulantes
+    SET estado = 'I'
+    WHERE idPostulante = pIdPostulante;
+
+    SELECT 'OK' AS mensaje;
+
+  -- Si está pendiente, no corresponde este flujo admin
+  ELSEIF vEstado = 'P' THEN
+    SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'POSTULANTE_PENDIENTE_NO_INACTIVABLE';
+
+  ELSE
+    SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'ESTADO_POSTULANTE_INVALIDO';
+  END IF;
+END //
+DELIMITER ;
+
+DELIMITER //
+CREATE PROCEDURE reactivarPostulante(
+  IN pIdPostulante CHAR(28)
+)
+BEGIN
+  DECLARE vEstado CHAR(1);
+
+  SELECT estado
+    INTO vEstado
+  FROM Postulantes
+  WHERE idPostulante = pIdPostulante
+  LIMIT 1;
+
+  IF vEstado IS NULL THEN
+    SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'POSTULANTE_NO_EXISTE';
+  END IF;
+
+  -- Si ya está activo, OK
+  IF vEstado = 'A' THEN
+    SELECT 'OK' AS mensaje;
+
+  -- Solo permitimos reactivar desde Inactivo
+  ELSEIF vEstado = 'I' THEN
+    UPDATE Postulantes
+    SET estado = 'A'
+    WHERE idPostulante = pIdPostulante;
+
+    SELECT 'OK' AS mensaje;
+
+  -- Si está pendiente, no corresponde "reactivar"
+  ELSEIF vEstado = 'P' THEN
+    SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'POSTULANTE_PENDIENTE_NO_REACTIVABLE';
+
+  ELSE
+    SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'ESTADO_POSTULANTE_INVALIDO';
+  END IF;
 END //
 DELIMITER ;
 

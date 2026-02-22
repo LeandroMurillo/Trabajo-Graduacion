@@ -21,7 +21,7 @@ Instrucciones para llenado.
 
 #set page(
   margin: (left: 31.7mm, right: 31.7mm, top: 45.4mm, bottom: 25.4mm),
-  header: [#image("header.png", width: 100%)],
+  header: [#image("Img/header.png", width: 100%)],
   numbering: "1",
 )
 
@@ -167,15 +167,15 @@ Instrucciones para llenado.
 
     Murillo, Leandro, 42221212, #enlace("mailto:leandromurillo00@gmail.com")[leandromurillo00\@gmail.com]
     #align(right)[#image(
-        "firmamurillo.jpg",
-        height: 15%,
-      )]
+      "Img/firmamurillo.jpg",
+      height: 15%,
+    )]
 
     Herrera, Cesar Ezequiel, 38737903, #enlace("mailto:cesar.ezequiel.herrera@gmail.com")[cesar.ezequiel.herrera\@gmail.com]
     #align(right)[#image(
-        "firmaherrera.jpg",
-        height: 10%,
-      )]
+      "Img/firmaherrera.jpg",
+      height: 10%,
+    )]
 
     = Datos del o los tutores(s) (Apellidos, Nombres, Email y Firma) – Rol (si corresponde)
 
