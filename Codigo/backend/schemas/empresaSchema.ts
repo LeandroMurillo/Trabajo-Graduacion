@@ -35,8 +35,9 @@ export const estiloEmpresaSchema = z.object({
 	cssVariables: z.boolean(),
 	palette: z.object({
 		primary: z.object({ main: hexColor }),
-		secondary: z.object({ main: hexColor }),
-		error: z.object({ main: hexColor }),
+		// Usamos .default() o .optional() para evitar que crashee si faltan
+		secondary: z.object({ main: hexColor }).default({ main: '#19857b' }),
+		error: z.object({ main: hexColor }).default({ main: '#cc0000' }),
 	}),
 });
 

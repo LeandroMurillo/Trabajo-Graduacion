@@ -48,6 +48,8 @@ END //
 
 DELIMITER ;
 
+DELIMITER //
+
 CREATE PROCEDURE dameEmpresa(
   IN pIdEmpresa SMALLINT
 )
@@ -62,6 +64,7 @@ BEGIN
   AND e.esSistema = 0
   LIMIT 1;
 END //
+
 DELIMITER ;
 
 DELIMITER //
