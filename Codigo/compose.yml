@@ -8,6 +8,7 @@ services:
     restart: unless-stopped
     environment:
       # Use .env file for these values
+      MYSQL_ROOT_HOST: '%' # Allows root to connect from any container
       MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
       MYSQL_DATABASE: ${DB_DATABASE}
       MYSQL_USER: ${DB_USER}
