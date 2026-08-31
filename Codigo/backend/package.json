@@ -15,14 +15,13 @@
 	"description": "",
 	"dependencies": {
 		"bcryptjs": "^3.0.3",
-		"body-parser": "^1.20.3",
 		"cookie-parser": "^1.4.7",
 		"cors": "^2.8.5",
-		"express": "^4.21.2",
+		"express": "^5.2.1",
 		"express-fileupload": "^1.5.1",
-		"firebase": "^11.4.0",
-		"firebase-admin": "^13.2.0",
-		"mariadb": "^3.4.0",
+		"firebase-admin": "^14.3.0",
+		"jsonwebtoken": "^9.0.2",
+		"mariadb": "^3.4.6",
 		"zod": "3.24.2"
 	},
 	"devDependencies": {
@@ -31,6 +30,7 @@
 		"@types/cors": "^2.8.17",
 		"@types/express": "^5.0.0",
 		"@types/express-fileupload": "^1.5.1",
+		"@types/jsonwebtoken": "^9.0.8",
 		"@types/node": "^22.13.4",
 		"concurrently": "^9.1.2",
 		"eslint": "^9.21.0",
@@ -39,5 +39,8 @@
 		"ts-node": "^10.9.2",
 		"typescript": "^5.7.3",
 		"typescript-eslint": "^8.26.0"
+	},
+	"overrides": {
+		"websocket-driver": "0.7.5"
 	}
 }
