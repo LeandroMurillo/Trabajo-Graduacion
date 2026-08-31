@@ -2,9 +2,10 @@
 node_modules/
 dist/
 .env
+.env.*
+!.env.example
+!.env.*.example
 pnpm-lock.yaml
-
-codigo-proyecto/backend/config.js
 
 ## Typst
 Informe/*.pdf

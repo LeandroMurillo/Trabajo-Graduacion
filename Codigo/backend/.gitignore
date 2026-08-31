@@ -3,7 +3,6 @@ node_modules/
 
 # Archivos de entorno
 .env
-config.js
 
 # Logs y reportes
 npm-debug.log*

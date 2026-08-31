@@ -1,10 +1,9 @@
 import express from 'express';
 import cors from 'cors';
-import bodyParser from 'body-parser';
 import cookieParser from 'cookie-parser';
 import fileUpload from 'express-fileupload';
 
-import { PORT } from './config.js';
+import { APP_ORIGINS, PORT } from './config.js';
 import { publicRoutes } from './routes/public.js';
 import { authRoutes } from './routes/auth.js';
 import { adminRoutes } from './routes/admin.js';
@@ -24,20 +23,15 @@ import {
 } from './middlewares/identificarEmpresa.js';
 
 const app = express();
+app.disable('x-powered-by');
+app.set('trust proxy', 1);
 
 // ===== CORS (antes que nada útil) =====
-const allowedOrigins = [/^https?:\/\/trabajo\.com(?::\d+)?$/, /\.up\.railway\.app$/];
-
 app.use(
 	cors({
 		origin(origin, callback) {
 			if (!origin) return callback(null, true);
-
-			const ok = allowedOrigins.some((o) =>
-				typeof o === 'string' ? o === origin : o.test(origin),
-			);
-
-			if (ok) return callback(null, true);
+			if (APP_ORIGINS.includes(origin)) return callback(null, true);
 			return callback(new Error('No autorizado por política CORS'));
 		},
 		credentials: true,
@@ -48,7 +42,11 @@ app.use(
 app.use(express.json());
 app.use(cookieParser());
 app.use(fileUpload({ hashAlgorithm: 'sha256' }));
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(express.urlencoded({ extended: false }));
+
+app.get('/health', (_req, res) => {
+	res.status(200).json({ status: 'ok' });
+});
 
 // ===== superadmin (plataforma, sin slug de empresa) =====
 app.use('/superadmin', verifyJWT, requireSuperadmin, superadminRoutes);
