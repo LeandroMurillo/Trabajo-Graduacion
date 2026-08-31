@@ -18,4 +18,4 @@ COPY --from=build --chown=node:node /app/dist ./dist
 USER node
 EXPOSE 3000
 
-CMD ["sh", "-c", "node dist/bootstrap.js && exec node dist/app.js"]
+CMD ["node", "dist/app.js"]

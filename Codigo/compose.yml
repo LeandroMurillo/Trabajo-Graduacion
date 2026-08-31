@@ -22,11 +22,10 @@ services:
       # Mount all your SQL scripts to initialize the database
       # The entrypoint runs them in alphabetical order.
       - ./db/proyecto_script.sql:/docker-entrypoint-initdb.d/1_schema.sql
-      - ./db/datos.sql:/docker-entrypoint-initdb.d/2_data.sql
-      - ./db/sp admins.sql:/docker-entrypoint-initdb.d/3_sp_admins.sql
-      - ./db/sp postulantes.sql:/docker-entrypoint-initdb.d/4_sp_postulantes.sql
-      - ./db/sp usuarios.sql:/docker-entrypoint-initdb.d/5_sp_usuarios.sql
-      - ./db/sp_superadmin.sql:/docker-entrypoint-initdb.d/6_sp_superadmin.sql
+      - ./db/sp admins.sql:/docker-entrypoint-initdb.d/2_sp_admins.sql
+      - ./db/sp postulantes.sql:/docker-entrypoint-initdb.d/3_sp_postulantes.sql
+      - ./db/sp usuarios.sql:/docker-entrypoint-initdb.d/4_sp_usuarios.sql
+      - ./db/sp_superadmin.sql:/docker-entrypoint-initdb.d/5_sp_superadmin.sql
 
   # ----------------------------------------
   # Backend Node.js Service
