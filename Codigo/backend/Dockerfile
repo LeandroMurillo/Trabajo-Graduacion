@@ -1,22 +1,21 @@
-# Codigo/backend/Dockerfile
-FROM node:jod-alpine
+FROM node:22-alpine AS build
 
-# Set the working directory inside the container
+WORKDIR /app
+COPY package*.json ./
+RUN npm ci
+COPY . .
+RUN npm run build && npm prune --omit=dev
+
+FROM node:22-alpine AS runtime
+
+ENV NODE_ENV=production
 WORKDIR /app
 
-# Copy package.json and package-lock.json first to leverage layer caching
-COPY package*.json ./
+COPY --from=build --chown=node:node /app/package*.json ./
+COPY --from=build --chown=node:node /app/node_modules ./node_modules
+COPY --from=build --chown=node:node /app/dist ./dist
 
-# Install dependencies
-RUN npm install
-
-# Copy the rest of your application's code
-# (This will be overwritten by the volume mount in dev,
-# but it's good practice for building the image)
-COPY . .
-
-# Expose the port the app runs on
+USER node
 EXPOSE 3000
 
-# The command to run your application in development mode
-CMD ["npm", "run", "dev"]
+CMD ["sh", "-c", "node dist/bootstrap.js && exec node dist/app.js"]

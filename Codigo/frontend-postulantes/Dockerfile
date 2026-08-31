@@ -1,17 +1,33 @@
-# Codigo/frontend-postulantes/Dockerfile
-FROM node:jod-alpine
+FROM node:22-alpine AS build
 
 WORKDIR /app
-
 COPY package*.json ./
-
-RUN npm install
-
+RUN npm ci
 COPY . .
 
-# Expose Vite's default port
-EXPOSE 5173
+ARG VITE_API_URL=""
+ARG VITE_FIREBASE_API_KEY
+ARG VITE_FIREBASE_AUTH_DOMAIN
+ARG VITE_FIREBASE_PROJECT_ID
+ARG VITE_FIREBASE_STORAGE_BUCKET
+ARG VITE_FIREBASE_MESSAGE_SENDER_ID
+ARG VITE_FIREBASE_APP_ID
 
-# Run vite dev server, passing "--host 0.0.0.0" to the "vite" command
-# The "--" separates npm arguments from the script's arguments
-CMD ["npm", "run", "dev", "--", "--host", "0.0.0.0"]
+ENV VITE_API_URL=${VITE_API_URL} \
+	VITE_FIREBASE_API_KEY=${VITE_FIREBASE_API_KEY} \
+	VITE_FIREBASE_AUTH_DOMAIN=${VITE_FIREBASE_AUTH_DOMAIN} \
+	VITE_FIREBASE_PROJECT_ID=${VITE_FIREBASE_PROJECT_ID} \
+	VITE_FIREBASE_STORAGE_BUCKET=${VITE_FIREBASE_STORAGE_BUCKET} \
+	VITE_FIREBASE_MESSAGE_SENDER_ID=${VITE_FIREBASE_MESSAGE_SENDER_ID} \
+	VITE_FIREBASE_APP_ID=${VITE_FIREBASE_APP_ID}
+
+RUN npm run build
+
+FROM nginx:stable-alpine AS runtime
+
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+COPY --from=build /app/dist /usr/share/nginx/html
+
+EXPOSE 80
+HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
+	CMD wget -qO- http://127.0.0.1/health || exit 1
