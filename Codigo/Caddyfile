@@ -1,0 +1,23 @@
+{
+	admin off
+}
+
+(security_headers) {
+	header {
+		Strict-Transport-Security "max-age=31536000; includeSubDomains"
+		X-Content-Type-Options "nosniff"
+		X-Frame-Options "DENY"
+		Referrer-Policy "strict-origin-when-cross-origin"
+	}
+	encode zstd gzip
+}
+
+{$PUBLIC_DOMAIN} {
+	import security_headers
+	reverse_proxy frontend-postulantes:80
+}
+
+{$ADMIN_DOMAIN} {
+	import security_headers
+	reverse_proxy frontend-admin:80
+}
