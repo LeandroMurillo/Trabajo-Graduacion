@@ -16,12 +16,27 @@ Caddy es el único servicio publicado hacia Internet. Recibe HTTP/HTTPS en los p
 
 La API y MariaDB solo existen dentro de redes de Docker. No se deben abrir públicamente los puertos `3000`, `3306` ni `8080`.
 
+El acceso publico debe apuntar a una Elastic IP asociada a la instancia:
+
+```text
+Internet
+   |
+DNS
+   |
+Elastic IP
+   |
+EC2
+   |
+Caddy :80/:443
+```
+
 ## 1. Antes de desplegar
 
 1. Revocar la clave de Firebase que estuvo versionada en `backend/firebase/serviceAccount.js` y crear una nueva. Eliminarla del archivo actual no la elimina del historial de Git.
-2. Crear una EC2 con Amazon Linux 2023, almacenamiento EBS cifrado, IP publica estable y un rol IAM para Systems Manager.
-3. Preferir Session Manager para administrar la instancia sin abrir SSH. AWS documenta que permite acceso sin puertos entrantes ni claves SSH: [Session Manager](https://docs.aws.amazon.com/systems-manager/latest/userguide/session-manager.html).
-4. Definir los dos nombres DNS que se usaran en produccion:
+2. Crear una EC2 con Amazon Linux 2023, almacenamiento EBS cifrado y un rol IAM para Systems Manager.
+3. Asociar una AWS Elastic IP a la instancia EC2.
+4. Preferir Session Manager para administrar la instancia sin abrir SSH. AWS documenta que permite acceso sin puertos entrantes ni claves SSH: [Session Manager](https://docs.aws.amazon.com/systems-manager/latest/userguide/session-manager.html).
+5. Definir los dos nombres DNS que se usaran en produccion:
    - `PUBLIC_DOMAIN`, por ejemplo `empleos.example.com`.
    - `ADMIN_DOMAIN`, por ejemplo `admin-empleos.example.com`.
 
@@ -55,12 +70,14 @@ Los frontends, el backend y MariaDB se comunican por redes internas de Docker. C
 
 ## 3. DNS
 
-Crear o actualizar los registros DNS para que ambos nombres apunten a la IP publica estable de la EC2:
+Crear o actualizar los registros DNS para que ambos nombres apunten a la Elastic IP asociada a la EC2:
 
 ```text
-PUBLIC_DOMAIN -> IP publica de la EC2
-ADMIN_DOMAIN  -> IP publica de la EC2
+PUBLIC_DOMAIN -> Elastic IP de la EC2
+ADMIN_DOMAIN  -> Elastic IP de la EC2
 ```
+
+Los registros DNS deben apuntar a una direccion estable. Una direccion IPv4 publica normal de EC2 puede cambiar despues de detener e iniciar la instancia; una Elastic IP mantiene estable el destino de esos registros mientras siga asociada a la instancia.
 
 No es obligatorio usar Route 53. El dominio puede estar en cualquier proveedor DNS.
 
@@ -126,7 +143,7 @@ Reglas importantes:
 
 - `PUBLIC_DOMAIN` debe ser el hostname publico del frontend de postulantes.
 - `ADMIN_DOMAIN` debe ser el hostname publico del frontend administrativo.
-- `APP_ORIGINS` debe contener esos dos origenes HTTPS exactos, separados por coma y sin `/` final.
+- `APP_ORIGINS` no se configura manualmente en `.env.production`; `compose.prod.yml` lo deriva automaticamente como `https://${PUBLIC_DOMAIN},https://${ADMIN_DOMAIN}` y lo entrega al backend.
 - `FIREBASE_SERVICE_ACCOUNT_JSON` debe ser el JSON nuevo, minificado en una sola línea.
 - Las variables `VITE_FIREBASE_*` son configuración pública del SDK web; la cuenta de servicio nunca debe usar el prefijo `VITE_`.
 - No guardar la contraseña inicial del `SUPERADMIN` en `.env.production`. Se ingresa manualmente una sola vez durante el provisioning inicial.
@@ -146,11 +163,11 @@ Los cinco servicios deben quedar `healthy`. Si Caddy no obtiene certificados o n
 docker compose --env-file .env.production -f compose.prod.yml logs --tail 100 caddy
 ```
 
-Verificar desde fuera de AWS, usando los dominios reales configurados en `.env.production`:
+Verificar desde fuera de AWS, usando los dominios reales configurados en `.env.production`. Por ejemplo, si se usaron los hostnames del archivo de ejemplo:
 
 ```bash
-curl -I https://PUBLIC_DOMAIN/health
-curl -I https://ADMIN_DOMAIN/health
+curl -I https://empleos.example.com/health
+curl -I https://admin-empleos.example.com/health
 ```
 
 La inicialización de MariaDB carga solamente esquema, tablas, relaciones, stored procedures y objetos estructurales. No carga datos de demostración ni usuarios administrativos.
