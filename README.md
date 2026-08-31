@@ -49,102 +49,15 @@ cd Trabajo-Graduacion/Codigo
 
 ### 2. Configurar Variables de Entorno (`.env`)
 
-Crea un archivo llamado `.env` en la raíz de la carpeta `Codigo` con el siguiente contenido.
-
-> **Importante:** El JSON de Firebase debe estar en **una sola línea** (minificado) para no romper el parser de Docker.
+Desde la carpeta `Codigo`, copia el ejemplo de desarrollo y completa las credenciales de Firebase:
 
 ```bash
-# Configuración de MariaDB
-DB_ROOT_PASSWORD=tu_contraseña_root
-DB_DATABASE=proyecto_db
-DB_USER=proyecto_user
-DB_PASSWORD=tu_contraseña_fuerte
-
-# Credenciales de Firebase (Una sola línea)
-FIREBASE_SERVICE_ACCOUNT_JSON={"type":"service_account","project_id":"...","private_key":"..."}
+cp .env.development.example .env
 ```
 
-El frontend de postulantes también necesita un archivo de configuración explícito para las constantes del sistema.
-Crea un archivo llamado `.env` en carpeta `frontend-postulantes` con el siguiente contenido.
+El JSON de `FIREBASE_SERVICE_ACCOUNT_JSON` debe estar minificado en una sola línea. No se deben crear archivos `.env` adicionales dentro de los frontends ni un `config.js` manual.
 
-```js
-VITE_API_URL = http://trabajo.com:3000
-
-MYSQL_ROOT_PASSWORD: tu_contraseña_root
-MYSQL_DATABASE: proyecto_db
-MYSQL_USER: proyecto_user
-MYSQL_PASSWORD: tu_contraseña_fuerte
-
-FIREBASE_API_KEY = 'TU_API_KEY',
-FIREBASE_AUTH_DOMAIN = '',
-FIREBASE_PROJECT_ID = '',
-FIREBASE_STORAGE_BUCKET = '',
-FIREBASE_MESSAGE_SENDER_ID = '',
-FIREBASE_APP_ID = '',
-FIREBASE_SERVICE_ACCOUNT_JSON: {
-	type: 'service_account',
-	project_id: '',
-	private_key_id: '',
-	private_key:
-		'-----BEGIN PRIVATE KEY-----\n \n-----END PRIVATE KEY-----\n',
-	client_email: '',
-	client_id: '',
-	auth_uri: 'https://accounts.google.com/o/oauth2/auth',
-	token_uri: 'https://oauth2.googleapis.com/token',
-	auth_provider_x509_cert_url: 'https://www.googleapis.com/oauth2/v1/certs',
-	client_x509_cert_url:
-		'',
-	universe_domain: 'googleapis.com',
-}
-```
-
-*(Regresa a la carpeta raíz `Codigo` con `cd ..`)*
-
-
-### 3. Crear archivo de configuración del Backend (`config.js`)
-
-El backend necesita un archivo de configuración explícito para las constantes del sistema.
-
-1. Navega a la carpeta del backend: `cd backend`
-2. Crea un archivo llamado `config.js`.
-3. Pega el siguiente contenido:
-
-```javascript
-export const {
-	PORT = 3000,
-	DB_HOST = 'db', // Nombre del servicio en Docker
-	DB_USER = 'proyecto_user',
-	DB_PASSWORD = 'tu_contraseña_fuerte',
-	DB_NAME = 'proyecto_db',
-	LIMITE_VACANTES_QUERY = 10,
-	SALT_ROUNDS = 10,
-	JWT_SECRET = 'habia-una-vez-un-secreto-llamado-jwt',
-	SECRET_RESET_JWT_KEY = 'ESTO-es-una.clave.de.restauración,delacontraseña',
-	SENDGRID_API_KEY = 'SG.TU_API_KEY',
-
-	FIREBASE_API_KEY = 'TU_API_KEY',
-	FIREBASE_AUTH_DOMAIN = '',
-	FIREBASE_PROJECT_ID = '',
-	FIREBASE_STORAGE_BUCKET = '',
-	FIREBASE_MESSAGE_SENDER_ID = '',
-	FIREBASE_APP_ID = '',
-} = process.env;
-```
-
-*(Regresa a la carpeta raíz `Codigo` con `cd ..`)*
-
-### 4. Instalar dependencia faltante (`crypto-js`)
-
-Para evitar errores de compilación en el frontend de postulantes, es necesario instalar manualmente esta librería antes de levantar Docker:
-
-```bash
-cd frontend-postulantes
-npm install crypto-js
-npm install -D @types/crypto-js
-cd ..
-```
-
-### 5. Configurar archivo Hosts
+### 3. Configurar archivo Hosts
 
 El sistema requiere el dominio `trabajo.com` para la gestión de cookies y CORS.
 
@@ -157,15 +70,15 @@ Añade la siguiente línea al final del archivo:
 127.0.0.1   trabajo.com
 ```
 
-### 6. Levantar los Contenedores
+### 4. Levantar los Contenedores
 
-Ejecuta el siguiente comando. Es vital usar la bandera `-V` para que Docker reconozca la instalación de `crypto-js` que hicimos en el paso 4.
+Ejecuta el siguiente comando desde la carpeta `Codigo`:
 
 ```bash
-sudo docker-compose up --build -V
+sudo docker compose up --build
 ```
 
-*(Si usas Docker V2, el comando es `sudo docker compose up --build -V`)*
+Para producción en AWS, seguir la guía [Codigo/DEPLOY_EC2.md](Codigo/DEPLOY_EC2.md).
 
 ## Accesos a los Servicios
 
